@@ -1,0 +1,18 @@
+/**/
+
+<form novalidate class="form-horizontal" role="form" name="beginForm">
+
+	<div class="form-group">
+		<label class="control-label col-sm-2" for="email">Zadajte počet pások (K):</label>
+		<div class="col-sm-10">
+			<input type="number" id="count" name="count" ng-model="kNumber" name="size" required min="0" max="10" integer />
+			<span ng-show="beginForm.count.$error.integer">The value is not a valid integer!</span>
+			<span ng-show="beginForm.count.$error.min || beginForm.count.$error.max"> The value must be in range 0 to 10!</span>
+		</div>
+	</div>
+
+	<div class="btn-group btn-group-justified">   
+   	<button class="btn btn-default" ng-disabled="beginForm.count.$dirty && beginForm.count.$invalid" ng-click="setKMode(1,kNumber)">MODE 1</button>
+   	<button class="btn btn-default" ng-disabled="beginForm.count.$dirty && beginForm.count.$invalid" ng-click="setKMode(2,kNumber)">MODE 2</button>
+   </div>
+</form>

@@ -1,0 +1,31 @@
+<form name="sourceTracksForm1" novalidate>
+
+	<div class="form-group" ng-repeat="x in kSourceTracks" ng-class="{ 'has-error' : userFieldForm.email.$invalid }">
+
+			<label>páska číslo: {{ $index }}</label>
+			<input type="text" class="form-control" name="sourceTrack{{$index}}" ng-model="kSourceTracks[index]" required ng-minlength="1" ng-maxlength="100">
+			/*<p class="help-block" ng-show="sourceTracksForm1['sourceTrack' + $index].$error">Nesprávne slovo</p>*/
+    		<div ng-messages="sourceTracksForm1['sourceTrack' + $index].$error">
+      		<div ng-message="minlength">
+        			Nesprávne slovo
+      		</div>
+      		<div ng-message="maxlength">
+        			Nesprávne slovo
+      		</div>
+
+    		</div>
+	</div>
+	<div class="btn-group btn-group-justified">   
+   	<button class="btn btn-default" ng-disabled="sourceTracksForm1.$invalid" ng-click="startSimulation(1)">Začať simuláciu</button>
+   </div>
+
+</form>
+
+/*
+		<ng-form name="userFieldForm">
+			<label>páska číslo" {{ $index }}</label>
+			<input type="text" class="form-control" name="sourceTrack" ng-model="kSourceTracks[index]" required ng-minlength="1" ng-maxlength="100">
+			<p class="help-block" ng-show="sourceTracksForm1.sourceTrack.$error">Nesprávne slovo</p>
+		</ng-form>
+    
+*/
