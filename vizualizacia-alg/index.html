@@ -3,7 +3,7 @@
 <head>
    <meta charset="utf-8" />
    <title>Vizualizacia alg.</title>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -13,40 +13,36 @@
 </head>
 
 <body ng-app="App" ng-controller="mainController">
-	{{ currentState }}
 	<div class="container">
-	{{ currentState }}
 		<h1>Vizualizacia alg</h1>
 
       <!-- intro -->
 		<div class="row">
-		{{ currentState }}
-			<div class="col-sm-12">
-				Vizualiz. algor. <br>
-				{{ currentState }}
-			</div>
+			<!--/*K tapes*/<div class="col-sm-12">-->
+				<p> Vizualiz. algor. </p> 
+			<!--/*K tapes*/</div>-->
 		</div>
         
         
         <!-- content -->
 		<div ng-show="currentState == stateEnum.BEGINNING" class="row">
-			<div class="col-sm-12">
-                /*CHOOSE K AND MODE*/
+			<!--/*K tapes*/<div class="col-sm-12">-->
+                <!--/*CHOOSE K AND MODE*/-->
 				<div ng-include="'beginning.html'"></div>
-			</div>
+			<!--/*K tapes*/</div>-->
 		</div>
 		<div ng-show="currentState == stateEnum.MODE_1_CHOOSE_INPUT" class="row">
-			<div class="col-sm-12">
-                /*K tapes*/
+			<!--/*K tapes*/<div class="col-sm-12">-->
+                <!--/*K tapes*/-->
 				<div ng-include="'mode1choose_in.html'"></div>
-			</div>
+			<!--/*K tapes*/</div>-->
 		</div>
 		<div ng-show="currentState == stateEnum.MODE_2_CHOOSE_INPUT" class="row">
-			<div class="col-sm-12">
-                /*K tapes*/
+			<!--/*K tapes*/<div class="col-sm-12">-->
+                <!--/*K tapes*/-->
 				<div ng-include="'mode2choose_in.html'">
 				</div>
-			</div>
+			<!--/*K tapes*/</div>-->
         /*TODO ostatne mody*/
         
 

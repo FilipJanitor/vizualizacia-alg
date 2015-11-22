@@ -1,31 +1,49 @@
+<!-- <div>
+hello {{le}}
+idfgsdf {{kNumber}}
+
+</div>
+--> 
 <form name="sourceTracksForm1" novalidate>
 
-	<div class="form-group" ng-repeat="x in kSourceTracks" ng-class="{ 'has-error' : userFieldForm.email.$invalid }">
+	<div ng-repeat="x in kSourceTracks track by $index " >
 
 			<label>páska číslo: {{ $index }}</label>
-			<input type="text" class="form-control" name="sourceTrack{{$index}}" ng-model="kSourceTracks[index]" required ng-minlength="1" ng-maxlength="100">
-			/*<p class="help-block" ng-show="sourceTracksForm1['sourceTrack' + $index].$error">Nesprávne slovo</p>*/
+			<input type="text" class="form-control" name="sourceTrack{{$index}}" value="{{ x }}" ng-model="kSourceTracks[$index]" required minlength="1" maxlength="100" ng-pattern="/^[A-Z]+$/">
+			
+		<!-- !TODO!!!!! vyriesit jednotlive chybove hlasky  ku kazdemu riadku zvlast - to je kozmeticke, v skutocnosti celkova validacia funguje
+				CO NEFUNGUJE - stav, ked formular uz nieje pristine ako celok, lebo som napisal do jedneho pola cosi, no nieje ani nevalidny, lebo niektore polia su pristine !!!			
+			
+			<span ng-show="sourceTracksForm1['sourceTrack' + $index].$error."> Word can contain only uppercase characters!</span>
+			<span ng-show="sourceTracksForm1['sourceTrack' + $index].$error.minlength || sourceTracksForm1['sourceTrack' + $index].$error.maxlength"> Length of word must be in range 0 to 10!</span>
+			<p class="help-block" ng-show="sourceTracksForm1['sourceTrack' + $index].$error">Nesprávne slovo</p>
     		<div ng-messages="sourceTracksForm1['sourceTrack' + $index].$error">
       		<div ng-message="minlength">
-        			Nesprávne slovo
+        			too short
       		</div>
       		<div ng-message="maxlength">
-        			Nesprávne slovo
+        			too long
       		</div>
 
-    		</div>
+    		</div> -->
 	</div>
-	<div class="btn-group btn-group-justified">   
-   	<button class="btn btn-default" ng-disabled="sourceTracksForm1.$invalid" ng-click="startSimulation(1)">Začať simuláciu</button>
-   </div>
+	
 
 </form>
+<p> {{ kSourceTracks }}</p>
+	<div class="btn-group">   
+   	<button class="btn btn-default" ng-disabled="sourceTracksForm1.$pristine||sourceTracksForm1.$invalid" ng-click="startSimulation(1)">Začať simuláciu</button>
+   </div>
+<!--	btn-group-justified
 
-/*
+class="form-group" 
+
+
+ng-class="{ 'has-error' : userFieldForm.email.$invalid }"
 		<ng-form name="userFieldForm">
 			<label>páska číslo" {{ $index }}</label>
 			<input type="text" class="form-control" name="sourceTrack" ng-model="kSourceTracks[index]" required ng-minlength="1" ng-maxlength="100">
 			<p class="help-block" ng-show="sourceTracksForm1.sourceTrack.$error">Nesprávne slovo</p>
 		</ng-form>
     
-*/
+*/ -->

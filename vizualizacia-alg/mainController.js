@@ -22,12 +22,13 @@ app.controller('mainController', function($scope) {
 	};
 	/*funkcia volana z formularu nastavujuceho k. Nastavi k, inicializuje vstupne pasky a nastavi dalsi STATE*/
 	$scope.setKMode = function(mode,kValue) {
-			// $scope.k = kValue;
-			for (var i = 0; i < kNumber; i++) {
-				$scope.kSourceTracks.push("");	
+			$scope.kNumber = kValue;
+			for (var i = 0; i < $scope.kNumber; i++) {
+				$scope.kSourceTracks.push(" ");	
 			}
 			if(mode == 1){
 				$scope.currentState = $scope.stateEnum.MODE_1_CHOOSE_INPUT;
+				$scope.le = $scope.kSourceTracks.length
 			} else {
 				$scope.currentState = $scope.stateEnum.MODE_2_CHOOSE_INPUT;
 			}
