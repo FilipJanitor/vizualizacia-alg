@@ -1,0 +1,25 @@
+<form name="delta" novalidate>
+	<div>
+			<label>Vstupná páska(o až 100 znakov):</label>
+			
+			/*TODO ng-minlength neevaluuje vstup, nevie najst kNumber*/
+			<input type="text" class="form-control" name="deltaRow" ng-model="deltaTemp.value" required ng-minlength="(3*{{kNumber}})+2" ng-maxlength="(4*{{kNumber}})+2" >
+			<span ng-show="deltaInvalid.value"> Zlý formát delta funkcie!</span>
+	</div>
+</form>
+
+<p>
+
+Pomocne vypisy
+
+temp {{deltaTemp}}  <br> 
+number {{kNumber}} <br>
+tempval {{deltaTemp.value}} <br>
+vypisuj {{deltaFunction.length}} <br>
+invalid {{deltaInvalid.value}}
+
+</p>
+	<div class="btn-group">  
+		<button class="btn btn-default" ng-disabled="delta.deltaRow.$pristine||delta.deltaRow.$invalid" ng-click="registerDelta()">Pridať ďalší riadok delta funkcie</button> 
+   	<button class="btn btn-default" ng-disabled="delta.deltaRow.$pristine||delta.deltaRow.$invalid" ng-click="startSimulation(3)">Začať simuláciu</button>
+   </div>
