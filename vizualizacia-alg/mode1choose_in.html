@@ -1,53 +1,48 @@
 <!-- <div>
-hello {{le}}
-idfgsdf {{kNumber}}
-
-</div>
---> 
+	hello {{le}}
+	idfgsdf {{kNumber}}
+	
+	</div>
+	--> 
 <form name="sourceTracksForm1" novalidate>
-
 	<div>
-	<p>Zadajte obsah vstupnej pásky pre simulovaný stroj</p>
-			<label>Vstupná páska(o až 100 znakov), čiarka sa nesmie používať ako symbol :</label>
-			<input type="text" class="form-control" name="sourceTrack" ng-pattern="/^[^,]*$/" value="" ng-model="kSourceTracks[0]" required minlength="0" maxlength="100" >
-			
+		<p>Zadajte obsah vstupnej pásky pre simulovaný stroj</p>
+		<label>Vstupná páska(o až 100 znakov), čiarka sa nesmie používať ako symbol :</label>
+		<input type="text" class="form-control" name="sourceTrack" ng-pattern="/^[^,]*$/" value="" ng-model="kSourceTracks[0]" required minlength="0" maxlength="100" >
 		<!-- !TODO!!!!! vyriesit jednotlive chybove hlasky  ku kazdemu riadku zvlast - to je kozmeticke, v skutocnosti celkova validacia funguje
-				CO NEFUNGUJE - stav, ked formular uz nieje pristine ako celok, lebo som napisal do jedneho pola cosi, no nieje ani nevalidny, lebo niektore polia su pristine !!!			
+			CO NEFUNGUJE - stav, ked formular uz nieje pristine ako celok, lebo som napisal do jedneho pola cosi, no nieje ani nevalidny, lebo niektore polia su pristine !!!			
 			
 			<span ng-show="sourceTracksForm1['sourceTrack' + $index].$error."> Word can contain only uppercase characters!</span>
 			<span ng-show="sourceTracksForm1['sourceTrack' + $index].$error.minlength || sourceTracksForm1['sourceTrack' + $index].$error.maxlength"> Length of word must be in range 0 to 10!</span>
 			<p class="help-block" ng-show="sourceTracksForm1['sourceTrack' + $index].$error">Nesprávne slovo</p>
-    		<div ng-messages="sourceTracksForm1['sourceTrack' + $index].$error">
-      		<div ng-message="minlength">
-        			too short
-      		</div>
-      		<div ng-message="maxlength">
-        			too long
-      		</div>
-
-
-ng-pattern="/^[A-Z]+$/"
-
-
-    		</div> -->
+					<div ng-messages="sourceTracksForm1['sourceTrack' + $index].$error">
+			  		<div ng-message="minlength">
+			    			too short
+			  		</div>
+			  		<div ng-message="maxlength">
+			    			too long
+			  		</div>
+			
+			
+			ng-pattern="/^[A-Z]+$/"
+			
+			
+					</div> -->
 	</div>
-	
-
 </form>
 <!-- <p> {{ kSourceTracks }}</p> -->
-	<div class="btn-group">   
-   	<button class="btn btn-default" ng-disabled="sourceTracksForm1.$invalid" ng-click="startSimulation(1)">Začať simuláciu</button>
-   </div>
+<div class="btn-group">   
+	<button class="btn btn-default" ng-disabled="sourceTracksForm1.$invalid" ng-click="startSimulation(1)">Začať simuláciu</button>
+</div>
 <!--	btn-group-justified
-
-class="form-group" 
-
-
-ng-class="{ 'has-error' : userFieldForm.email.$invalid }"
-		<ng-form name="userFieldForm">
-			<label>páska číslo" {{ $index }}</label>
-			<input type="text" class="form-control" name="sourceTrack" ng-model="kSourceTracks[index]" required ng-minlength="1" ng-maxlength="100">
-			<p class="help-block" ng-show="sourceTracksForm1.sourceTrack.$error">Nesprávne slovo</p>
-		</ng-form>
-    
-*/ -->
+	class="form-group" 
+	
+	
+	ng-class="{ 'has-error' : userFieldForm.email.$invalid }"
+			<ng-form name="userFieldForm">
+				<label>páska číslo" {{ $index }}</label>
+				<input type="text" class="form-control" name="sourceTrack" ng-model="kSourceTracks[index]" required ng-minlength="1" ng-maxlength="100">
+				<p class="help-block" ng-show="sourceTracksForm1.sourceTrack.$error">Nesprávne slovo</p>
+			</ng-form>
+	    
+	*/ -->
