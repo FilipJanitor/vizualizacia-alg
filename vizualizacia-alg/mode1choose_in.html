@@ -7,7 +7,7 @@ idfgsdf {{kNumber}}
 <form name="sourceTracksForm1" novalidate>
 
 	<div>
-
+	<p>Zadajte obsah vstupnej pásky pre simulovaný stroj</p>
 			<label>Vstupná páska(o až 100 znakov), čiarka sa nesmie používať ako symbol :</label>
 			<input type="text" class="form-control" name="sourceTrack" ng-pattern="/^[^,]*$/" value="" ng-model="kSourceTracks[0]" required minlength="0" maxlength="100" >
 			
@@ -34,7 +34,7 @@ ng-pattern="/^[A-Z]+$/"
 	
 
 </form>
-<p> {{ kSourceTracks }}</p>
+<!-- <p> {{ kSourceTracks }}</p> -->
 	<div class="btn-group">   
    	<button class="btn btn-default" ng-disabled="sourceTracksForm1.$invalid" ng-click="startSimulation(1)">Začať simuláciu</button>
    </div>
