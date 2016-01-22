@@ -51,14 +51,11 @@
 		</div>
 		
 		<div class="container" ng-controller="simulationController">
-			<div ng-show="currentState == stateEnum.MODE_2_CHOOSE_DELTA" class="row">
-				<!--/*K tapes*/<div class="col-sm-12">-->
-				<!--/*K tapes*/-->
-				<div ng-include="'mode2choose_delta.html'">
-				</div>
-				<!--/*K tapes*/</div>-->
+
+				<div  ng-show="activeSimulation.value" class="row" ng-include="'simulatingForm.html'">
 				
-			</div>
+				</div>
+
 		
 		</div>
 				

@@ -1,10 +1,10 @@
 /*service na posielanie veci z prveho controllearu (toho, co zodpoveda za input) simulatoru*/
 app.service('simulationService', function() {
-  var _kNumber;
-  var _kSourceTracks;
-  var _deltaFunction;
-  var _mode;
-  var _isActive = false;
+  var _kNumber = {};
+  var _kSourceTracks = {};
+  var _deltaFunction = {};
+  var _mode = {};
+  var _isActive = {};
 	
 	this.kNumber = _kNumber;
   this.kSourceTracks = _kSourceTracks;

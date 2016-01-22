@@ -72,21 +72,21 @@ app.controller('mainController', ['$scope','simulationService',function($scope, 
     /*Funkcia volana v stavoch CHOOSE. Pre value 1 zacne simulaciu modu 1. Pre 2 skoci do DELTA, pre 3 zacne simulaciu MODU 2. Je garantovane, ze v slovach sa nepouzivaju ciarky ako symbol */
     $scope.startSimulation = function(value) {
         if (value == 1) {
-        		simulationService.kNumber = $scope.kNumber;
-				simulationService.kSourceTracks = $scope.kSourceTracks;
-        		simulationService.mode = $scope.stateEnum.MODE_1_SIMULATE;
-        		simulationService.isActive = true;
+        		simulationService.kNumber.value = $scope.kNumber;
+				simulationService.kSourceTracks.value = $scope.kSourceTracks;
+        		simulationService.mode.value = $scope.stateEnum.MODE_1_SIMULATE;
+        		simulationService.isActive.value = true;
             $scope.currentState = $scope.stateEnum.MODE_1_SIMULATE;
         } else if (value == 2) {
             $scope.currentState = $scope.stateEnum.MODE_2_CHOOSE_DELTA;
             $scope.resetDelta();
         } else {
-        		simulationService.kNumber = $scope.kNumber;
-        		simulationService.deltaFunction =$scope.deltaFunction;
+        		simulationService.kNumber.value = $scope.kNumber;
+        		simulationService.deltaFunction.value =$scope.deltaFunction;
 				
-				simulationService.kSourceTracks = $scope.kSourceTracks;
-        		simulationService.mode = $scope.stateEnum.MODE_2_SIMULATE;
-        		simulationService.isActive = true;
+				simulationService.kSourceTracks.value = $scope.kSourceTracks;
+        		simulationService.mode.value = $scope.stateEnum.MODE_2_SIMULATE;
+        		simulationService.isActive.value = true;
         		 
             $scope.currentState = $scope.stateEnum.MODE_2_SIMULATE;
         }
@@ -148,10 +148,10 @@ app.controller('mainController', ['$scope','simulationService',function($scope, 
         var errLog = "Chyba nedeterminizmu pri páskach: ";
         /*overime determinizmus*/
         for (var i = 0; i < $scope.deltaFunction.length; i++) {
-            for (var j = 0; j < $scope.deltaFunction.length; j++) {
-                if (i == j) {
+            for (var j = i + 1; j < $scope.deltaFunction.length; j++) {
+                /*if (i == j) {
                     continue
-                }
+                }*/
                 if ($scope.deltaFunction[i].originalState == $scope.deltaFunction[j].originalState && $scope.deltaFunction[i].toString() === $scope.deltaFunction[j].toString()) {
                     overallSuccess = false;
                     determinism = false;

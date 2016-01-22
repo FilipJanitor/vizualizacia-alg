@@ -10,27 +10,29 @@ app.controller('simulationController', ['$scope','simulationService',function ($
 		}
 		$scope.activeSimulation = true
 	}
-	*/
+
 	$scope.activeSimulation = false;	
 	
-	$scope.mode;
-	/*Kolko paskovy stroj chceme simulovat*/
-    $scope.kNumber;
-    /*pole obsahujuce stringy vstupnych slov na k paskach*/
-    $scope.kSourceTracks;
-    /*pole objektov deltafunkcii*/
-    $scope.deltaFunction;
+	$scope.mode = {};
+
+    $scope.kNumber = {};
+
+    $scope.kSourceTracks = {};
+
+    $scope.deltaFunction = {};*/
+    
+    const FIXED_WIDTH = 800;
     
     
     
-    if(simulationService.isActive){
-		$scope.kNumber = simulationService.kNumber;
+   /*if(simulationService.isActive){*/
+		$scope.kNumber= simulationService.kNumber;
 		$scope.kSourceTracks = simulationService.kSourceTracks;		
 		
 		$scope.mode = simulationService.mode;	
-		if($scope.mode == 6){
+		if($scope.mode.value == 6){
 			$scope.deltaFunction = simulationService.deltaFunction;
 		}
-		$scope.activeSimulation = true
-	}
+		$scope.activeSimulation = simulationService.isActive;
+	/*}*/
 }]);
