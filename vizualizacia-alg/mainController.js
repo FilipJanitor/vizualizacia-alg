@@ -1,4 +1,6 @@
-app.controller('mainController', function($scope) {
+
+/*service injection nefunguje*/
+app.controller('mainController', ['$scope','simulationService',function($scope, simulationService) {
 
     /*Enumerator hovoriaci, v akom stave simulacie sa nachadzame*/
     $scope.stateEnum = {
@@ -70,13 +72,45 @@ app.controller('mainController', function($scope) {
     /*Funkcia volana v stavoch CHOOSE. Pre value 1 zacne simulaciu modu 1. Pre 2 skoci do DELTA, pre 3 zacne simulaciu MODU 2. Je garantovane, ze v slovach sa nepouzivaju ciarky ako symbol */
     $scope.startSimulation = function(value) {
         if (value == 1) {
+        		simulationService.kNumber = $scope.kNumber;
+				simulationService.kSourceTracks = $scope.kSourceTracks;
+        		simulationService.mode = $scope.stateEnum.MODE_1_SIMULATE;
+        		simulationService.isActive = true;
             $scope.currentState = $scope.stateEnum.MODE_1_SIMULATE;
         } else if (value == 2) {
             $scope.currentState = $scope.stateEnum.MODE_2_CHOOSE_DELTA;
             $scope.resetDelta();
         } else {
+        		simulationService.kNumber = $scope.kNumber;
+        		simulationService.deltaFunction =$scope.deltaFunction;
+				
+				simulationService.kSourceTracks = $scope.kSourceTracks;
+        		simulationService.mode = $scope.stateEnum.MODE_2_SIMULATE;
+        		simulationService.isActive = true;
+        		 
             $scope.currentState = $scope.stateEnum.MODE_2_SIMULATE;
         }
+        
+        /*if (value == 1) {
+        		simulationService.addK($scope.kNumber);
+				simulationService.addKSourceTracks($scope.kSourceTracks);
+        		simulationService.addMode($scope.stateEnum.MODE_1_SIMULATE);
+        		simulationService.setActive();
+            $scope.currentState = $scope.stateEnum.MODE_1_SIMULATE;
+        } else if (value == 2) {
+            $scope.currentState = $scope.stateEnum.MODE_2_CHOOSE_DELTA;
+            $scope.resetDelta();
+        } else {
+        		
+        		simulationService.addK($scope.kNumber);
+        		simulationService.addDeltaFunction($scope.DeltaFunction);
+				
+				simulationService.addKSourceTracks($scope.kSourceTracks);
+        		simulationService.addMode($scope.stateEnum.MODE_2_SIMULATE);
+        		simulationService.setActive();
+        		 
+            $scope.currentState = $scope.stateEnum.MODE_2_SIMULATE;
+        }*/
     };
 
     /*Funkcie na dynamicke pridavanie a davanie prec inputov pre deltafunkciu*/
@@ -196,4 +230,4 @@ app.controller('mainController', function($scope) {
         /*$scope.resetDelta();*/
     };
 
-});
+}]);

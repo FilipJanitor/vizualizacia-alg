@@ -7,9 +7,13 @@
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script src="app.js"></script>
+		<script src="simulationService.js"></script>
+		<script src="mainController.js"></script>
+		<script src="simulationController.js"></script>
 	</head>
-	<body ng-app="App" ng-controller="mainController">
-		<div class="container">
+	<body ng-app="App">
+		<div class="container" ng-controller="mainController">
 			<h1>Vizualizacia alg</h1>
 			<!-- intro -->
 			<!--/*K tapes*/<div class="col-sm-12">-->
@@ -41,18 +45,33 @@
 				<div ng-include="'mode2choose_delta.html'">
 				</div>
 				<!--/*K tapes*/</div>-->
-				/*TODO ostatne mody*/
+				
 			</div>
-			<!-- footer -->
+			
+		</div>
+		
+		<div class="container" ng-controller="simulationController">
+			<div ng-show="currentState == stateEnum.MODE_2_CHOOSE_DELTA" class="row">
+				<!--/*K tapes*/<div class="col-sm-12">-->
+				<!--/*K tapes*/-->
+				<div ng-include="'mode2choose_delta.html'">
+				</div>
+				<!--/*K tapes*/</div>-->
+				
+			</div>
+		
+		</div>
+				
+		
+		
+		<div class="container"> <!-- footer -->
 			<div class="row">
 				<div class="col-sm-12">
 					<hr />
 					Filip Janitor 2015 
 					<a href="https://github.com/FilipJanitor/vizualizacia-alg">Repozitár projektu</a><br/>
 				</div>
-			</div>
-		</div>
-		<script src="app.js"></script>
-		<script src="mainController.js"></script>
+			</div></div>
+		
 	</body>
 </html>
