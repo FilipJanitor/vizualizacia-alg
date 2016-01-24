@@ -21,9 +21,8 @@ app.controller('simulationController', ['$scope','simulationService',function ($
 
     $scope.deltaFunction = {};*/
     
-    const FIXED_WIDTH = 800;
-    
-    
+    /**/
+   
     
    /*if(simulationService.isActive){*/
 		$scope.kNumber= simulationService.kNumber;
@@ -34,5 +33,14 @@ app.controller('simulationController', ['$scope','simulationService',function ($
 			$scope.deltaFunction = simulationService.deltaFunction;
 		}
 		$scope.activeSimulation = simulationService.isActive;
+		$scope.simulatingArray = simulationService.simulatingArray;
+
+		const FIXED_WIDTH = 800;
+		 $scope.canvasWidth = FIXED_WIDTH;
+    $scope.canvasHeight = 80*2*$scope.kSourceTracks.value + 100;
+    
+    
+		
+		
 	/*}*/
 }]);

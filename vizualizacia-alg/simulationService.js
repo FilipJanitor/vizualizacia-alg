@@ -5,12 +5,13 @@ app.service('simulationService', function() {
   var _deltaFunction = {};
   var _mode = {};
   var _isActive = {};
-	
+  var _simulatingArray = []
 	this.kNumber = _kNumber;
   this.kSourceTracks = _kSourceTracks;
   this.deltaFunction =_deltaFunction;
   this.mode = _mode;
-  this.isActive =  _isActive;
+  this.isActive = _isActive;
+  this.simulatingArray = _simulatingArray;
 	
 	
 	/*var addK = function(K) {

@@ -69,26 +69,37 @@ app.controller('mainController', ['$scope','simulationService',function($scope, 
             $scope.myMaxLength = (4 * $scope.kNumber) + 2;
         }
     };
+	
+	/*Funkcia pripravi pole objektov, ktore sa bude pouzivat pri simulacii*/    
+    $scope.prepareSimulatingArray = function(){
+		var tempArray= [];
+		for(var i = 0; i < $scope.kNumber;i++){
+			temparray.push({});
+		}    
+		return temparray;
+    }
+ 
     /*Funkcia volana v stavoch CHOOSE. Pre value 1 zacne simulaciu modu 1. Pre 2 skoci do DELTA, pre 3 zacne simulaciu MODU 2. Je garantovane, ze v slovach sa nepouzivaju ciarky ako symbol */
     $scope.startSimulation = function(value) {
         if (value == 1) {
+        		$scope.currentState = $scope.stateEnum.MODE_1_SIMULATE;
         		simulationService.kNumber.value = $scope.kNumber;
 				simulationService.kSourceTracks.value = $scope.kSourceTracks;
         		simulationService.mode.value = $scope.stateEnum.MODE_1_SIMULATE;
         		simulationService.isActive.value = true;
-            $scope.currentState = $scope.stateEnum.MODE_1_SIMULATE;
+				simulationService.simulatingArray = $scope.prepareSimulatingArray();        		
+            
         } else if (value == 2) {
             $scope.currentState = $scope.stateEnum.MODE_2_CHOOSE_DELTA;
             $scope.resetDelta();
         } else {
+				$scope.currentState = $scope.stateEnum.MODE_2_SIMULATE;
         		simulationService.kNumber.value = $scope.kNumber;
         		simulationService.deltaFunction.value =$scope.deltaFunction;
-				
 				simulationService.kSourceTracks.value = $scope.kSourceTracks;
         		simulationService.mode.value = $scope.stateEnum.MODE_2_SIMULATE;
-        		simulationService.isActive.value = true;
-        		 
-            $scope.currentState = $scope.stateEnum.MODE_2_SIMULATE;
+        		simulationService.simulatingArray = $scope.prepareSimulatingArray();
+        		simulationService.isActive.value = true;	 
         }
         
         /*if (value == 1) {

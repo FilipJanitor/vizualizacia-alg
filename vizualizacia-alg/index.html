@@ -5,6 +5,7 @@
 		<title>Vizualizacia alg.</title>
 		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link href="styles.css" rel="stylesheet" />
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<script src="app.js"></script>
@@ -13,62 +14,42 @@
 		<script src="simulationController.js"></script>
 	</head>
 	<body ng-app="App">
-		<div class="container" ng-controller="mainController">
-			<h1>Vizualizacia alg</h1>
+	<div class="container">
+		<div ng-controller="mainController">
+			<h1>Vizualizacia alg</h1>	
 			<!-- intro -->
-			<!--/*K tapes*/<div class="col-sm-12">-->
 			<p>Interaktívny simulátor práce 2 páskového Turingovho stroja simulujúceho K páskový Turingov stroj podľa algoritmu na redukciu počtu pások na 2 pre čas, vhodný pre študentov predmetu FOJA1. </p>
 			<!-- content -->
 			<div ng-show="currentState == stateEnum.BEGINNING" class="row">
-				<!--/*K tapes*/<div class="col-sm-12">-->
 				<!--/*CHOOSE K AND MODE*/-->
 				<div ng-include="'beginning.html'"></div>
-				<!--/*K tapes*/</div>-->
 			</div>
 			<div ng-show="currentState == stateEnum.MODE_1_CHOOSE_INPUT" class="row">
-				<!--/*K tapes*/<div class="col-sm-12">-->
-				<!--/*K tapes*/-->
 				<div ng-include="'mode1choose_in.html'"></div>
-				<!--/*K tapes*/</div>-->
 			</div>
 			<div ng-show="currentState == stateEnum.MODE_2_CHOOSE_INPUT" class="row">
-				<!--/*K tapes*/<div class="col-sm-12">-->
-				<!--/*K tapes*/-->
-				<div ng-include="'mode2choose_in.html'">
-				</div>
-				<!--/*K tapes*/</div>-->
-				/*TODO ostatne mody*/
+				<div ng-include="'mode2choose_in.html'"></div>
 			</div>
 			<div ng-show="currentState == stateEnum.MODE_2_CHOOSE_DELTA" class="row">
-				<!--/*K tapes*/<div class="col-sm-12">-->
-				<!--/*K tapes*/-->
-				<div ng-include="'mode2choose_delta.html'">
+				<div ng-include="'mode2choose_delta.html'"></div>				
+			</div>		
+		</div>		
+		<div ng-controller="simulationController">
+				<div  ng-show="activeSimulation.value" class="row">
+					<div  ng-include="'simulatingForm.html'">
+					</div>
 				</div>
-				<!--/*K tapes*/</div>-->
-				
-			</div>
-			
 		</div>
-		
-		<div class="container" ng-controller="simulationController">
-
-				<div  ng-show="activeSimulation.value" class="row" ng-include="'simulatingForm.html'">
+						
 				
-				</div>
-
-		
-		</div>
-				
-		
-		
-		<div class="container"> <!-- footer -->
+ <!-- footer -->
 			<div class="row">
 				<div class="col-sm-12">
 					<hr />
 					Filip Janitor 2015 
 					<a href="https://github.com/FilipJanitor/vizualizacia-alg">Repozitár projektu</a><br/>
 				</div>
-			</div></div>
-		
+			</div>
+		</div>
 	</body>
 </html>
