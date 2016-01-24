@@ -1,6 +1,4 @@
-
-/*service injection nefunguje*/
-app.controller('mainController', ['$scope','simulationService',function($scope, simulationService) {
+app.controller('mainController', ['$scope', 'simulationService', function($scope, simulationService) {
 
     /*Enumerator hovoriaci, v akom stave simulacie sa nachadzame*/
     $scope.stateEnum = {
@@ -69,39 +67,39 @@ app.controller('mainController', ['$scope','simulationService',function($scope, 
             $scope.myMaxLength = (4 * $scope.kNumber) + 2;
         }
     };
-	
-	/*Funkcia pripravi pole objektov, ktore sa bude pouzivat pri simulacii*/    
-    $scope.prepareSimulatingArray = function(){
-		var tempArray= [];
-		for(var i = 0; i < $scope.kNumber;i++){
-			temparray.push({});
-		}    
-		return temparray;
+
+    /*Funkcia pripravi pole objektov, ktore sa bude pouzivat pri simulacii*/
+    $scope.prepareSimulatingArray = function() {
+        var tempArray = [];
+        for (var i = 0; i < $scope.kNumber; i++) {
+            temparray.push({});
+        }
+        return temparray;
     }
- 
+
     /*Funkcia volana v stavoch CHOOSE. Pre value 1 zacne simulaciu modu 1. Pre 2 skoci do DELTA, pre 3 zacne simulaciu MODU 2. Je garantovane, ze v slovach sa nepouzivaju ciarky ako symbol */
     $scope.startSimulation = function(value) {
         if (value == 1) {
-        		$scope.currentState = $scope.stateEnum.MODE_1_SIMULATE;
-        		simulationService.kNumber.value = $scope.kNumber;
-				simulationService.kSourceTracks.value = $scope.kSourceTracks;
-        		simulationService.mode.value = $scope.stateEnum.MODE_1_SIMULATE;
-        		simulationService.isActive.value = true;
-				simulationService.simulatingArray = $scope.prepareSimulatingArray();        		
-            
+            $scope.currentState = $scope.stateEnum.MODE_1_SIMULATE;
+            simulationService.kNumber.value = $scope.kNumber;
+            simulationService.kSourceTracks.value = $scope.kSourceTracks;
+            simulationService.mode.value = $scope.stateEnum.MODE_1_SIMULATE;
+            simulationService.isActive.value = true;
+            simulationService.simulatingArray = $scope.prepareSimulatingArray();
+
         } else if (value == 2) {
             $scope.currentState = $scope.stateEnum.MODE_2_CHOOSE_DELTA;
             $scope.resetDelta();
         } else {
-				$scope.currentState = $scope.stateEnum.MODE_2_SIMULATE;
-        		simulationService.kNumber.value = $scope.kNumber;
-        		simulationService.deltaFunction.value =$scope.deltaFunction;
-				simulationService.kSourceTracks.value = $scope.kSourceTracks;
-        		simulationService.mode.value = $scope.stateEnum.MODE_2_SIMULATE;
-        		simulationService.simulatingArray = $scope.prepareSimulatingArray();
-        		simulationService.isActive.value = true;	 
+            $scope.currentState = $scope.stateEnum.MODE_2_SIMULATE;
+            simulationService.kNumber.value = $scope.kNumber;
+            simulationService.deltaFunction.value = $scope.deltaFunction;
+            simulationService.kSourceTracks.value = $scope.kSourceTracks;
+            simulationService.mode.value = $scope.stateEnum.MODE_2_SIMULATE;
+            simulationService.simulatingArray = $scope.prepareSimulatingArray();
+            simulationService.isActive.value = true;
         }
-        
+
         /*if (value == 1) {
         		simulationService.addK($scope.kNumber);
 				simulationService.addKSourceTracks($scope.kSourceTracks);
@@ -141,7 +139,7 @@ app.controller('mainController', ['$scope','simulationService',function($scope, 
         var success;
         var overallSuccess = true;
         var determinism = true;
-        /*vsetkz riadkz pretavime do objektov deltafunkcii*/
+        /*vsetky riadky pretavime do objektov deltafunkcii*/
         for (var i = 0; i < $scope.deltaArrayTemp.length; i++) {
             success = $scope.registerDelta($scope.deltaArrayTemp[i]);
             if (success === true) {
@@ -190,7 +188,7 @@ app.controller('mainController', ['$scope','simulationService',function($scope, 
             $scope.deltaInvalid.value = true;
             errLog += "Zlá dĺžka vstupu. ";
         }
-        /*toto moyno netreba TODO*/
+        /*toto mozno netreba - mozno povolime viacznakove stavy TODO*/
         if (arr[0].length != 1) {
             $scope.deltaInvalid.value = true;
             errLog += "Stav musí mať 1 znak. ";
@@ -205,7 +203,7 @@ app.controller('mainController', ['$scope','simulationService',function($scope, 
                 reading.push(arr[i]);
             }
         }
-        /*toto sa možno tiež vyhodí*/
+        /*toto sa mozno tiez vyhodi - mozno povolime viacznakove stavy TODO*/
         if (arr[1 + $scope.kNumber].length != 1) {
             $scope.deltaInvalid.value = true;
             errLog += "Nový stav môže byť len 1 znak. ";

@@ -1,52 +1,35 @@
-<!-- tu bude fixedwidth canvas. Col skaluje dohora, cize staci xs -->
-
 <div class="col-sm-9">
-<div class="row">
-<div class="col-sm-12">
-<div class="wrap-svg">
-<div class="spacer.svg">
-<svg viewBox="0 0 800 800">
-
-
-
-
-</svg>
-
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="wrap-svg">
+            <div class="spacer.svg">
+               <svg viewBox="0 0 800 800"></svg>
+            </div>
+         </div>
+         <p>
+            Ci je aktivne 
+            {{	activeSimulation.value	}}	
+            Mod 
+            {{	mode.value	}}
+            /*Kolko paskovy stroj chceme simulovat*/
+            {{	kNumber.value	}}
+            /*pole obsahujuce stringy vstupnych slov na k paskach*/
+            {{	kSourceTracks.value	}}
+            /*pole objektov deltafunkcii*/
+            {{	deltaFunction.value	}}
+         </p>
+      </div>
+   </div>
 </div>
-</div>
-<p>
-Ci je aktivne 
-{{	activeSimulation.value	}}	
-Mod 
-{{	mode.value	}}
-	/*Kolko paskovy stroj chceme simulovat*/
-    {{	kNumber.value	}}
-    /*pole obsahujuce stringy vstupnych slov na k paskach*/
-    {{	kSourceTracks.value	}}
-    /*pole objektov deltafunkcii*/
-    {{	deltaFunction.value	}}
-</p>
-
-
-
-</div>
-</div>
-</div>
-<!--
-</div>
-
--->
-
-<!-- formular s ngrepeat -->
+<!-- formular s ngrepeat bude mat vstup pre simulaciu TODO-->
 <div class="col-sm-3">
-
-<form name="simulation" novalidate>
-	<fieldset  data-ng-repeat="choice in simulatingArray">
-		<input type="text" ng-model="choice.overwriteValue" name="" required minlength="0" maxlength="100" >
-		  <input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="-1"> -1<br>
-  			<input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="0" checked> 0<br>
-  			<input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="1"> 1 <br>
-	</fieldset>
-	<button type="button" class="btn btn-primary" ng-click="checkAndStartStep()">zvalidova5 vstup a odsimulovať krok</button>
-</form>
+   <form name="simulation" novalidate>
+      <fieldset  data-ng-repeat="choice in simulatingArray">
+         <input type="text" ng-model="choice.overwriteValue" name="" required minlength="0" maxlength="100" >
+         <input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="-1"> -1<br>
+         <input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="0" checked> 0<br>
+         <input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="1"> 1 <br>
+      </fieldset>
+      <button type="button" class="btn btn-primary" ng-click="checkAndStartStep()">zvalidova5 vstup a odsimulovať krok</button>
+   </form>
 </div>
