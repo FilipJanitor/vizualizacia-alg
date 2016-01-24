@@ -17,19 +17,25 @@
             {{	kSourceTracks.value	}}
             /*pole objektov deltafunkcii*/
             {{	deltaFunction.value	}}
+            /*simulacne pole*/
+            {{simulatingArray.value}}
          </p>
       </div>
    </div>
 </div>
-<!-- formular s ngrepeat bude mat vstup pre simulaciu TODO-->
+<!-- Doplnit spravne ng-disabled pre mod s deltafunkciou-->
 <div class="col-sm-3">
    <form name="simulation" novalidate>
-      <fieldset  data-ng-repeat="choice in simulatingArray">
-         <input type="text" ng-model="choice.overwriteValue" name="" required minlength="0" maxlength="100" >
+      <fieldset  data-ng-repeat="choice in simulatingArray.value">
+      	<label>Páska číslo: {{ $index }}</label>
+         <p class="help-block">Znak, ktorým bude prepísaný aktuálny znak:</p>
+         <input type="text" ng-model="choice.overwriteValue" name="" required minlength="0" maxlength="1"> <br>
+         <p class="help-block">Posun hlavy:</p>
          <input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="-1"> -1<br>
-         <input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="0" checked> 0<br>
-         <input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="1"> 1 <br>
+         <input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="0"> 0<br>
+         <input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="1"> 1 <br> <br>
       </fieldset>
-      <button type="button" class="btn btn-primary" ng-click="checkAndStartStep()">zvalidova5 vstup a odsimulovať krok</button>
+      <br>
+      <button type="button" class="btn btn-primary" ng-click="checkAndStartStep()">Zvalidovať vstup a odsimulovať krok</button>
    </form>
 </div>
