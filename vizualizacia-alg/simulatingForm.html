@@ -3,7 +3,67 @@
       <div class="col-sm-12">
          <div class="wrap-svg">
             <div class="spacer.svg">
-               <svg viewBox="0 0 800 800"></svg>
+               <svg viewBox="0 0 800 {{neededHeightOfSvg.value}}">
+               <!-- TODO  urobit to viac dynamicke - 2d array sa asi bude hodit viac na nasledne editovanie myslim-->
+               <!-- original machine-->
+               	<rect ng-repeat="circle in originalMachinePrintingArray" x="60" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="100" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="140" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="180" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="220" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="260" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="300" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="340" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="420" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="460" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="500" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="540" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="580" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="620" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="660" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="700" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="380" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)"/>
+               
+               <!-- storage tape-->
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="60" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="100" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="140" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="180" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="220" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="260" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="300" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="340" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="420" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="460" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="500" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="540" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="580" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="620" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="660" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="700" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="380" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)"/>
+               
+               <!-- copy tape -->
+                  <rect x="60" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="100" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="140" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="180" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="220" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="260" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="300" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="340" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="420" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="460" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="500" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="540" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="580" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="620" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="660" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="700" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="380" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+               
+               
+               </svg>
             </div>
          </div>
          <p>
@@ -19,6 +79,8 @@
             {{	deltaFunction.value	}}
             /*simulacne pole*/
             {{simulatingArray.value}}
+            /*printingarray*/
+            {{originalMachinePrintingArray}}
          </p>
       </div>
    </div>
