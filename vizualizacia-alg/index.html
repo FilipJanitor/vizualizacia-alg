@@ -9,9 +9,9 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
       <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
       <script src="app.js"></script>
-      <script src="simulationService.js"></script>
-      <script src="mainController.js"></script>
-      <script src="simulationController.js"></script>
+      <script src="services/simulationService.js"></script>
+      <script src="controllers/mainController.js"></script>
+      <script src="controllers/simulationController.js"></script>
    </head>
    <body ng-app="App">
       <div class="container">
@@ -21,21 +21,21 @@
             <p>Interaktívny simulátor práce 2 páskového Turingovho stroja simulujúceho K páskový Turingov stroj podľa algoritmu na redukciu počtu pások na 2 pre čas, vhodný pre študentov predmetu FOJA1. </p>
             <!-- content -->
             <div ng-show="currentState == stateEnum.BEGINNING" class="row">
-               <div ng-include="'beginning.html'"></div>
+               <div ng-include="'views/beginning.html'"></div>
             </div>
             <div ng-show="currentState == stateEnum.MODE_1_CHOOSE_INPUT" class="row">
-               <div ng-include="'mode1choose_in.html'"></div>
+               <div ng-include="'views/mode1choose_in.html'"></div>
             </div>
             <div ng-show="currentState == stateEnum.MODE_2_CHOOSE_INPUT" class="row">
-               <div ng-include="'mode2choose_in.html'"></div>
+               <div ng-include="'views/mode2choose_in.html'"></div>
             </div>
             <div ng-show="currentState == stateEnum.MODE_2_CHOOSE_DELTA" class="row">
-               <div ng-include="'mode2choose_delta.html'"></div>
+               <div ng-include="'views/mode2choose_delta.html'"></div>
             </div>
          </div>
          <div ng-controller="simulationController">
             <div  ng-show="activeSimulation.value" class="row">
-               <div  ng-include="'simulatingForm.html'">
+               <div  ng-include="'views/simulatingForm.html'">
                </div>
             </div>
          </div>
