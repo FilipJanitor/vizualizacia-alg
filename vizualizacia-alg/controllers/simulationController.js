@@ -1,5 +1,8 @@
 app.controller('simulationController', ['$scope', 'simulationService', function($scope, simulationService) {
 
+
+
+	 
     /*if(simulationService.isActive){
 		$scope.kNumber = simulationService.getK();
 		$scope.kSourceTracks = simulationService.getKSourceTracks();		
@@ -23,7 +26,12 @@ app.controller('simulationController', ['$scope', 'simulationService', function(
 
     */
     
-    
+    $scope.stateEnum = {
+        IDLE: 1,
+        IN_PROGRESS: 2,
+        MODE_1_SIMULATE: 5,
+        MODE_2_SIMULATE: 6,
+    };
     /*Pomocne polia na spravne vykreslenie*/
 
 
@@ -34,14 +42,14 @@ app.controller('simulationController', ['$scope', 'simulationService', function(
     $scope.kNumber = simulationService.kNumber;
     $scope.kSourceTracks = simulationService.kSourceTracks;
 
-    $scope.mode = simulationService.mode;
-    if ($scope.mode.value == 6) {
+    $scope.mainMode = simulationService.mode;
+    if ($scope.mainMode.value == 6) {
         $scope.deltaFunction = simulationService.deltaFunction;
     }
     $scope.activeSimulation = simulationService.isActive;
     $scope.simulatingArray = simulationService.simulatingArray;
 
-
+    $scope.simulationMode = $scope.stateEnum.IDLE;
 	 $scope.originalMachinePrintingArray = [];
 	 $scope.reducedMachineStorageTapePrintingArray = [];
 
@@ -64,5 +72,25 @@ app.controller('simulationController', ['$scope', 'simulationService', function(
         $scope.reducedMachineCopyTapeOffset.value = storageTapeOffset+40+(80*$scope.kNumber.value);
         $scope.neededHeightOfSvg.value = $scope.reducedMachineCopyTapeOffset.value + 100;
     },true);
-
+    
+    
+    /*Funkcia, ktorá prijme vstup od používateľa, spracuje ho a pošle hlavnej simulačnej funkcií*/
+    $scope.checkAndStartStep = function(){
+    
+    };
+    
+    /*Funkcia, ktorá porovná aktuálnu konfiguráciu s deltafunkciou a na základe toho stroj buď zasekne, alebo zavolá hlavnú simulačnú funkciu*/
+    $scope.findDeltaAndStartStep = function(){
+    
+    };
+    
+    /*Funkcia upravuje výstup simulačnej funkcie tak, aby bol vykresliteľný*/
+    $scope.nextStep = function () {
+    	
+    };	
+    
+    $scope.mainSimulatingFunction = function(){
+    
+    };
+    
 }]);
