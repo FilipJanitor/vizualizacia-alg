@@ -1,4 +1,0 @@
-.wrap-svg{/*display:inline-block;position:relative;width:100%*/}
-.spacer-svg{/*margin-top:100%*/}
-svg{/*position:absolute;top:0;bottom:0;left:0;right:0;*/border:1px solid #000}
-fieldset{border-top: 1px solid #000; border-bottom: 1px solid #000}
