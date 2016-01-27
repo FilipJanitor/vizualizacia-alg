@@ -1,0 +1,114 @@
+<div class="col-sm-9">
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="wrap-svg">
+            <div class="spacer.svg">
+               <svg viewBox="0 0 800 {{neededHeightOfSvg.value}}">
+               <!-- TODO  urobit to viac dynamicke - 2d array sa asi bude hodit viac na nasledne editovanie myslim-->
+               <!-- original machine-->
+               	<rect ng-repeat="circle in originalMachinePrintingArray" x="60" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="100" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="140" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="180" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="220" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="260" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="300" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="340" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="420" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="460" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="500" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="540" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="580" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="620" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="660" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="700" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in originalMachinePrintingArray" x="380" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)"/>
+               
+               <!-- storage tape-->
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="60" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="100" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="140" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="180" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="220" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="260" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="300" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="340" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="420" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="460" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="500" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="540" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="580" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="620" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="660" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="700" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="circle in reducedMachineStorageTapePrintingArray" x="380" ng-attr-y="{{circle.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)"/>
+               
+               <!-- copy tape -->
+                  <rect x="60" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="100" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="140" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="180" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="220" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="260" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="300" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="340" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="420" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="460" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="500" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="540" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="580" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="620" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="660" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="700" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+                  <rect x="380" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
+               
+					<!-- red squares - tie budu oznacovat zmenu na orig. stroji-->               
+               
+					<!-- green squares - tie budu oznacovat aktualne zmeny  krokov simulacie na sim. stroji-->
+					
+					<!-- texty na vykreslovanie -->
+               </svg>
+            </div>
+         </div>
+         <p>
+         
+         <!--
+            Ci je aktivne 
+            {{	activeSimulation.value	}}	
+            Mod 
+            {{	mode.value	}}
+            /*Kolko paskovy stroj chceme simulovat*/
+            {{	kNumber.value	}}
+            /*pole obsahujuce stringy vstupnych slov na k paskach*/
+            {{	kSourceTracks.value	}}
+            /*pole objektov deltafunkcii*/
+            {{	deltaFunction.value	}}
+            /*simulacne pole*/
+            {{simulatingArray.value}}
+            /*printingarray*/
+            {{originalMachinePrintingArray}}
+			-->         
+         </p>
+      </div>
+   </div>
+</div>
+<!-- Doplnit spravne ng-disabled pre mod s deltafunkciou-->
+<div class="col-sm-3">
+   <form name="simulation" novalidate>
+      <fieldset  data-ng-repeat="choice in simulatingArray.value">
+      	<label>Páska číslo: {{ $index }}</label>
+         <p class="help-block">Znak, ktorým bude prepísaný aktuálny znak:</p>
+         <input type="text" ng-model="choice.overwriteValue" name="" required minlength="0" maxlength="1"> <br>
+         <p class="help-block">Posun hlavy:</p>
+         <input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="-1"> -1<br>
+         <input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="0"> 0<br>
+         <input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="1"> 1 <br> <br>
+      </fieldset>
+      <br>
+      <button type="button" ng-show="mainMode.value == stateEnum.MODE_1_SIMULATE" class="btn btn-primary" ng-click="checkAndStartStep()">Zvalidovať vstup a odsimulovať krok</button>
+      
+      <button type="button" ng-show="mainMode.value == stateEnum.MODE_2_SIMULATE" class="btn btn-primary" ng-click="findDeltaAndStartStep()">Odsimulovať krok</button>
+         
+      <button type="button" ng-show="simulationMode.value == stateEnum.IN_PROGRESS" class="btn btn-primary" ng-click="nextStep()">Pokračovať</button>
+   </form>
+</div>
