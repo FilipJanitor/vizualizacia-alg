@@ -46,6 +46,7 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
     $scope.resetDelta = function() {
         $scope.deltaTemp.value = angular.copy($scope.masterFormCommas);
     };
+    /*pouziva to registerdelta funkcia. Skutocne musi byt vizana na scope? nestaci lokalna?*/
     $scope.deltaInvalid = {
         value: false
     };
@@ -155,14 +156,14 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
                 continue;
             }
         }
-        var errLog = "Chyba nedeterminizmu pri páskach: ";
+        var errLog = "Chyba nedeterminizmu pri riadkoch: ";
         /*overime determinizmus*/
         for (var i = 0; i < $scope.deltaFunction.length; i++) {
             for (var j = i + 1; j < $scope.deltaFunction.length; j++) {
                 /*if (i == j) {
                     continue
                 }*/
-                if ($scope.deltaFunction[i].originalState == $scope.deltaFunction[j].originalState && $scope.deltaFunction[i].toString() === $scope.deltaFunction[j].toString()) {
+                if ($scope.deltaFunction[i].originalState == $scope.deltaFunction[j].originalState && $scope.deltaFunction[i].reading.toString() === $scope.deltaFunction[j].reading.toString()) {
                     overallSuccess = false;
                     determinism = false;
                     errLog += " " + i + " a " + j + ";";

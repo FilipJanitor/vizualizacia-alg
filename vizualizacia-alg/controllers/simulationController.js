@@ -1,4 +1,4 @@
-app.controller('simulationController', ['$scope', 'simulationService', function($scope, simulationService) {
+app.controller('simulationController', ['$scope', '$window', 'simulationService', function($scope, $window, simulationService) {
 
 
 
@@ -72,8 +72,11 @@ app.controller('simulationController', ['$scope', 'simulationService', function(
         $scope.reducedMachineCopyTapeOffset.value = storageTapeOffset+40+(80*$scope.kNumber.value);
         $scope.neededHeightOfSvg.value = $scope.reducedMachineCopyTapeOffset.value + 100;
     },true);
-    
-    
+
+	 /*Funkcia na restartovanie celeho simulacneho procesu do state beginning*/    
+    $scope.restartSimulation = function(){
+    	  $window.location.reload();
+    }
     /*Funkcia, ktorá prijme vstup od používateľa, spracuje ho a pošle hlavnej simulačnej funkcií*/
     $scope.checkAndStartStep = function(){
     

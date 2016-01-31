@@ -105,10 +105,11 @@
          <input type="radio" name="movement{{$index}}" ng-model="choice.movement" value="1"> 1 <br> <br>
       </fieldset>
       <br>
-      <button type="button" ng-show="mainMode.value == stateEnum.MODE_1_SIMULATE" class="btn btn-primary" ng-click="checkAndStartStep()">Zvalidovať vstup a odsimulovať krok</button>
+      <button type="button" ng-show="mainMode.value == stateEnum.MODE_1_SIMULATE" class="btn btn-primary" ng-click="checkAndStartStep()">Odsimulovať krok</button>
       
       <button type="button" ng-show="mainMode.value == stateEnum.MODE_2_SIMULATE" class="btn btn-primary" ng-click="findDeltaAndStartStep()">Odsimulovať krok</button>
          
       <button type="button" ng-show="simulationMode.value == stateEnum.IN_PROGRESS" class="btn btn-danger" ng-click="nextStep()">Pokračovať</button>
    </form>
+   <button type="button" class="btn btn-danger" ng-click="restartSimulation()">Zrušiť simuláciu</button>
 </div>
