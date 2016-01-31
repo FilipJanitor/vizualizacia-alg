@@ -95,6 +95,7 @@
 <!-- Doplnit spravne ng-disabled pre mod s deltafunkciou-->
 <div class="col-sm-3">
    <form name="simulation" novalidate>
+   <!-- Co vsetko disablnut v deltafunkcnej simulacii? Nechat to tak ten formular s tym, ze jeho input nikdy nebud efunkcny, alebo ho radsej cely skryt?-->
       <fieldset  data-ng-repeat="choice in simulatingArray.value">
       	<label>Páska číslo: {{ $index }}</label>
          <p class="help-block">Znak, ktorým bude prepísaný aktuálny znak:</p>
@@ -109,7 +110,10 @@
       
       <button type="button" ng-show="mainMode.value == stateEnum.MODE_2_SIMULATE" class="btn btn-primary" ng-click="findDeltaAndStartStep()">Odsimulovať krok</button>
          
-      <button type="button" ng-show="simulationMode.value == stateEnum.IN_PROGRESS" class="btn btn-danger" ng-click="nextStep()">Pokračovať</button>
+      <button type="button" ng-show="simulationMode.value == stateEnum.IN_PROGRESS" class="btn btn-default" ng-click="nextStep()">Pokračovať</button>
+      
+      <button type="button" ng-show="simulationMode.value == stateEnum.IN_PROGRESS" class="btn btn-default" ng-click="previousStep()">Krok späť</button>
+		      
    </form>
    <button type="button" class="btn btn-danger" ng-click="restartSimulation()">Zrušiť simuláciu</button>
 </div>
