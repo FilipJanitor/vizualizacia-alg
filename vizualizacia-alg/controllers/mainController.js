@@ -69,7 +69,7 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
         }
     };
 
-    /*Funkcia pripravi pole objektov, ktore sa bude pouzivat pri simulacii*/
+    /*Funkcia pripravi pole objektov, ktore sa bude pouzivat pri simulacii(budu obsahovat udaje o pohyboch a zmenach na paskach orig. stroja)*/
     $scope.prepareSimulatingArray = function() {
         var tempArray = [];
         for (var i = 0; i < $scope.kNumber; i++) {
@@ -81,6 +81,16 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
     /*Funkcia volana v stavoch CHOOSE. Pre value 1 zacne simulaciu modu 1. Pre 2 skoci do DELTA, pre 3 zacne simulaciu MODU 2. Je garantovane, ze v slovach sa nepouzivaju ciarky ako symbol */
     $scope.startSimulation = function(value) {
     	  $scope.simulatingArray = $scope.prepareSimulatingArray();
+    	  /*TODO toto upravit - kod je tu duplicitny, nejakinak to vymysliet TODO
+    	  
+    	  
+			na zaciatku sa pred kazdy string pasky pridaju medzery, tak aby sa pohodlne vykreslovalo. Toto sa mozno nebude robit cez stringy ale cez polia. Este neviem    	  
+    	  */
+    	  $scope.kSourceTracks[0] = "        "+$scope.kSourceTracks[0];
+        for(var i = 1; i < $scope.kNumber; i++){
+        	    $scope.kSourceTracks[i] = "                 "+$scope.kSourceTracks[i];
+        }    	  
+    	  
         if (value == 1) {
             $scope.currentState = $scope.stateEnum.MODE_1_SIMULATE;
             simulationService.kNumber.value = $scope.kNumber;

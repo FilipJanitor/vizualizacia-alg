@@ -38,9 +38,11 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     /*Objekty s datami, ktore su odoslane cez service z maincontrolleru. Obsahuju presne to, co aj tam - aj nazvy su rovnake*/
     
     $scope.reducedMachineCopyTapeOffset = {'value':0};
-    $scope.neededHeightOfSvg={'value':0};
-    $scope.kNumber = simulationService.kNumber;
+    $scope.neededHeightOfSvg = {'value':0};
+    $scope.storageTapeOffset = {'value':0};
     $scope.kSourceTracks = simulationService.kSourceTracks;
+    $scope.kNumber = simulationService.kNumber;
+
 
     $scope.mainMode = simulationService.mode;
     if ($scope.mainMode.value == 6) {
@@ -53,7 +55,10 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 	 $scope.originalMachinePrintingArray = [];
 	 $scope.reducedMachineStorageTapePrintingArray = [];
 
+    /*pole obsahujuci pre kazdu pasku interval <) ktory bude vykreslovany */
+    $scope.originalMachineViews = [];
 	 	 
+	 
 	 	 
     /*Watch, ktory spravne nastavi prazdne polia na vykreslovanie, ked sa nastavi kNumber. 
     Robi sa to takto, pretoze kNumber sa pocas simulacie menit nebude, na rozdiel od ksourcetracks,
@@ -63,14 +68,19 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
             $scope.originalMachinePrintingArray.push({'value':40+i*60});
         }
         /*Premenna, znaciaca zaciatok pasok redukovaneho automatu - mozno bude dobre ju dat priamo do scope, aby sa dala pouzit aj v naslednom vykreslovani*/
-        var storageTapeOffset = 40 + 40 +$scope.kNumber.value*60;
+        $scope.storageTapeOffset.value = 40 + 40 +$scope.kNumber.value*60;
         /*kriz nad home column sa bude posuvat, teda do tychto objektov nepatri*/
         for(var i = 0; i < $scope.kNumber.value; i++){
-            $scope.reducedMachineStorageTapePrintingArray.push({'value':storageTapeOffset+i*80});
-            $scope.reducedMachineStorageTapePrintingArray.push({'value':storageTapeOffset+40+i*80});
+            $scope.reducedMachineStorageTapePrintingArray.push({'value':$scope.storageTapeOffset.value+i*80});
+            $scope.reducedMachineStorageTapePrintingArray.push({'value':$scope.storageTapeOffset.value+40+i*80});
         }    
-        $scope.reducedMachineCopyTapeOffset.value = storageTapeOffset+40+(80*$scope.kNumber.value);
+        $scope.reducedMachineCopyTapeOffset.value = $scope.storageTapeOffset.value+40+(80*$scope.kNumber.value);
         $scope.neededHeightOfSvg.value = $scope.reducedMachineCopyTapeOffset.value + 100;
+        
+        /*nastavenie pointrov vykreslovania pasok orig. stroja*/
+        for(var i = 0; i < $scope.kNumber.value; i++){
+			   $scope.originalMachineViews.push(new originalMachineView());   
+        }
     },true);
 
 	 /*Funkcia na restartovanie celeho simulacneho procesu do state beginning*/    

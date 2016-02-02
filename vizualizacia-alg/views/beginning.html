@@ -1,13 +1,15 @@
-<form novalidate class="form-horizontal" role="form" name="beginForm">
-	<div class="form-group">
-		<label class="control-label col-sm-4" for="email">Zadajte počet pások od 1 do 10(K):</label>
-		<div class="col-sm-8">
-			<input type="number" id="count" name="count" ng-model="kNumber" required min="1" max="10" integer />
-			<span ng-show="beginForm.count.$error.integer">Hodnota nie je validné číslo!</span>
-			<span ng-show="beginForm.count.$error.min || beginForm.count.$error.max"> Hodnota musí byť od 1 do 10!</span>
+<div class="col-sm-12">
+	<form novalidate class="form-horizontal" role="form" name="beginForm">
+		<div class="form-group">
+			<label class="control-label col-sm-4" for="email">Zadajte počet pások od 1 do 10(K):</label>
+			<div class="col-sm-8">
+				<input type="number" id="count" name="count" ng-model="kNumber" required min="1" max="10" integer />
+				<span ng-show="beginForm.count.$error.integer">Hodnota nie je validné číslo!</span>
+				<span ng-show="beginForm.count.$error.min || beginForm.count.$error.max"> Hodnota musí byť od 1 do 10!</span>
+			</div>
 		</div>
-	</div>
-</form>
+	</form>
+</div>
 <div class="col-sm-12">
 	<p> Mód 1 je interaktívny = umožňuje používateľovi simuláciu po krokoch, pričom pri každom kroku bude používateľ určovať, čo sa bude diať v tom nasledujúcom. Mód 2 simuluje stroj na základe delta funkcie, ktorú používateľ zadá vopred.
 	</p>
