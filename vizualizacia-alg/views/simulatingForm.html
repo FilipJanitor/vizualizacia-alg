@@ -6,9 +6,9 @@
                <svg viewBox="0 0 800 {{ neededHeightOfSvg.value }}">
                <!-- TODO  urobit to viac dynamicke - 2d array sa asi bude hodit viac na nasledne editovanie myslim-->
                
-                  <text style="font-size:60" x="325" ng-attr-y="30" fill="black">Pásky originálneho stroja</text>
-                  <text style="font-size:60" x="230" ng-attr-y="{{storageTapeOffset.value+10}}" fill="black">Storage páska simulujúceho stroja</text>
-                  <text style="font-size:60" x="240" ng-attr-y="{{reducedMachineCopyTapeOffset.value+10}}" fill="black">Copy páska simulujúceho stroja</text>
+                  <text style="text-anchor: middle" x="400" y="30" fill="black">Pásky originálneho stroja</text>
+                  <text style="text-anchor: middle" x="400" ng-attr-y="{{storageTapeOffset.value-20}}" fill="black">Storage páska simulujúceho stroja</text>
+                  <text style="text-anchor: middle" x="400" ng-attr-y="{{reducedMachineCopyTapeOffset.value-10}}" fill="black">Copy páska simulujúceho stroja</text>
                <!-- original machine-->
                	<rect ng-repeat="node in originalMachinePrintingArray" x="60" ng-attr-y="{{node.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
                   <rect ng-repeat="node in originalMachinePrintingArray" x="100" ng-attr-y="{{node.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
@@ -108,25 +108,25 @@
 </div>
 <!-- Doplnit spravne ng-disabled pre mod s deltafunkciou-->
 <div class="col-sm-3">
-   <form name="simulation" novalidate>
+   <form name="simulationForm" novalidate>
    <!-- formular sa cely stane readonly-->
       <fieldset  data-ng-repeat="choice in simulatingArray.value">
       	<label>Páska číslo: {{ $index }}</label>
          <p class="help-block">Znak, ktorým bude prepísaný aktuálny znak:</p>
-         <input type="text" ng-model="choice.overwriteValue" name="" ng-readonly="simulationMode.value == stateEnum.IN_PROGRESS" required minlength="0" maxlength="1"> <br>
+         <input type="text" ng-model="choice.overwriteValue" name="" ng-readonly="simulationMode == stateEnum.IN_PROGRESS" required minlength="0" maxlength="1"> <br>
          <p class="help-block">Posun hlavy:</p>
-         <input type="radio" name="movement{{$index}}" ng-readonly="simulationMode.value == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="-1"> -1<br>
-         <input type="radio" name="movement{{$index}}" ng-readonly="simulationMode.value == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="0"> 0<br>
-         <input type="radio" name="movement{{$index}}" ng-readonly="simulationMode.value == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="1"> 1 <br> <br>
+         <input type="radio" name="movement{{$index}}" ng-readonly="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="-1"> -1<br>
+         <input type="radio" name="movement{{$index}}" ng-readonly="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="0"> 0<br>
+         <input type="radio" name="movement{{$index}}" ng-readonly="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="1"> 1 <br> <br>
       </fieldset>
       <br>
-      <button type="button" ng-show="mainMode.value == stateEnum.MODE_1_SIMULATE" ng-disabled="simulationMode.value == stateEnum.IN_PROGRESS" class="btn btn-primary" ng-click="checkAndStartStep()">Odsimulovať krok</button>
+      <button type="button" ng-show="mainMode.value == stateEnum.MODE_1_SIMULATE" ng-disabled="simulationMode == stateEnum.IN_PROGRESS || !simulationForm.$valid" class="btn btn-primary" ng-click="checkAndStartStep()">Odsimulovať krok</button>
       
-      <button type="button" ng-show="mainMode.value == stateEnum.MODE_2_SIMULATE" ng-disabled="simulationMode.value == stateEnum.IN_PROGRESS" class="btn btn-primary" ng-click="findDeltaAndStartStep()">Odsimulovať krok</button>
+      <button type="button" ng-show="mainMode.value == stateEnum.MODE_2_SIMULATE" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-primary" ng-click="findDeltaAndStartStep()">Odsimulovať krok</button>
          
-      <button type="button" ng-show="simulationMode.value == stateEnum.IN_PROGRESS" class="btn btn-default" ng-click="nextStep()">Pokračovať</button>
+      <button type="button" ng-show="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-default" ng-click="nextStep()">Pokračovať ďalším krokom</button>
       
-      <button type="button" ng-show="simulationMode.value == stateEnum.IN_PROGRESS" class="btn btn-default" ng-click="previousStep()">Krok späť</button>
+      <button type="button" ng-show="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-default" ng-click="previousStep()">Krok späť</button>
 		      
    </form>
    <button type="button" class="btn btn-danger" ng-click="restartSimulation()">Zrušiť simuláciu</button>

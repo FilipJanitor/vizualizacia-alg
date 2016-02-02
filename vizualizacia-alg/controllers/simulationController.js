@@ -89,7 +89,7 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     }
     /*Funkcia, ktorá prijme vstup od používateľa, spracuje ho a pošle hlavnej simulačnej funkcií*/
     $scope.checkAndStartStep = function(){
-    
+    	  $scope.simulationMode = $scope.stateEnum.IN_PROGRESS;
     };
     
     /*Funkcia, ktorá porovná aktuálnu konfiguráciu s deltafunkciou a na základe toho stroj buď zasekne, alebo zavolá hlavnú simulačnú funkciu*/
