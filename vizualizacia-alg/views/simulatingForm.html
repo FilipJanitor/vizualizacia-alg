@@ -37,10 +37,12 @@
 					
 					<!-- texty na vykreslovanie -->
 
-					<!-- texty na orig. stroji TODO ten range spravit nejak normalnejsie-->
+					<!-- texty na orig. stroji TODO ten range spravit nejak normalnejsie mozno-->
 						<g ng-repeat="track in kSourceTracks.value track by $index">
 							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{40+25+$parent.$index*60}}" fill="black">{{ track.charAt($index+ originalMachineViews[$parent.$index].beginning) }}</text>
-						</g>										
+						</g>							
+									
+					<!-- texty na simulujucom stroji. Vzhladom k tomu, ze sa bude chodit aj do minusu castejsie ako v origo, ide to cez to negativeArray;-->
 					
                </svg>
             </div>
@@ -50,7 +52,8 @@
             Ci je aktivne simulacia alebo idle<br />
             {{	simulationMode != stateEnum.IDLE	}}	
 <br />            Mod 
-<br />            {{	mode	}}
+<br />            {{	mainMode.value	}}
+<br /> {{simulationStorageTapeArray}}
 <br />				{{simulationMode}}		
 <br />            /*Kolko paskovy stroj chceme simulovat*/
 <br />            {{	kNumber.value	}}

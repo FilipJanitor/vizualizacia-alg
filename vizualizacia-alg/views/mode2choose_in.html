@@ -1,13 +1,11 @@
 <div class="col-sm-12">
 	<p>Zadajte obsah vstupnej pásky pre simulovaný stroj</p>
-	<div class="col-sm-12">
-		<form name="sourceTracksForm2" novalidate>
-			<div>
-				<label>Vstupná páska(0 až 100 znakov) , čiarka sa nesmie používať ako symbol:</label>
-				<input type="text" class="form-control" name="sourceTrack" value="" ng-pattern="/^[^,]*$/" ng-model="kSourceTracks[0]" required minlength="0" maxlength="100" >
-			</div>
-		</form>
-	</div>
+	<form name="sourceTracksForm2" novalidate>
+		<div>
+			<label>Vstupná páska(0 až 100 znakov) , čiarka sa nesmie používať ako symbol:</label>
+			<input type="text" class="form-control" name="sourceTrack" value="" ng-pattern="/^[^,]*$/" ng-model="kSourceTracks[0]" required minlength="0" maxlength="100" >
+		</div>
+	</form>
 </div>
 <!-- <p> {{ kSourceTracks }}</p> -->
 <div class="col-sm-12">

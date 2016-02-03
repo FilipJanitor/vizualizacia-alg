@@ -22,7 +22,11 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
     $scope.deltaArrayTemp = [];
     /*templat pre vyplnanie formularu deltafunkcie*/
     $scope.masterFormCommas = "";
-
+	 
+	 
+	 /*pole negativeArrayov, ktore budu reprezentovat stopy na simulacnej paske*/
+	 $scope.simulationStorageTapeArray = [];
+	 
     /*Angular nevie evalovat ng-minlength a ng-maxlength v inputoch, musi tam byt bud konstanta alebo premenna - vyraz nie. Preto urobim svoje premenne len na toto urcene*/
     $scope.myMinLength;
     $scope.myMaxLength;
@@ -89,7 +93,23 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
     	  $scope.kSourceTracks[0] = "        "+$scope.kSourceTracks[0];
         for(var i = 1; i < $scope.kNumber; i++){
         	    $scope.kSourceTracks[i] = "                 "+$scope.kSourceTracks[i];
-        }    	  
+        }
+        
+        /*pre kSourceTracks vyrobime negativearrays*/
+        for(var i = 0; i < $scope.kNumber; i++){
+		  	   $scope.simulationStorageTapeArray.push(new negativeArray());
+		  	   /*prvu pasku naplnime doplna, alebo viac , podla toho, ci uzivatel zadal dostatocne dlhe vstupne slovo*/
+		  	   if(i == 0){
+		  	   	 var endOfCopy = Math.max($scope.kSourceTracks[0].length-8,j < 9);
+		  	       for(var j = -8; j < endOfCopy;j++){
+					     $scope.simulationStorageTapeArray[0].add(j,new storageNode(" ",$scope.kSourceTracks[0].charAt(j+8)));
+		  	       }         
+		  	   } else {
+					 for(var j = -8; j < 9;j++){
+					     $scope.simulationStorageTapeArray[i].add(j,new storageNode(" "," "));
+		  	       } 		  	   
+		  	   }
+        }
     	  
         if (value == 1) {
             $scope.currentState = $scope.stateEnum.MODE_1_SIMULATE;
@@ -98,6 +118,8 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
             simulationService.mode.value = $scope.stateEnum.MODE_1_SIMULATE;
             simulationService.isActive.value = true;
             simulationService.simulatingArray.value = $scope.simulatingArray;
+				simulationService.simulationStorageTapeArray.value = $scope.simulationStorageTapeArray;
+                        
 
         } else if (value == 2) {
             $scope.currentState = $scope.stateEnum.MODE_2_CHOOSE_DELTA;
@@ -110,6 +132,7 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
             simulationService.mode.value = $scope.stateEnum.MODE_2_SIMULATE;
             simulationService.simulatingArray.value = $scope.simulatingArray;
             simulationService.isActive.value = true;
+            simulationService.simulationStorageTapeArray.value = $scope.simulationStorageTapeArray;
         }
 
         /*if (value == 1) {

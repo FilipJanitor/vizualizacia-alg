@@ -1,4 +1,7 @@
 /*service na posielanie veci z main controlleru (toho, co zodpoveda za primarny input) controlleru simulatoru*/
+
+/*TODO unifikovat posielanie. Nieco sa posiela cez .valu, ine zas priamo, nejak lepsie to vymysliet. S tym suvisi aj chaos v simulation controlllery*/
+
 app.service('simulationService', function() {
     var _kNumber = {};
     var _kSourceTracks = {};
@@ -6,6 +9,8 @@ app.service('simulationService', function() {
     var _mode = {};
     var _isActive = {};
     var _simulatingArray = []
+    var _simulationStorageTapeArray = {} /*hoci to je array, budeme ho posielat vo value */
+    this.simulationStorageTapeArray = _simulationStorageTapeArray;
     this.kNumber = _kNumber;
     this.kSourceTracks = _kSourceTracks;
     this.deltaFunction = _deltaFunction;
