@@ -44,7 +44,9 @@ function negativeArray() {
 			   else{
 				    return this.__negative[(-index)-1];		   
 			   }
-	 	  }	
+	 	  } else {
+	 	  	   return null;
+	 	  }
 	 };
 	 
 	 /*tieto funkcie predpokladaju, ze pole obsahuje 0. Ak nie, budu sa robit diery. Ale pasky su konstruovbane tak, ze home row je na nule, teda situacia, ked by sa to pokazilo nevznikne*/

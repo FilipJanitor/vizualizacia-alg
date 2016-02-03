@@ -44,7 +44,8 @@
 									
 					<!-- texty na simulujucom stroji. Vzhladom k tomu, ze sa bude chodit aj do minusu castejsie ako v origo, ide to cez to negativeArray;-->
 						<g ng-repeat="track in simulationStorageTapeArray track by $index">
-							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{40+25+$parent.$index*60}}" fill="black">{{ track.charAt($index+ originalMachineViews[$parent.$index].beginning) }}</text>
+							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{  storageTapeOffset.value+40+25+$parent.$index*80  }}" fill="black">{{ track.get($index+simulatingMachineStorageTapeViews.beginning).upperLevel }}</text>
+							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{  storageTapeOffset.value+65+$parent.$index*80  }}" fill="black">{{ track.get($index+ simulatingMachineStorageTapeViews.beginning).lowerLevel }}</text>						
 						</g>
                </svg>
             </div>
@@ -60,7 +61,7 @@
 <br />            /*Kolko paskovy stroj chceme simulovat*/
 <br />            {{	kNumber.value	}}
 	<br />					dlzka
-<br />            {{	kSourceTapes.value[0].length	}}
+<br />            {{	simulatingMachineStorageTapeViews.beginning	}}
 <br />            /*pole obsahujuce stringy vstupnych slov na k paskach*/
 <br />            {{	kSourceTapes.value	}}
 <br />            /*pole objektov deltafunkcii*/

@@ -32,6 +32,11 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     $scope.reducedMachineCopyTapeOffset = {'value':0};
     $scope.neededHeightOfSvg = {'value':0};
     $scope.storageTapeOffset = {'value':0};
+    
+    /*pole obsahujuci pre kazdu pasku orig. stroja interval <) ktory bude vykreslovany */
+    $scope.originalMachineViews = [];
+	 /*pole obsahujuci pre storage pasku simulacneho stroja interval <) ktory bude vykreslovany. On sa asi bude posuvat len pre stav, ze sa cosi bude diat as na moc vzdialenom konci, tak aby to uzivatel videl. Ma mat beginning nastavey na -8 */
+    $scope.simulatingMachineStorageTapeViews = new machineView();	 
 
     /*Objekty s datami, ktore su odoslane cez service z maincontrolleru. Obsahuju presne to, co aj tam - aj nazvy su rovnake*/
     $scope.kSourceTapes = simulationService.kSourceTapes;
@@ -47,16 +52,12 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 
 
 	/*Dolezite objekty urcujuce stav simulacie*/
-	 /*IDLE aleo in progress*/
+	 /*IDLE alebo in progress*/
     $scope.simulationMode = $scope.stateEnum.IDLE;
 	 /*Polia na printing textu a stvorcov. Obsahuju dynamicky ulozene suradnice*/	 
 	 $scope.originalMachinePrintingArray = [];
 	 $scope.reducedMachineStorageTapePrintingArray = [];
 
-    /*pole obsahujuci pre kazdu pasku orig. stroja interval <) ktory bude vykreslovany */
-    $scope.originalMachineViews = [];
-	 /*pole obsahujuci pre storage pasku simulacneho stroja interval <) ktory bude vykreslovany. On sa asi bude posuvat len pre stav, ze sa cosi bude diat as na moc vzdialenom konci, tak aby to uzivatel videl */
-    $scope.simulatingMachineStorageTapeViews = new machineView().changeInterval(-8,9);	 
 	 
 	 	 
     /*Watch, ktory spravne nastavi prazdne polia na vykreslovanie, ked sa nastavi kNumber. 
@@ -80,6 +81,9 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
         for(var i = 0; i < $scope.kNumber.value; i++){
 			   $scope.originalMachineViews.push(new machineView());   
         }
+        
+        /*ked sa spusti tento watch - on sa spusti aj pri uplnej inicializacii vsetkeho aj pri nastaveni ksourcetapes - nastavime rovno aj spravny zaciatok storage tejpu*/
+        $scope.simulatingMachineStorageTapeViews.changeInterval(-8,9);
     },true);
 
 	 /*Funkcia na restartovanie celeho simulacneho procesu do state beginning*/    
