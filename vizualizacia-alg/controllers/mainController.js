@@ -13,7 +13,7 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
     /*Kolko paskovy stroj hcceme simulovat*/
     $scope.kNumber;
     /*pole obsahujuce stringy vstupnych slov na k paskach*/
-    $scope.kSourceTracks = [];
+    $scope.kSourceTapes = [];
     /*Najskor sa nachadzame v stave BEGINNING, to sa bude casom menit. CurrentState obsahuje aktualny stav*/
     $scope.currentState = $scope.stateEnum.BEGINNING
         /*pole objektov deltafunkcii*/
@@ -58,11 +58,11 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
     $scope.setKMode = function(mode, kValue) {
         $scope.kNumber = kValue;
         for (var i = 0; i < $scope.kNumber; i++) {
-            $scope.kSourceTracks.push("");
+            $scope.kSourceTapes.push("");
         }
         if (mode == 1) {
             $scope.currentState = $scope.stateEnum.MODE_1_CHOOSE_INPUT;
-            $scope.le = $scope.kSourceTracks.length
+            $scope.le = $scope.kSourceTapes.length
         } else {
             $scope.currentState = $scope.stateEnum.MODE_2_CHOOSE_INPUT;
             for (var i = 0; i < 3 * $scope.kNumber + 1; i++) {
@@ -90,19 +90,19 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
     	  
 			na zaciatku sa pred kazdy string pasky pridaju medzery, tak aby sa pohodlne vykreslovalo. Toto sa mozno nebude robit cez stringy ale cez polia. Este neviem    	  
     	  */
-    	  $scope.kSourceTracks[0] = "        "+$scope.kSourceTracks[0];
+    	  $scope.kSourceTapes[0] = "        "+$scope.kSourceTapes[0];
         for(var i = 1; i < $scope.kNumber; i++){
-        	    $scope.kSourceTracks[i] = "                 "+$scope.kSourceTracks[i];
+        	    $scope.kSourceTapes[i] = "                 "+$scope.kSourceTapes[i];
         }
         
-        /*pre kSourceTracks vyrobime negativearrays*/
+        /*pre kSourceTapes vyrobime negativearrays*/
         for(var i = 0; i < $scope.kNumber; i++){
 		  	   $scope.simulationStorageTapeArray.push(new negativeArray());
 		  	   /*prvu pasku naplnime doplna, alebo viac , podla toho, ci uzivatel zadal dostatocne dlhe vstupne slovo*/
 		  	   if(i == 0){
-		  	   	 var endOfCopy = Math.max($scope.kSourceTracks[0].length-8,j < 9);
+		  	   	 var endOfCopy = Math.max($scope.kSourceTapes[0].length-8,j < 9);
 		  	       for(var j = -8; j < endOfCopy;j++){
-					     $scope.simulationStorageTapeArray[0].add(j,new storageNode(" ",$scope.kSourceTracks[0].charAt(j+8)));
+					     $scope.simulationStorageTapeArray[0].add(j,new storageNode(" ",$scope.kSourceTapes[0].charAt(j+8)));
 		  	       }         
 		  	   } else {
 					 for(var j = -8; j < 9;j++){
@@ -114,7 +114,7 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
         if (value == 1) {
             $scope.currentState = $scope.stateEnum.MODE_1_SIMULATE;
             simulationService.kNumber.value = $scope.kNumber;
-            simulationService.kSourceTracks.value = $scope.kSourceTracks;
+            simulationService.kSourceTapes.value = $scope.kSourceTapes;
             simulationService.mode.value = $scope.stateEnum.MODE_1_SIMULATE;
             simulationService.isActive.value = true;
             simulationService.simulatingArray.value = $scope.simulatingArray;
@@ -128,7 +128,7 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
             $scope.currentState = $scope.stateEnum.MODE_2_SIMULATE;
             simulationService.kNumber.value = $scope.kNumber;
             simulationService.deltaFunction.value = $scope.deltaFunction;
-            simulationService.kSourceTracks.value = $scope.kSourceTracks;
+            simulationService.kSourceTapes.value = $scope.kSourceTapes;
             simulationService.mode.value = $scope.stateEnum.MODE_2_SIMULATE;
             simulationService.simulatingArray.value = $scope.simulatingArray;
             simulationService.isActive.value = true;
@@ -137,7 +137,7 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
 
         /*if (value == 1) {
         		simulationService.addK($scope.kNumber);
-				simulationService.addKSourceTracks($scope.kSourceTracks);
+				simulationService.addKSourceTapes($scope.kSourceTapes);
         		simulationService.addMode($scope.stateEnum.MODE_1_SIMULATE);
         		simulationService.setActive();
             $scope.currentState = $scope.stateEnum.MODE_1_SIMULATE;
@@ -149,7 +149,7 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
         		simulationService.addK($scope.kNumber);
         		simulationService.addDeltaFunction($scope.DeltaFunction);
 				
-				simulationService.addKSourceTracks($scope.kSourceTracks);
+				simulationService.addKSourceTapes($scope.kSourceTapes);
         		simulationService.addMode($scope.stateEnum.MODE_2_SIMULATE);
         		simulationService.setActive();
         		 

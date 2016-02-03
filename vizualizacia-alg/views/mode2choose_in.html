@@ -1,15 +1,15 @@
 <div class="col-sm-12">
 	<p>Zadajte obsah vstupnej pásky pre simulovaný stroj</p>
-	<form name="sourceTracksForm2" novalidate>
+	<form name="sourceTapesForm2" novalidate>
 		<div>
 			<label>Vstupná páska(0 až 100 znakov) , čiarka sa nesmie používať ako symbol:</label>
-			<input type="text" class="form-control" name="sourceTrack" value="" ng-pattern="/^[^,]*$/" ng-model="kSourceTracks[0]" required minlength="0" maxlength="100" >
+			<input type="text" class="form-control" name="sourceTrack" value="" ng-pattern="/^[^,]*$/" ng-model="kSourceTapes[0]" required minlength="0" maxlength="100" >
 		</div>
 	</form>
 </div>
-<!-- <p> {{ kSourceTracks }}</p> -->
+<!-- <p> {{ kSourceTapes }}</p> -->
 <div class="col-sm-12">
 	<div class="btn-group">   
-		<button class="btn btn-default" ng-disabled="sourceTracksForm2.$invalid" ng-click="startSimulation(2)">Vložiť delta funkciu</button>
+		<button class="btn btn-default" ng-disabled="sourceTapesForm2.$invalid" ng-click="startSimulation(2)">Vložiť delta funkciu</button>
 	</div>
 </div>

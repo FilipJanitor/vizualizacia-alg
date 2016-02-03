@@ -1,7 +1,7 @@
 app.controller('simulationController', ['$scope', '$window', 'simulationService', function($scope, $window, simulationService) {
     /*if(simulationService.isActive){
 		$scope.kNumber = simulationService.getK();
-		$scope.kSourceTracks = simulationService.getKSourceTracks();			
+		$scope.kSourceTapes = simulationService.getKSourceTapes();			
 		$scope.mode = simulationService.getMode();	
 		if($scope.mode == 6){
 			$scope.deltaFunction = simulationService.getDeltaFunction();
@@ -11,7 +11,7 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 	$scope.activeSimulation = false;	
 	$scope.mode = {};
     $scope.kNumber = {};
-    $scope.kSourceTracks = {};
+    $scope.kSourceTapes = {};
     $scope.deltaFunction = {};
     */
     
@@ -34,7 +34,7 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     $scope.storageTapeOffset = {'value':0};
 
     /*Objekty s datami, ktore su odoslane cez service z maincontrolleru. Obsahuju presne to, co aj tam - aj nazvy su rovnake*/
-    $scope.kSourceTracks = simulationService.kSourceTracks;
+    $scope.kSourceTapes = simulationService.kSourceTapes;
     $scope.kNumber = simulationService.kNumber;
     $scope.mainMode = simulationService.mode;
 	 /*Toto je divne ze funguje, treba to spravit nejak normalnejsie, ale mainMode sa pocas simulacie menit nebude, tak ked to funguje tak to zatial nechavam tak*/    
@@ -43,7 +43,7 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     }
     $scope.activeSimulation = simulationService.isActive;
     $scope.simulatingArray = simulationService.simulatingArray;
-    $scope.simulationStorageTapeArray = simulationService.simulationStorageTapeArray;
+    $scope.simulationStorageTapeArray = simulationService.simulationStorageTapeArray.value;
 
 
 	/*Dolezite objekty urcujuce stav simulacie*/
@@ -60,7 +60,7 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 	 
 	 	 
     /*Watch, ktory spravne nastavi prazdne polia na vykreslovanie, ked sa nastavi kNumber. 
-    Robi sa to takto, pretoze kNumber sa pocas simulacie menit nebude, na rozdiel od ksourcetracks,
+    Robi sa to takto, pretoze kNumber sa pocas simulacie menit nebude, na rozdiel od ksourceTapes,
      takze nebude treba spracuvat tolko eventov - tento by sa mal invariantne spustit prave raz pocaz celeho pouzitia aplikacie(raz pri spusteni a inicializovani tohoto controlleru, ale to nepocitame)*/
 	 $scope.$watch('kNumber.value', function() {
         for(var i = 0; i < $scope.kNumber.value; i++){
