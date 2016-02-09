@@ -1,4 +1,4 @@
-app.controller('mainController', ['$scope', 'simulationService', function($scope, simulationService) {
+app.controller('mainController', ['$scope', 'simulationService','$window', function($scope, simulationService,$window) {
 
     /*Enumerator hovoriaci, v akom stave simulacie sa nachadzame*/
     $scope.stateEnum = {
@@ -50,10 +50,10 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
     $scope.resetDelta = function() {
         $scope.deltaTemp.value = angular.copy($scope.masterFormCommas);
     };
-    /*pouziva to registerdelta funkcia. Skutocne musi byt vizana na scope? nestaci lokalna?*/
-    $scope.deltaInvalid = {
+    /*pouziva to registerdelta funkcia. Skutocne musi byt vizana na scope? nestaci lokalna? NEBUDE SA POUZIVAT*/
+    /*$scope.deltaInvalid = {
         value: false
-    };
+    };*/
     /*funkcia volana z formularu nastavujuceho k. Nastavi k, inicializuje vstupne pasky a nastavi dalsi STATE*/
     $scope.setKMode = function(mode, kValue) {
         $scope.kNumber = kValue;
@@ -81,7 +81,16 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
         }
         return tempArray;
     };
-
+    
+    
+    /*Funkcia volana z mode2choosein pre presunutie do vyberu delty*/
+    $scope.changeStateToChooseDelta = function(){
+    	  $scope.currentState = $scope.stateEnum.MODE_2_CHOOSE_DELTA;
+        $scope.resetDelta();
+    };
+    
+    
+	/*TODO toto rozdelit, robi to blbosti - tym ze sa to vola 2 krat, v mode 2 to prependne 2* tie medzery. Taktiez je to moc chaoticke. Asi to bude lacnejsie rozdelit na viac funkcii, lebo ajtak sa vsetko robi v tych ifoch podstatne.*/
     /*Funkcia volana v stavoch CHOOSE. Pre value 1 zacne simulaciu modu 1. Pre 2 skoci do DELTA, pre 3 zacne simulaciu MODU 2. Je garantovane, ze v slovach sa nepouzivaju ciarky ako symbol */
     $scope.startSimulation = function(value) {
     	  $scope.simulatingArray = $scope.prepareSimulatingArray();
@@ -121,9 +130,9 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
 				simulationService.simulationStorageTapeArray.value = $scope.simulationStorageTapeArray;
                         
 
-        } else if (value == 2) {
+        /*} else if (value == 2) {
             $scope.currentState = $scope.stateEnum.MODE_2_CHOOSE_DELTA;
-            $scope.resetDelta();
+            $scope.resetDelta();*/
         } else {
             $scope.currentState = $scope.stateEnum.MODE_2_SIMULATE;
             simulationService.kNumber.value = $scope.kNumber;
@@ -171,6 +180,7 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
 
     /*funkcia ktora najprv zvaliduje vstupy pouzivatela, potom overi deterministickost deltafunkcie a ak sa vsetko podari, spusti simulaciu*/
     $scope.validateDeltaStartSimulation = function() {
+    	  $scope.deltaFunction.length = 0; /*pred spracovanim vyhodime vsetky veci z toho pola prec*/
         var success;
         var overallSuccess = true;
         var determinism = true;
@@ -191,6 +201,7 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
         }
         var errLog = "Chyba nedeterminizmu pri riadkoch: ";
         /*overime determinizmus*/
+        $window.alert($scope.deltaFunction.length);
         for (var i = 0; i < $scope.deltaFunction.length; i++) {
             for (var j = i + 1; j < $scope.deltaFunction.length; j++) {
                 /*if (i == j) {
@@ -217,22 +228,25 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
 
     /*Funkcia na zaregistrovanie noveho objektu deltafunkcie(vytvara sa z stringu ). Zaroven vykonava vstrupnu kontrolu, ci je vstup korektny*/
     $scope.registerDelta = function(deltaTempRow) {
+    	 $window.alert('aspomtusom')
         var arr = deltaTempRow.value.split(",");
         var errLog = "";
+        var deltaInvalid = {'value': false};
         if (arr.length != 3 * $scope.kNumber + 2) {
-            $scope.deltaInvalid.value = true;
+            /*$scope.*/deltaInvalid.value = true;
             errLog += "Zlá dĺžka vstupu. ";
         }
         /*toto mozno netreba - mozno povolime viacznakove stavy TODO*/
         if (arr[0].length != 1) {
-            $scope.deltaInvalid.value = true;
+            /*$scope.*/deltaInvalid.value = true;
             errLog += "Stav musí mať 1 znak. ";
         }
+        /*tieto _state premenne su iba tempy, preto nepouzivaju camelcase*/
         var orig_state = arr[0];
         var reading = [];
         for (var i = 1; i < 1 + $scope.kNumber; i++) {
             if (arr[i].length != 1) {
-                $scope.deltaInvalid.value = true;
+                /*$scope.*/deltaInvalid.value = true;
                 errLog += "Hlava môže čítať práve jeden znak. Problém je v čítaní " + (i - 1) + " pásky. ";
             } else {
                 reading.push(arr[i]);
@@ -240,7 +254,7 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
         }
         /*toto sa mozno tiez vyhodi - mozno povolime viacznakove stavy TODO*/
         if (arr[1 + $scope.kNumber].length != 1) {
-            $scope.deltaInvalid.value = true;
+            /*$scope.*/deltaInvalid.value = true;
             errLog += "Nový stav môže byť len 1 znak. ";
         } else {
             var new_state = arr[1 + $scope.kNumber];
@@ -250,25 +264,26 @@ app.controller('mainController', ['$scope', 'simulationService', function($scope
         var printing = [];
         for (var i = $scope.kNumber + 2; i < 2 + 2 * $scope.kNumber; i++) {
             if (arr[i].length != 1) {
-                $scope.deltaInvalid.value = true;
+                /*$scope.*/deltaInvalid.value = true;
                 errLog += "Hlava môže písať práve jeden znak. Problém je v prepisovaní " + (i - $scope.kNumber + 2) + " pásky. ";;
             } else {
-                reading.push(arr[i]);
+                printing.push(arr[i]);
             }
         }
         var moving = [];
         for (var i = 2 + 2 * $scope.kNumber; i < 2 + 3 * $scope.kNumber; i++) {
             if (arr[i] == "0" || arr[i] == "-1" || arr[i] == "1") {
-                reading.push(arr[i]);
+                moving.push(arr[i]);
             } else {
-                $scope.deltaInvalid.value = true;
+                /*$scope.*/deltaInvalid.value = true;
                 errLog += "Pohyb hlavy môže byť označovaný len -1 0 1. Problém je s hlavou " + (i - 2 + 2 * $scope.kNumber) + ". ";
             }
         }
-        if ($scope.deltaInvalid.value == true) {
+        if (/*$scope.*/deltaInvalid.value == true) {
             return errLog;
         }
-        $scope.deltaInvalid.value = false;
+        /*$scope.*/deltaInvalid.value = false;
+        $window.alert('pushujem');
         $scope.deltaFunction.push(new delta(orig_state, reading, new_state, printing, moving));
         return true;
         /*$scope.resetDelta();*/

@@ -30,7 +30,7 @@
             		<rect x="380" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
                
 					<!-- red squares - tie budu oznacovat zmenu na orig. stroji--> 
-					   <g ng-if="simulationMode != stateEnum.IDLE">              
+					   <g ng-if="simulationMode == stateEnum.IN_PROGRESS">              
                   	<rect ng-repeat="node in simulatingArray.value" ng-attr-x="{{380+node.movement*40}}" ng-attr-y="{{40+$index*60}}" width="40" height="40" style="fill:rgb(255,0,0);stroke-width:0;"/>
 						</g>					
 					<!-- green squares - tie budu oznacovat aktualne zmeny  krokov simulacie na sim. stroji-->
@@ -43,10 +43,14 @@
 						</g>							
 									
 					<!-- texty na simulujucom stroji. Vzhladom k tomu, ze sa bude chodit aj do minusu castejsie ako v origo, ide to cez to negativeArray;-->
-						<g ng-repeat="track in simulationStorageTapeArray track by $index">
-							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{  storageTapeOffset.value+40+25+$parent.$index*80  }}" fill="black">{{ track.get($index+simulatingMachineStorageTapeViews.beginning).upperLevel }}</text>
-							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{  storageTapeOffset.value+65+$parent.$index*80  }}" fill="black">{{ track.get($index+ simulatingMachineStorageTapeViews.beginning).lowerLevel }}</text>						
+						<g ng-repeat="track in simulationStorageTapeArray.value track by $index">
+							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{  storageTapeOffset.value+40+25+$parent.$index*80  }}" fill="black">{{ track.get($index+reducedMachineStorageTapeViews.beginning).upperLevel }}</text>
+							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{  storageTapeOffset.value+65+$parent.$index*80  }}" fill="black">{{ track.get($index+ reducedMachineStorageTapeViews.beginning).lowerLevel }}</text>						
 						</g>
+						
+					<!-- texty na copyarray, este neviem ci bude negativeArray alebo normalne, zistime casom. Zda sa ze by to mohlo fungovat = este nieje otestovane-->						
+						<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{reducedMachineCopyTapeOffset.value+25}}" fill="black">{{ reducedMachineCopyTape.charAt($index+ reducedMachineCopyTapeViews.beginning)}}</text>
+						
                </svg>
             </div>
          </div>
@@ -56,12 +60,13 @@
             {{	simulationMode != stateEnum.IDLE	}}	
 <br />            Mod 
 <br />            {{	mainMode.value	}}
-<br /> {{simulationStorageTapeArray}}
+Toto nefunguje 
+<br /> {{simulationStorageTapeArray.value}}
 <br />				{{simulationMode}}		
 <br />            /*Kolko paskovy stroj chceme simulovat*/
 <br />            {{	kNumber.value	}}
 	<br />					dlzka
-<br />            {{	simulatingMachineStorageTapeViews.beginning	}}
+<br />            {{	reducedMachineStorageTapeViews.beginning	}}
 <br />            /*pole obsahujuce stringy vstupnych slov na k paskach*/
 <br />            {{	kSourceTapes.value	}}
 <br />            /*pole objektov deltafunkcii*/
@@ -76,6 +81,9 @@
 <br />    {{neededHeightOfSvg }}
 <br />storageTapeOffset  
 <br />  {{storageTapeOffset}}
+
+
+<br />  {{$scope.simulatingArray.value[0].overwriteValue}}
        
          </p>
       </div>
@@ -84,15 +92,15 @@
 <!-- Doplnit spravne ng-disabled pre mod s deltafunkciou-->
 <div class="col-sm-3">
    <form name="simulationForm" novalidate>
-   <!-- formular sa cely stane readonly-->
-      <fieldset  data-ng-repeat="choice in simulatingArray.value">
+   <!-- formular sa cely stane readonly. Ukazeme ho len v pripade, ze mod je jedna-->
+      <fieldset  ng-if="mainMode.value == stateEnum.MODE_1_SIMULATE" data-ng-repeat="choice in simulatingArray.value">
       	<label>Páska číslo: {{ $index }}</label>
          <p class="help-block">Znak, ktorým bude prepísaný aktuálny znak:</p>
-         <input type="text" ng-model="choice.overwriteValue" name="" ng-readonly="simulationMode == stateEnum.IN_PROGRESS" required minlength="0" maxlength="1"> <br>
+         <input type="text" ng-model="choice.overwriteValue" name="" ng-readonly="simulationMode == stateEnum.IN_PROGRESS" required minlength="0" ng-pattern="/[^ ]/" maxlength="1"> <br>
          <p class="help-block">Posun hlavy:</p>
-         <input type="radio" name="movement{{$index}}" ng-readonly="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="-1"> -1<br>
-         <input type="radio" name="movement{{$index}}" ng-readonly="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="0"> 0<br>
-         <input type="radio" name="movement{{$index}}" ng-readonly="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="1"> 1 <br> <br>
+         <input type="radio" name="movement{{$index}}" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="-1"> -1<br>
+         <input type="radio" name="movement{{$index}}" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="0"> 0<br>
+         <input type="radio" name="movement{{$index}}" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="1"> 1 <br> <br>
       </fieldset>
       <br>
       <button type="button" ng-show="mainMode.value == stateEnum.MODE_1_SIMULATE" ng-disabled="simulationMode == stateEnum.IN_PROGRESS || !simulationForm.$valid" class="btn btn-primary" ng-click="checkAndStartStep()">Odsimulovať krok</button>

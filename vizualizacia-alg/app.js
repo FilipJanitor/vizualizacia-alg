@@ -3,10 +3,11 @@ var app = angular.module("App", []);
 /*za konstruktory dodane bodkociarky*/
 
 /*konstruktor pre objekt deltafunkcia*/	
+/*TODO asi nejake getery a setery*/
 function delta(original_state, reading, new_state, printing, moving) {
-    this.original_state = original_state;
+    this.originalState = original_state;
     this.reading = reading;
-    this.new_state = new_state;
+    this.newState = new_state;
     this.printing = printing;
     this.moving = moving;
 };
@@ -80,4 +81,28 @@ function machineView() {
 	 	  this.beginning = beg;
 	     this.end = end;	
 	};
+	this.getCurrentHeadPosition = function () {
+		  return this.beginning+8;
+	};
+	this.moveRight = function () {
+		  this.beginning++;
+		  this.end++;
+	};
+	this.moveLeft = function () {
+		  this.beginning--;
+		  this.end--;
+	};
+};
+
+/*funkcia co prepise stringu character na danom indexe. Nechcem ju pouzivat, lebo chcem posielat referenciou nie hodnotou*/
+function overwriteCharacterInString(character,index,string) {
+	if(character.lenght != 1 || string.length < 1 || string.length < index){
+		  return null;	
+	}
+	else {
+		  var arr = string.split("");
+		  arr[index]=character;
+		  string = arr.join();
+		  return string;
+	}
 };

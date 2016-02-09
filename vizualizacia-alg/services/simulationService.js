@@ -38,7 +38,6 @@ app.service('simulationService', function() {
   var getMode = function(){
       return mode;
   };
-
   var getKNumber = function(){
       return kNumber;
   };
@@ -54,7 +53,6 @@ app.service('simulationService', function() {
   var setActive(){
 		isActive = true;  
   }
-
   return {
     addDeltaFunction: addDeltaFunction,
     addKSourceTapes: addKSourceTapes,

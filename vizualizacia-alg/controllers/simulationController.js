@@ -36,21 +36,31 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     /*pole obsahujuci pre kazdu pasku orig. stroja interval <) ktory bude vykreslovany */
     $scope.originalMachineViews = [];
 	 /*pole obsahujuci pre storage pasku simulacneho stroja interval <) ktory bude vykreslovany. On sa asi bude posuvat len pre stav, ze sa cosi bude diat as na moc vzdialenom konci, tak aby to uzivatel videl. Ma mat beginning nastavey na -8 */
-    $scope.simulatingMachineStorageTapeViews = new machineView();	 
+    $scope.reducedMachineStorageTapeViews = new machineView();
+	 /*pole obsahujuci pre copy pasku simulacneho stroja interval <) ktory bude vykreslovany. On sa asi bude posuvat len pre stav, ze sa cosi bude diat as na moc vzdialenom konci, tak aby to uzivatel videl. Ma mat beginning nastavey na -8 */
+    $scope.reducedMachineCopyTapeViews = new machineView();
 
     /*Objekty s datami, ktore su odoslane cez service z maincontrolleru. Obsahuju presne to, co aj tam - aj nazvy su rovnake*/
     $scope.kSourceTapes = simulationService.kSourceTapes;
     $scope.kNumber = simulationService.kNumber;
     $scope.mainMode = simulationService.mode;
+	 
+	 /*to ifove nakoniec nefungovalo, deltafunction ostane proste undefined, ked sme v zlom mode*/
+	 $scope.deltaFunction = simulationService.deltaFunction;
 	 /*Toto je divne ze funguje, treba to spravit nejak normalnejsie, ale mainMode sa pocas simulacie menit nebude, tak ked to funguje tak to zatial nechavam tak*/    
-    if ($scope.mainMode.value == 6) {
+    /*if ($scope.mainMode.value == 6) {
         $scope.deltaFunction = simulationService.deltaFunction;
-    }
+    }*/
     $scope.activeSimulation = simulationService.isActive;
     $scope.simulatingArray = simulationService.simulatingArray;
-    $scope.simulationStorageTapeArray = simulationService.simulationStorageTapeArray.value;
+    $scope.simulationStorageTapeArray = simulationService.simulationStorageTapeArray;
+	 
+	 /*String copy zatial obsahuje iba medzerniky*/
+	 $scope.reducedMachineCopyTape = "                 "
 
-
+	 /*Sucasny stav originalneho TS. Defaultne to bude stav 0 nula*/
+	 $scope.originalMachineState = "0";
+	 	
 	/*Dolezite objekty urcujuce stav simulacie*/
 	 /*IDLE alebo in progress*/
     $scope.simulationMode = $scope.stateEnum.IDLE;
@@ -83,7 +93,7 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
         }
         
         /*ked sa spusti tento watch - on sa spusti aj pri uplnej inicializacii vsetkeho aj pri nastaveni ksourcetapes - nastavime rovno aj spravny zaciatok storage tejpu*/
-        $scope.simulatingMachineStorageTapeViews.changeInterval(-8,9);
+        $scope.reducedMachineStorageTapeViews.changeInterval(-8,9);
     },true);
 
 	 /*Funkcia na restartovanie celeho simulacneho procesu do state beginning*/    
@@ -92,12 +102,59 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     }
     /*Funkcia, ktorá prijme vstup od používateľa, spracuje ho a pošle hlavnej simulačnej funkcií*/
     $scope.checkAndStartStep = function(){
+    	  /*zapne simulaciu*/
     	  $scope.simulationMode = $scope.stateEnum.IN_PROGRESS;
+    	  var writing = [];
+    	  var moving = [];
+    	  for( var i = 0; i < $scope.kNumber.value;i++){
+			   writing.push($scope.simulatingArray.value[i].overwriteValue);
+			   moving.push($scope.simulatingArray.value[i].movement);
+    	  }
+    	  /*sem sa dostaneme a writing aj moving su spravne vyplnene*/
+    	  
+    	  $scope.redrawOriginalMachine(writing,moving);
+    	  /*Potialto to funguje*/
+    	  $scope.mainSimulatingFunction(writing,moving);
     };
     
     /*Funkcia, ktorá porovná aktuálnu konfiguráciu s deltafunkciou a na základe toho stroj buď zasekne, alebo zavolá hlavnú simulačnú funkciu*/
     $scope.findDeltaAndStartStep = function(){
-    
+		  /*zapne simulaciu*/
+    	  $scope.simulationMode = $scope.stateEnum.IN_PROGRESS;
+    	  
+    	  
+    	  /*pole so znakmi, ktore prave citame*/
+    	  var readingArr = [];
+    	  for (var i =0; i < $scope.kNumber.value;i++) {
+    	  	   readingArr.push($scope.kSourceTapes.value[i].charAt($scope.originalMachineViews[i].getCurrentHeadPosition()));
+    	  }
+    	  var writing;
+    	  var moving;
+    	  var wasSet = false;
+    	  for(var i = 0; i < $scope.deltaFunction.value.length;i++){
+			   if($scope.deltaFunction.value[i].originalState == $scope.originalMachineState){
+					  if($scope.deltaFunction.value[i].reading.toString() === readingArr.toString()){
+						     writing = $scope.deltaFunction.value[i].printing;
+						     moving = $scope.deltaFunction.value[i].moving;
+						     $scope.originalMachineState = $scope.deltaFunction.value[i].originalState;
+						     wasSet = true;
+						     break;
+					  }
+			   }
+    	  }
+    	  /*Ak sa nenasla zhoda v deltavunkcii, stroj sa zasekne - zatial temporary*/
+    	  if(!wasSet){
+		      $window.alert("Žiadna zhoda s deltafunkciou, stroj sa zasekol");
+		      return;
+    	  }
+    	  for(var i = 0; i < $scope.kNumber.value;i++){
+    	  		$scope.simulatingArray.value[i].movement = moving[i];
+    	  }
+    	  $scope.redrawOriginalMachine(writing,moving);
+    	  
+    	  
+    	  /*Potialto to funguje. Kedze deltafunkcia je osobitne teleso, musime manualne nastavit tie veci, na ktore obycajne ukazuju radiobuttony aby sa cervene stvorceky vykreslili spravne;*/
+    	  $scope.mainSimulatingFunction(writing,moving);
     };
     
     /*Funkcia upravuje výstup simulačnej funkcie tak, aby bol vykresliteľný*/
@@ -105,8 +162,49 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     	
     };	
     
+    /*tato funkcia bude vsetko pocitat*/
     $scope.mainSimulatingFunction = function(){
     
+    };
+    
+    /*funkcia, ktora prekresli pasky na orig stroji. O realne nastavenie movementu pre posun cervenych stvorcekov sa stara funkcia, ktora ju vola. Tato len prepisuje a posuva pointre*/
+    $scope.redrawOriginalMachine = function (writingArr,movementArr) {
+    	      	  	
+
+    	  for(var i = 0; i < $scope.kNumber.value;i++){
+
+    	  	   /*toto asi neni dobre, posielam to hodnotou co je zbytocne*/
+			   /*overwriteCharacterInString(writingArr[i],$scope.originalMachineViews[i].getCurrentHeadPosition(),$scope.kSourceTapes.value[i]);*/ 
+           
+            /*prepis*/			   
+			   var arr = $scope.kSourceTapes.value[i].split("");
+		      arr[$scope.originalMachineViews[i].getCurrentHeadPosition()]=writingArr[i];
+		      $scope.kSourceTapes.value[i] = arr.join("");  
+
+		      /*shiftnutie*/
+		      if(movementArr[i] == 0) {
+		      	  continue;
+		      }
+		      
+		      if(movementArr[i] == -1){
+		      	  $scope.originalMachineViews[i].moveRight();
+		      	  $window.alert($scope.originalMachineViews[i].beginning);
+		      	  /*ak sme sa posunuli tak daleko, ze pozerame za pomysleny koniec pasky - koniec stringu ktory pasku reprezentuje, apendneme mu medzernik*/
+		      	  if($scope.originalMachineViews[i].end > $scope.kSourceTapes.value[i].length){
+							  $scope.kSourceTapes.value[i]+=" ";
+		      	  }
+		      	  continue;
+		      }
+		      if(movementArr[i] == 1){
+		      	  $scope.originalMachineViews[i].moveLeft();
+		      	  /*ak sme sa posunuli tak daleko, ze pozerame pred pomysleny koniec pasky - zaciatok stringu ktory pasku reprezentuje, preppendneme mu medzernik a nastavime spravne view (posunu sa prependnutim indexy)*/
+		      	  if($scope.originalMachineViews[i].beginning < 0){
+							  $scope.kSourceTapes.value[i] =" "+$scope.kSourceTapes.value[i];
+							  $scope.originalMachineViews[i].moveRight();
+		      	  }
+		      	  continue;
+		      }
+    	  }
     };
     
 }]);
