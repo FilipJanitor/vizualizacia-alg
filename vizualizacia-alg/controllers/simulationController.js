@@ -21,6 +21,14 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
         MODE_1_SIMULATE: 5,
         MODE_2_SIMULATE: 6,
     };
+    
+    $scope.simulationStateEnum = {
+        OVERWRITING_HOME_COLUMN: 1,
+        IN_PROGRESS: 2,
+        MODE_1_SIMULATE: 3,
+        MODE_2_SIMULATE: 4,
+    };
+    
    /*Pomocne polia na spravne vykreslenie*/
     /*pole, ktore sa nebude menit a bude sluzit len na iterovanie cez view na paskach*/
 	/*Je na vykreslenie celeho riadku / tj textu*/	 
@@ -64,6 +72,9 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 	/*Dolezite objekty urcujuce stav simulacie*/
 	 /*IDLE alebo in progress*/
     $scope.simulationMode = $scope.stateEnum.IDLE;
+	 /*premenna urcujuca, co sa aktualne deje - kopirovanie, hladanie atd. Mozno sa nebude pouzivat*/	 
+	 $scope.simulationState;    
+    
 	 /*Polia na printing textu a stvorcov. Obsahuju dynamicky ulozene suradnice*/	 
 	 $scope.originalMachinePrintingArray = [];
 	 $scope.reducedMachineStorageTapePrintingArray = [];
@@ -110,7 +121,6 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 			   writing.push($scope.simulatingArray.value[i].overwriteValue);
 			   moving.push($scope.simulatingArray.value[i].movement);
     	  }
-    	  /*sem sa dostaneme a writing aj moving su spravne vyplnene*/
     	  
     	  $scope.redrawOriginalMachine(writing,moving);
     	  /*Potialto to funguje*/
@@ -164,7 +174,7 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     
     /*tato funkcia bude vsetko pocitat*/
     $scope.mainSimulatingFunction = function(){
-    
+    		/*Na zaciatku potrebujeme prepisat policko v homesquare. Invariant je, ze homerow je vzdy v strede obrazovky pri zacati simulacie, takze to je jednoduche*/
     };
     
     /*funkcia, ktora prekresli pasky na orig stroji. O realne nastavenie movementu pre posun cervenych stvorcekov sa stara funkcia, ktora ju vola. Tato len prepisuje a posuva pointre*/
