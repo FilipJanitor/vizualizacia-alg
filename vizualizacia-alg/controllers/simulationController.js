@@ -22,11 +22,13 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
         MODE_2_SIMULATE: 6,
     };
     
+    /*body simulacie. Musia byt pre kazdu pasku orig. stroja ulozene v poradi od najmensieho po najvacsi*/
     $scope.simulationStateEnum = {
         OVERWRITING_HOME_COLUMN: 1,
-        IN_PROGRESS: 2,
-        MODE_1_SIMULATE: 3,
-        MODE_2_SIMULATE: 4,
+        EMPTY_BLOCK_REARRANGE_SYMBOLS: 2,
+        HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS: 3,
+        FULL_BLOCK_ON_OPPOSITE_SIDE: 4,
+        HALF_FULL_BLOCK_ON_OPPOSITE_SIDE: 5,
     };
     
    /*Pomocne polia na spravne vykreslenie*/
@@ -60,7 +62,9 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
         $scope.deltaFunction = simulationService.deltaFunction;
     }*/
     $scope.activeSimulation = simulationService.isActive;
+    /*pole obsahujuce objekty s udajmi o pohyboch a prepisovaniach na paskach. Je k tomuto polu pripojeny formular*/
     $scope.simulatingArray = simulationService.simulatingArray;
+    /*pole obsahujuce pre kazdu pasku orig stroja jedno negativearray reprezentujuce dvojstopu na storage paske*/
     $scope.simulationStorageTapeArray = simulationService.simulationStorageTapeArray;
 	 
 	 /*String copy zatial obsahuje iba medzerniky*/
@@ -70,10 +74,10 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 	 $scope.originalMachineState = "0";
 	 	
 	/*Dolezite objekty urcujuce stav simulacie*/
-	 /*IDLE alebo in progress*/
+	 /*IDLE alebo in progress - ci prave simulujeme, alebo len nahadzujeme vstup*/
     $scope.simulationMode = $scope.stateEnum.IDLE;
-	 /*premenna urcujuca, co sa aktualne deje - kopirovanie, hladanie atd. Mozno sa nebude pouzivat*/	 
-	 $scope.simulationState;    
+	 /*premenna ktoru naplni mainSimulationFunkcia objektami, ktore budu obsahovat riadiace prikazy pre simulaciu.*/	 
+	 $scope.currentSimulationStateArray = [];    
     
 	 /*Polia na printing textu a stvorcov. Obsahuju dynamicky ulozene suradnice*/	 
 	 $scope.originalMachinePrintingArray = [];
@@ -174,7 +178,14 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     
     /*tato funkcia bude vsetko pocitat*/
     $scope.mainSimulatingFunction = function(){
-    		/*Na zaciatku potrebujeme prepisat policko v homesquare. Invariant je, ze homerow je vzdy v strede obrazovky pri zacati simulacie, takze to je jednoduche*/
+    	/*najskor vyprazdnime pole, v ktrom zostali veci z prerdch. simulacie*/
+    	$scope.currentSimulationStateArray.length=0;
+    	/*velky cyklus, prechadzajuci cez vsetky pasky postupne odhora dolu*/
+    		for(var i = 0; i < $scope.kNumber.value;i++){
+    			/*musime sa spravne pohhybovat a najst ity blok co spna nasu podmienku (Pouzivam algoritmus z Petovho clanku, nie ten originalny, pretoze jednoduchost)*/
+    			
+    		
+    		}
     };
     
     /*funkcia, ktora prekresli pasky na orig stroji. O realne nastavenie movementu pre posun cervenych stvorcekov sa stara funkcia, ktora ju vola. Tato len prepisuje a posuva pointre*/

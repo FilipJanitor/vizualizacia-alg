@@ -1,5 +1,5 @@
 var app = angular.module("App", []); 
-
+/*TODO< PREMENOVAT KONSTRUKTORY NA ZACINAJUCE VELKYM PISMENKOM. PRIVATE VARIABLES SPRAVIT AKO IMAGINARY PRIVATE - POUZIT PODTRZNIK A VYTVORIT GETERY A SETERY*/
 /*za konstruktory dodane bodkociarky*/
 
 /*konstruktor pre objekt deltafunkcia*/	
@@ -17,8 +17,15 @@ function storageNode(upper_level,lower_level){
 	 /*Zatial kvoli vykreslovaniu pouzivame ako blank medzeru. Pouzivatel ju nebude moct dat do vstupu, takze je to rozumny blank asi*/
 	 this.upperLevel = upper_level;
 	 this.lowerLevel = lower_level;
+	 /*Pre nase potreby, potrebujeme robit rozdiel medzi uplne prazdnym node a takym, co ma zaplneny iba spodny riadok. Konvencia je nasledovna - 0 node je plny. 1 - node je poloprazdy. 2 - node je prazdny*/
 	 this.isEmpty = function(){
-	 	  return (this.upperLevel === " " && this.lowerLevel === " ")
+	 	if(this.upperLevel === " " && this.lowerLevel === " "){
+	 		return 2;
+	 	} if (this.upperLevel === " " || this.lowerLevel === " ") {
+	 		return 1;
+	 	} else {
+			return 0;	 	
+	 	}
 	 };
 };
 /*Nase specialne divne pole - ma aj negativne indexy a bude sa pouzivat na vykreslovanie. Nechceme nim prekryt vsetky polia, lebo by to robilo sarapatu. Toto je skor taky container. Asi bude dobre do toho zaondit kSourcetracks*/
@@ -94,7 +101,7 @@ function machineView() {
 	};
 };
 
-/*funkcia co prepise stringu character na danom indexe. Nechcem ju pouzivat, lebo chcem posielat referenciou nie hodnotou*/
+/*funkcia co prepise stringu character na danom indexe. Nechcem ju pouzivat, lebo chcem posielat referenciou nie hodnotou MOMENTALNE JU NEPOUZIVAM*/
 function overwriteCharacterInString(character,index,string) {
 	if(character.lenght != 1 || string.length < 1 || string.length < index){
 		  return null;	
@@ -106,3 +113,17 @@ function overwriteCharacterInString(character,index,string) {
 		  return string;
 	}
 };
+
+/*TODO getery a setery*/
+/*Objekt, obsahuci vsetky potrebne informacie pre podkrok simulacie. Je tvoreny mainsimulation funkciou a citany nextstepom*/
+function stepInformationContainer(step_state,original_track,block_number) {
+	this.stepState = step_state;
+	this.indexOfOriginalTrack = original_track;
+	this.iBlockNumber = block_number;
+
+
+}
+
+
+
+
