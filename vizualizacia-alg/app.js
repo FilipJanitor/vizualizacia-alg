@@ -29,6 +29,7 @@ function storageNode(upper_level,lower_level){
 	 };
 };
 /*Nase specialne divne pole - ma aj negativne indexy a bude sa pouzivat na vykreslovanie. Nechceme nim prekryt vsetky polia, lebo by to robilo sarapatu. Toto je skor taky container. Asi bude dobre do toho zaondit kSourcetracks*/
+/*asi je dobre, aby bolo vzdy maximalny pozitivny aj negativny index rovnaky*/
 function negativeArray() {
     this.__positive = [];
 	 this.__negative = [];

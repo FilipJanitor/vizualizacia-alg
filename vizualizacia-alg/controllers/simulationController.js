@@ -189,10 +189,11 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 					/*ak sa nehybeme, staci overprintnut*/
 					continue				
 				} 
+				var blockNumber;
 				/*najdeme prvy prazdny stlpec v danom smere. Na zaklade neho vyratame blok*/ 
 				/*TODO TODO vyriesit dosiahnutie koncu pasky a nenajdenie prazdneho bloku - proste ako prinutit pasku rast*/
 				if(moving[j]===1){ /*mozno je dobre cachovat tu dlzku*/
-					var blockNumber; 
+					 
 					for(var k = 1; k < $scope.simulationStorageTapeArray.value[i].positiveLength();k++) {
     					 if($scope.simulationStorageTapeArray.value[i].get(k).isEmpty() === 1){
     					 		blocknumber = Math.floor(Math.log(k) / Math.LN2); 
@@ -206,11 +207,22 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     					 		break;    					 		    					 		
     					 }else{
     					 
-    					 }    					 
+    					 }				 
+    				}
+    				/*tu treba skontrolovat, ci skutocne plati invariant, ze zaporny index je vzdy rovnaky ako kladny*/
+    				if(blocknumber === undefined){/*narazili sme na koniec pola a je cele plne, vytvorme novy blok na oboch stranach*/
+    					 var poslednyIndex = $scope.simulationStorageTapeArray.value[i].positiveLength()-1;
+    					 var poslednyBlok = Math.floor(Math.log(poslednyIndex) / Math.LN2);
+    					 var poslednyIndexVNovomBloku = Math.pow(2,poslednyblok+2)-1;
+    					 for(var m = poslednyIndex + 1; m <=poslednyIndexVNovomBloku;m++){
+								$scope.simulationStorageTapeArray.value[i].add(m,new storageNode(" "," "));
+								$scope.simulationStorageTapeArray.value[i].add(-m,new storageNode(" "," "));
+								
+    					 }
+    					 
     				}
 				}
-				if(moving[j]===-1){ /*mozno je dobre cachovat tu dlzku*/
-					var blockNumber; 
+				if(moving[j]===-1){ /*mozno je dobre cachovat tu dlzku*/ 
 					for(var k = 1; k < $scope.simulationStorageTapeArray.value[i].negativeLength();k++) {
     					 if($scope.simulationStorageTapeArray.value[i].get(-k).isEmpty() === 1){
     					 		blocknumber = -(Math.floor(Math.log(k) / Math.LN2));
@@ -226,9 +238,8 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     					 
     					 }    					 
     				}
-				}
-								
-    			
+    				/*if*/
+				}   			
     		}
     };
     

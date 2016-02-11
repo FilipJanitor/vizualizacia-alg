@@ -110,8 +110,11 @@ app.controller('mainController', ['$scope', 'simulationService','$window', funct
 		  	   /*prvu pasku naplnime doplna, alebo viac , podla toho, ci uzivatel zadal dostatocne dlhe vstupne slovo*/
 		  	   if(i == 0){
 		  	   	 var endOfCopy = Math.max($scope.kSourceTapes[0].length-8,j < 9);
-		  	       for(var j = -8; j < endOfCopy;j++){
-					     $scope.simulationStorageTapeArray[0].add(j,new storageNode(" ",$scope.kSourceTapes[0].charAt(j+8)));
+		  	       for(var j = 0; j < endOfCopy;j++){
+					     $scope.simulationStorageTapeArray[0].add(j,new storageNode(" ",$scope.kSourceTapes[0].charAt(j)));
+		  	       }
+		  	       for(var j = 1; j < endOfCopy;j++){
+					     $scope.simulationStorageTapeArray[0].add(-j,new storageNode(" "," "));
 		  	       }         
 		  	   } else {
 					 for(var j = -8; j < 9;j++){
