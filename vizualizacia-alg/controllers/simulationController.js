@@ -177,14 +177,58 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     };	
     
     /*tato funkcia bude vsetko pocitat*/
-    $scope.mainSimulatingFunction = function(){
+    $scope.mainSimulatingFunction = function(writingArr,movementArr){
     	/*najskor vyprazdnime pole, v ktrom zostali veci z prerdch. simulacie*/
     	$scope.currentSimulationStateArray.length=0;
     	/*velky cyklus, prechadzajuci cez vsetky pasky postupne odhora dolu*/
-    		for(var i = 0; i < $scope.kNumber.value;i++){
-    			/*musime sa spravne pohhybovat a najst ity blok co spna nasu podmienku (Pouzivam algoritmus z Petovho clanku, nie ten originalny, pretoze jednoduchost)*/
+    		for(var j = 0; j < $scope.kNumber.value;j++){
+    			/*musime sa spravne pohhybovat a najst ity blok co splna nasu podmienku (Pouzivam algoritmus z Petovho clanku, nie ten originalny, pretoze jednoduchost)*/
+    			/*prepis znaku*/
+    			$scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.OVERWRITING_HOME_COLUMN,j,null,writingArr[j]));
+				if(moving[j]===0) {
+					/*ak sa nehybeme, staci overprintnut*/
+					continue				
+				} 
+				/*najdeme prvy prazdny stlpec v danom smere. Na zaklade neho vyratame blok*/ 
+				/*TODO TODO vyriesit dosiahnutie koncu pasky a nenajdenie prazdneho bloku - proste ako prinutit pasku rast*/
+				if(moving[j]===1){ /*mozno je dobre cachovat tu dlzku*/
+					var blockNumber; 
+					for(var k = 1; k < $scope.simulationStorageTapeArray.value[i].positiveLength();k++) {
+    					 if($scope.simulationStorageTapeArray.value[i].get(k).isEmpty() === 1){
+    					 		blocknumber = Math.floor(Math.log(k) / Math.LN2); 
+    					 		$scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS,j,blocknumber,null));
+    					 		$scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE,j,-blocknumber,null));	
+    					 		break; 		    					 		
+    					 }else if($scope.simulationStorageTapeArray.value[i].get(k).isEmpty() === 2) {
+    					 		blocknumber = Math.floor(Math.log(k) / Math.LN2);
+    					 		$scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS,j,blocknumber,null));
+    					 		$scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE,j,-blocknumber,null));	 		
+    					 		break;    					 		    					 		
+    					 }else{
+    					 
+    					 }    					 
+    				}
+				}
+				if(moving[j]===-1){ /*mozno je dobre cachovat tu dlzku*/
+					var blockNumber; 
+					for(var k = 1; k < $scope.simulationStorageTapeArray.value[i].negativeLength();k++) {
+    					 if($scope.simulationStorageTapeArray.value[i].get(-k).isEmpty() === 1){
+    					 		blocknumber = -(Math.floor(Math.log(k) / Math.LN2));
+    					 		$scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS,j,blocknumber,null));
+    					 		$scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE,j,-blocknumber,null));
+    					 		break;
+    					 }else if($scope.simulationStorageTapeArray.value[i].get(-k).isEmpty() === 2) {
+    					 		blocknumber = -(Math.floor(Math.log(k) / Math.LN2));	
+    					 		$scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS,j,blocknumber,null));
+    					 		$scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE,j,-blocknumber,null));		 
+    					 		break;		
+    					 }else{
+    					 
+    					 }    					 
+    				}
+				}
+								
     			
-    		
     		}
     };
     

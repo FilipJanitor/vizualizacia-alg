@@ -74,7 +74,7 @@ function negativeArray() {
 	 	  return this.__positive.length;	
 	 };	 
 	 this.negativeLength = function () {
-	 	  return this.__negative.length;	
+	 	  return this.__negative.length+1;	
 	 };	 
 	 /*todo - more functions*/	 
 	 
@@ -116,11 +116,11 @@ function overwriteCharacterInString(character,index,string) {
 
 /*TODO getery a setery*/
 /*Objekt, obsahuci vsetky potrebne informacie pre podkrok simulacie. Je tvoreny mainsimulation funkciou a citany nextstepom*/
-function stepInformationContainer(step_state,original_track,block_number) {
+function stepInformationContainer(step_state,original_track,block_number,overwrite_symbol) {
 	this.stepState = step_state;
 	this.indexOfOriginalTrack = original_track;
 	this.iBlockNumber = block_number;
-
+	this.overwriteSymbol
 
 }
 
