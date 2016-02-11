@@ -185,14 +185,14 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     			/*musime sa spravne pohhybovat a najst ity blok co splna nasu podmienku (Pouzivam algoritmus z Petovho clanku, nie ten originalny, pretoze jednoduchost)*/
     			/*prepis znaku*/
     			$scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.OVERWRITING_HOME_COLUMN,j,null,writingArr[j]));
-				if(moving[j]===0) {
+				if(movementArr[j]===0) {
 					/*ak sa nehybeme, staci overprintnut*/
 					continue				
 				} 
 				var blockNumber;
 				/*najdeme prvy prazdny stlpec v danom smere. Na zaklade neho vyratame blok*/ 
 				/*TODO TODO vyriesit dosiahnutie koncu pasky a nenajdenie prazdneho bloku - proste ako prinutit pasku rast*/
-				if(moving[j]===1){ /*mozno je dobre cachovat tu dlzku*/
+				if(movementArr[j]===1){ /*mozno je dobre cachovat tu dlzku*/
 					 
 					for(var k = 1; k < $scope.simulationStorageTapeArray.value[i].positiveLength();k++) {
     					 if($scope.simulationStorageTapeArray.value[i].get(k).isEmpty() === 1){
@@ -222,7 +222,7 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     					 
     				}
 				}
-				if(moving[j]===-1){ /*mozno je dobre cachovat tu dlzku*/ 
+				if(movementArr[j]===-1){ /*mozno je dobre cachovat tu dlzku*/ 
 					for(var k = 1; k < $scope.simulationStorageTapeArray.value[i].negativeLength();k++) {
     					 if($scope.simulationStorageTapeArray.value[i].get(-k).isEmpty() === 1){
     					 		blocknumber = -(Math.floor(Math.log(k) / Math.LN2));
