@@ -108,16 +108,24 @@ app.controller('mainController', ['$scope', 'simulationService','$window', funct
         for(var i = 0; i < $scope.kNumber; i++){
 		  	   $scope.simulationStorageTapeArray.push(new negativeArray());
 		  	   /*prvu pasku naplnime doplna, alebo viac , podla toho, ci uzivatel zadal dostatocne dlhe vstupne slovo*/
-		  	   if(i == 0){
-		  	   	 var endOfCopy = Math.max($scope.kSourceTapes[0].length-8,j < 9);
-		  	       for(var j = 0; j < endOfCopy;j++){
-					     $scope.simulationStorageTapeArray[0].add(j,new storageNode(" ",$scope.kSourceTapes[0].charAt(j)));
+		  	   if(i === 0){
+		  	   	 var endOfCopy = Math.max($scope.kSourceTapes[0].length-8,9);
+		  	   	 $window.alert(endOfCopy);
+		  	       for(var j = 0; j < $scope.kSourceTapes[0].length;j++){
+					     $scope.simulationStorageTapeArray[0].add(j,new storageNode(" ",$scope.kSourceTapes[0].charAt(j+8)));
+					     $window.alert("addujem slovo");
 		  	       }
-		  	       for(var j = 1; j < endOfCopy;j++){
-					     $scope.simulationStorageTapeArray[0].add(-j,new storageNode(" "," "));
+		  	       for(var r = $scope.kSourceTapes[0].length; r < endOfCopy;r++){
+					     $scope.simulationStorageTapeArray[0].add(r,new storageNode(" "," "));
+					     $window.alert("addujem medzery napravo");
+		  	       }
+		  	       for(var f = 1; f < endOfCopy;f++){
+		  	       	$window.alert("addujem vlavo");
+					     $scope.simulationStorageTapeArray[0].add(-f,new storageNode(" "," "));
 		  	       }         
 		  	   } else {
 					 for(var j = -8; j < 9;j++){
+					 	$window.alert("tu ani niesom");
 					     $scope.simulationStorageTapeArray[i].add(j,new storageNode(" "," "));
 		  	       } 		  	   
 		  	   }

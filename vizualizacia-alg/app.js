@@ -44,7 +44,6 @@ function negativeArray() {
 			   }
 	 	  }	
 	 };
-	 this.length = this.__positive.length + this.__negative.length;
 	 this.get = function (index) {
 	 	  if(typeof index == "number" && Math.round(index) === index){ /*zistime ci je to integer*/
 			   if(index >= 0){
@@ -76,7 +75,10 @@ function negativeArray() {
 	 };	 
 	 this.negativeLength = function () {
 	 	  return this.__negative.length+1;	
-	 };	 
+	 };
+	 this.getLength = function(){
+	 	  	 return this.__positive.length + this.__negative.length+1;
+	 };
 	 /*todo - more functions*/	 
 	 
 };
