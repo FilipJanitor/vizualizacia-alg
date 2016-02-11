@@ -123,7 +123,7 @@ function stepInformationContainer(step_state,original_track,block_number,overwri
 	this.stepState = step_state;
 	this.indexOfOriginalTrack = original_track;
 	this.iBlockNumber = block_number;
-	this.overwriteSymbol
+	this.overwriteSymbol = overwrite_symbol;
 
 }
 

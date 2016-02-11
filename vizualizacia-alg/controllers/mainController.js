@@ -110,22 +110,22 @@ app.controller('mainController', ['$scope', 'simulationService','$window', funct
 		  	   /*prvu pasku naplnime doplna, alebo viac , podla toho, ci uzivatel zadal dostatocne dlhe vstupne slovo*/
 		  	   if(i === 0){
 		  	   	 var endOfCopy = Math.max($scope.kSourceTapes[0].length-8,9);
-		  	   	 $window.alert(endOfCopy);
+		  	   	 /*$window.alert(endOfCopy);*/
 		  	       for(var j = 0; j < $scope.kSourceTapes[0].length;j++){
 					     $scope.simulationStorageTapeArray[0].add(j,new storageNode(" ",$scope.kSourceTapes[0].charAt(j+8)));
-					     $window.alert("addujem slovo");
+					     /*$window.alert("addujem slovo");*/
 		  	       }
 		  	       for(var r = $scope.kSourceTapes[0].length; r < endOfCopy;r++){
 					     $scope.simulationStorageTapeArray[0].add(r,new storageNode(" "," "));
-					     $window.alert("addujem medzery napravo");
+					     /*$window.alert("addujem medzery napravo");*/
 		  	       }
 		  	       for(var f = 1; f < endOfCopy;f++){
-		  	       	$window.alert("addujem vlavo");
+		  	       	/*$window.alert("addujem vlavo");*/
 					     $scope.simulationStorageTapeArray[0].add(-f,new storageNode(" "," "));
 		  	       }         
 		  	   } else {
 					 for(var j = -8; j < 9;j++){
-					 	$window.alert("tu ani niesom");
+					 	/*$window.alert("tu ani niesom");*/
 					     $scope.simulationStorageTapeArray[i].add(j,new storageNode(" "," "));
 		  	       } 		  	   
 		  	   }
@@ -227,7 +227,7 @@ app.controller('mainController', ['$scope', 'simulationService','$window', funct
         }
         var errLog = "Chyba nedeterminizmu pri riadkoch: ";
         /*overime determinizmus*/
-        $window.alert($scope.deltaFunction.length);
+        /*$window.alert($scope.deltaFunction.length);*/
         for (var i = 0; i < $scope.deltaFunction.length; i++) {
             for (var j = i + 1; j < $scope.deltaFunction.length; j++) {
                 /*if (i == j) {
@@ -254,7 +254,7 @@ app.controller('mainController', ['$scope', 'simulationService','$window', funct
 
     /*Funkcia na zaregistrovanie noveho objektu deltafunkcie(vytvara sa z stringu ). Zaroven vykonava vstrupnu kontrolu, ci je vstup korektny*/
     $scope.registerDelta = function(deltaTempRow) {
-    	 $window.alert('aspomtusom')
+    	 /*$window.alert('aspomtusom')*/
         var arr = deltaTempRow.value.split(",");
         var errLog = "";
         var deltaInvalid = {'value': false};
@@ -309,7 +309,7 @@ app.controller('mainController', ['$scope', 'simulationService','$window', funct
             return errLog;
         }
         /*$scope.*/deltaInvalid.value = false;
-        $window.alert('pushujem');
+        /*$window.alert('pushujem');*/
         $scope.deltaFunction.push(new delta(orig_state, reading, new_state, printing, moving));
         return true;
         /*$scope.resetDelta();*/
