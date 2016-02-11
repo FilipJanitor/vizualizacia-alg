@@ -122,6 +122,21 @@ app.controller('mainController', ['$scope', 'simulationService','$window', funct
 		  	       } 		  	   
 		  	   }
         }
+        /*takto to bolo predtzm a fungovalo. Je to nejaka blbost ye to vobec slo*/
+        /*for(var i = 0; i < $scope.kNumber; i++){
+		  	   $scope.simulationStorageTapeArray.push(new negativeArray());
+
+		  	   if(i == 0){
+		  	   	 var endOfCopy = Math.max($scope.kSourceTapes[0].length-8,j < 9);
+		  	       for(var j = -8; j < endOfCopy;j++){
+					     $scope.simulationStorageTapeArray[0].add(j,new storageNode(" ",$scope.kSourceTapes[0].charAt(j+8)));
+		  	       }         
+		  	   } else {
+					 for(var j = -8; j < 9;j++){
+					     $scope.simulationStorageTapeArray[i].add(j,new storageNode(" "," "));
+		  	       } 		  	   
+		  	   }
+        }*/
     	  
         if (value == 1) {
             $scope.currentState = $scope.stateEnum.MODE_1_SIMULATE;
