@@ -39,17 +39,17 @@
 
 					<!-- texty na orig. stroji TODO ten range spravit nejak normalnejsie mozno-->
 						<g ng-repeat="tape in kSourceTapes.value track by $index">
-							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{40+25+$parent.$index*60}}" fill="black">{{ tape.charAt($index+ originalMachineViews[$parent.$index].beginning) }}</text>
+							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{40+25+$parent.$index*60}}" fill="black">{{ tape.charAt($index+ originalMachineViews[$parent.$index].getBeginning()) }}</text>
 						</g>							
 									
 					<!-- texty na simulujucom stroji. Vzhladom k tomu, ze sa bude chodit aj do minusu castejsie ako v origo, ide to cez to negativeArray;-->
 						<g ng-repeat="track in simulationStorageTapeArray.value track by $index">
-							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{  storageTapeOffset.value+40+25+$parent.$index*80  }}" fill="black">{{ track.get($index+reducedMachineStorageTapeViews.beginning).upperLevel }}</text>
-							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{  storageTapeOffset.value+65+$parent.$index*80  }}" fill="black">{{ track.get($index+ reducedMachineStorageTapeViews.beginning).lowerLevel }}</text>						
+							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{  storageTapeOffset.value+40+25+$parent.$index*80  }}" fill="black">{{ track.get($index+reducedMachineStorageTapeViews.getBeginning()).upperLevel }}</text>
+							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{  storageTapeOffset.value+65+$parent.$index*80  }}" fill="black">{{ track.get($index+ reducedMachineStorageTapeViews.getBeginning()).lowerLevel }}</text>						
 						</g>
 						
 					<!-- texty na copyarray, este neviem ci bude negativeArray alebo normalne, zistime casom. Zda sa ze by to mohlo fungovat = este nieje otestovane-->						
-						<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{reducedMachineCopyTapeOffset.value+25}}" fill="black">{{ reducedMachineCopyTape.charAt($index+ reducedMachineCopyTapeViews.beginning)}}</text>
+						<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{reducedMachineCopyTapeOffset.value+25}}" fill="black">{{ reducedMachineCopyTape.charAt($index+ reducedMachineCopyTapeViews.getBeginning())}}</text>
 						
                </svg>
             </div>
@@ -81,7 +81,7 @@ Toto nefunguje
 <br />    {{neededHeightOfSvg }}
 <br />storageTapeOffset  
 <br />  {{storageTapeOffset}}
-
+<br />  {{reducedMachineStorageTapeViews}}
 
 <br />  {{currentSimulationStateArray}}
        

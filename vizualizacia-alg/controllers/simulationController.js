@@ -52,9 +52,9 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     /*pole obsahujuci pre kazdu pasku orig. stroja interval <) ktory bude vykreslovany */
     $scope.originalMachineViews = [];
     /*pole obsahujuci pre storage pasku simulacneho stroja interval <) ktory bude vykreslovany. On sa asi bude posuvat len pre stav, ze sa cosi bude diat as na moc vzdialenom konci, tak aby to uzivatel videl. Ma mat beginning nastavey na -8 */
-    $scope.reducedMachineStorageTapeViews = new machineView();
+    $scope.reducedMachineStorageTapeViews = new MachineView();
     /*pole obsahujuci pre copy pasku simulacneho stroja interval <) ktory bude vykreslovany. On sa asi bude posuvat len pre stav, ze sa cosi bude diat as na moc vzdialenom konci, tak aby to uzivatel videl. Ma mat beginning nastavey na -8 */
-    $scope.reducedMachineCopyTapeViews = new machineView();
+    $scope.reducedMachineCopyTapeViews = new MachineView();
 
     /*Objekty s datami, ktore su odoslane cez service z maincontrolleru. Obsahuju presne to, co aj tam - aj nazvy su rovnake*/
     $scope.kSourceTapes = simulationService.kSourceTapes;
@@ -116,7 +116,7 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 
         /*nastavenie pointrov vykreslovania pasok orig. stroja*/
         for (var i = 0; i < $scope.kNumber.value; i++) {
-            $scope.originalMachineViews.push(new machineView());
+            $scope.originalMachineViews.push(new MachineView());
         }
 
         /*ked sa spusti tento watch - on sa spusti aj pri uplnej inicializacii vsetkeho aj pri nastaveni ksourcetapes - nastavime rovno aj spravny zaciatok storage tejpu*/
@@ -156,11 +156,11 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
         var moving;
         var wasSet = false;
         for (var i = 0; i < $scope.deltaFunction.value.length; i++) {
-            if ($scope.deltaFunction.value[i].originalState == $scope.originalMachineState) {
-                if ($scope.deltaFunction.value[i].reading.toString() === readingArr.toString()) {
-                    writing = $scope.deltaFunction.value[i].printing;
-                    moving = $scope.deltaFunction.value[i].moving;
-                    $scope.originalMachineState = $scope.deltaFunction.value[i].originalState;
+            if ($scope.deltaFunction.value[i].getOriginalState() == $scope.originalMachineState) {
+                if ($scope.deltaFunction.value[i].getReading().toString() === readingArr.toString()) {
+                    writing = $scope.deltaFunction.value[i].getPrinting();
+                    moving = $scope.deltaFunction.value[i].getMoving();
+                    $scope.originalMachineState = $scope.deltaFunction.value[i].getNewState();
                     wasSet = true;
                     break;
                 }
@@ -192,9 +192,10 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
         $scope.currentSimulationStateArray.length = 0;
         /*velky cyklus, prechadzajuci cez vsetky pasky postupne odhora dolu*/
         for (var j = 0; j < $scope.kNumber.value; j++) {
+        	$window.alert("spracuvam pasku "+j);
             /*musime sa spravne pohhybovat a najst ity blok co splna nasu podmienku (Pouzivam algoritmus z Petovho clanku, nie ten originalny, pretoze jednoduchost)*/
             /*prepis znaku*/
-            $scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.OVERWRITING_HOME_COLUMN, j, null, writingArr[j]));
+            $scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.OVERWRITING_HOME_COLUMN, j, null, writingArr[j]));
             if (movementArr[j] == 0) {
                 /*ak sa nehybeme, staci overprintnut*/
                 continue
@@ -205,13 +206,13 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
                 for (var k = 1; k < $scope.simulationStorageTapeArray.value[j].positiveLength(); k++) {
                     if ($scope.simulationStorageTapeArray.value[j].get(k).isEmpty() === 1) {
                         blocknumber = Math.floor(Math.log(k) / Math.LN2);
-                        $scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
-                        $scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
+                        $scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
+                        $scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
                         break;
-                    } else if ($scope.simulationStorageTapeArray.value[i].get(k).isEmpty() === 2) {
+                    } else if ($scope.simulationStorageTapeArray.value[j].get(k).isEmpty() === 2) {
                         blocknumber = Math.floor(Math.log(k) / Math.LN2);
-                        $scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
-                        $scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
+                        $scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
+                        $scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
                         break;
                     } else {
 
@@ -224,24 +225,24 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
                     var poslednyBlok = Math.floor(Math.log(poslednyIndex) / Math.LN2);
                     var poslednyIndexVNovomBloku = Math.pow(2, poslednyblok + 2) - 1;
                     for (var m = poslednyIndex + 1; m <= poslednyIndexVNovomBloku; m++) {
-                        $scope.simulationStorageTapeArray.value[j].add(m, new storageNode(" ", " "));
-                        $scope.simulationStorageTapeArray.value[j].add(-m, new storageNode(" ", " "));
+                        $scope.simulationStorageTapeArray.value[j].add(m, new StorageNode(" ", " "));
+                        $scope.simulationStorageTapeArray.value[j].add(-m, new StorageNode(" ", " "));
                     }
-                    $scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok + 1, null));
-                    $scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -poslednyBlok - 1, null));
+                    $scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok + 1, null));
+                    $scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -poslednyBlok - 1, null));
                 }
             }
             if (movementArr[j] == -1) { /*mozno je dobre cachovat tu dlzku*/
                 for (var k = 1; k < $scope.simulationStorageTapeArray.value[j].negativeLength(); k++) {
                     if ($scope.simulationStorageTapeArray.value[j].get(-k).isEmpty() === 1) {
                         blocknumber = -(Math.floor(Math.log(k) / Math.LN2));
-                        $scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
-                        $scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
+                        $scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
+                        $scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
                         break;
                     } else if ($scope.simulationStorageTapeArray.value[j].get(-k).isEmpty() === 2) {
                         blocknumber = -(Math.floor(Math.log(k) / Math.LN2));
-                        $scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
-                        $scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
+                        $scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
+                        $scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
                         break;
                     } else {
 
@@ -253,11 +254,11 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
                     var poslednyBlok = Math.floor(Math.log(poslednyIndex) / Math.LN2);
                     var poslednyIndexVNovomBloku = Math.pow(2, poslednyblok + 2) - 1;
                     for (var m = poslednyIndex + 1; m <= poslednyIndexVNovomBloku; m++) {
-                        $scope.simulationStorageTapeArray.value[j].add(m, new storageNode(" ", " "));
-                        $scope.simulationStorageTapeArray.value[j].add(-m, new storageNode(" ", " "));
+                        $scope.simulationStorageTapeArray.value[j].add(m, new StorageNode(" ", " "));
+                        $scope.simulationStorageTapeArray.value[j].add(-m, new StorageNode(" ", " "));
                     }
-                    $scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok + 1, null));
-                    $scope.currentSimulationStateArray.push(new stepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -poslednyBlok - 1, null));
+                    $scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok + 1, null));
+                    $scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -poslednyBlok - 1, null));
                 }
             }
         }
@@ -283,7 +284,7 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
                 $scope.originalMachineViews[i].moveRight();
                 /*$window.alert($scope.originalMachineViews[i].beginning);*/
                 /*ak sme sa posunuli tak daleko, ze pozerame za pomysleny koniec pasky - koniec stringu ktory pasku reprezentuje, apendneme mu medzernik*/
-                if ($scope.originalMachineViews[i].end > $scope.kSourceTapes.value[i].length) {
+                if ($scope.originalMachineViews[i].getEnd() > $scope.kSourceTapes.value[i].length) {
                     $scope.kSourceTapes.value[i] += " ";
                 }
                 continue;
@@ -291,7 +292,7 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
             if (movementArr[i] == 1) {
                 $scope.originalMachineViews[i].moveLeft();
                 /*ak sme sa posunuli tak daleko, ze pozerame pred pomysleny koniec pasky - zaciatok stringu ktory pasku reprezentuje, preppendneme mu medzernik a nastavime spravne view (posunu sa prependnutim indexy)*/
-                if ($scope.originalMachineViews[i].beginning < 0) {
+                if ($scope.originalMachineViews[i].getBeginning() < 0) {
                     $scope.kSourceTapes.value[i] = " " + $scope.kSourceTapes.value[i];
                     $scope.originalMachineViews[i].moveRight();
                 }

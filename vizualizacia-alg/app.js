@@ -4,17 +4,34 @@ var app = angular.module("App", []);
 
 /*konstruktor pre objekt deltafunkcia*/	
 /*TODO asi nejake getery a setery*/
-function delta(original_state, reading, new_state, printing, moving) {
-    this.originalState = original_state;
-    this.reading = reading;
-    this.newState = new_state;
-    this.printing = printing;
-    this.moving = moving;
+function Delta(original_state, reading, new_state, printing, moving) {
+    this._originalState = original_state;
+    this._reading = reading;
+    this._newState = new_state;
+    this._printing = printing;
+    this._moving = moving;
+    
+    this.getOriginalState = function () {
+    		return this._originalState;
+    };
+    this.getReading = function () {
+    		return this._reading;
+    };
+    this.getNewState = function () {
+    		return this._newState;
+    };
+    this.getPrinting = function () {
+    		return this._printing;
+    };
+    this.getMoving = function () {
+    		return this._moving;
+    };
 };
 /*konstruktor pre objekt jednehostlpca (dvoch riadkov) na jednej stopre storage pasky*/
-function storageNode(upper_level,lower_level){
+function StorageNode(upper_level,lower_level){
 	 /*predpokladame, ze oba su stringy, aspon prazdne - je to vec implementatora*/
 	 /*Zatial kvoli vykreslovaniu pouzivame ako blank medzeru. Pouzivatel ju nebude moct dat do vstupu, takze je to rozumny blank asi*/
+	 /*toto zatial necham tak, moze sa k tomu pristupovat priamo - aj tak sa to bude desivo menit stale*/
 	 this.upperLevel = upper_level;
 	 this.lowerLevel = lower_level;
 	 /*Pre nase potreby, potrebujeme robit rozdiel medzi uplne prazdnym node a takym, co ma zaplneny iba spodny riadok. Konvencia je nasledovna - 0 node je plny. 1 - node je poloprazdy. 2 - node je prazdny*/
@@ -30,7 +47,7 @@ function storageNode(upper_level,lower_level){
 };
 /*Nase specialne divne pole - ma aj negativne indexy a bude sa pouzivat na vykreslovanie. Nechceme nim prekryt vsetky polia, lebo by to robilo sarapatu. Toto je skor taky container. Asi bude dobre do toho zaondit kSourcetracks*/
 /*asi je dobre, aby bolo vzdy maximalny pozitivny aj negativny index rovnaky*/
-function negativeArray() {
+function NegativeArray() {
     this.__positive = [];
 	 this.__negative = [];
 	 /*tato funkcia silently overwritne to co tam je povodne*/
@@ -84,24 +101,30 @@ function negativeArray() {
 };
     /*objekt, v ktorom si pamatame interval <) ktory bude vykreslovany na paskach orig stroja. Pre kazdu pasku bude jeden a budeme pomocou neho vykreslovat.(pomocou in range)*/
 
-function machineView() {
-	this.beginning = 0;
-	this.end = 17;
+function MachineView() {
+	this._beginning = 0;
+	this._end = 17;
 	this.changeInterval = function (beg,end) {
-	 	  this.beginning = beg;
-	     this.end = end;	
+	 	  this._beginning = beg;
+	     this._end = end;	
 	};
 	this.getCurrentHeadPosition = function () {
-		  return this.beginning+8;
+		  return this._beginning+8;
 	};
 	this.moveRight = function () {
-		  this.beginning++;
-		  this.end++;
+		  this._beginning++;
+		  this._end++;
 	};
 	this.moveLeft = function () {
-		  this.beginning--;
-		  this.end--;
+		  this._beginning--;
+		  this._end--;
 	};
+	this.getBeginning = function () {
+    		return this._beginning;
+   };
+   this.getEnd = function () {
+    		return this._end;
+   };
 };
 
 /*funkcia co prepise stringu character na danom indexe. Nechcem ju pouzivat, lebo chcem posielat referenciou nie hodnotou MOMENTALNE JU NEPOUZIVAM*/
@@ -119,12 +142,26 @@ function overwriteCharacterInString(character,index,string) {
 
 /*TODO getery a setery*/
 /*Objekt, obsahuci vsetky potrebne informacie pre podkrok simulacie. Je tvoreny mainsimulation funkciou a citany nextstepom*/
-function stepInformationContainer(step_state,original_track,block_number,overwrite_symbol) {
-	this.stepState = step_state;
-	this.indexOfOriginalTrack = original_track;
-	this.iBlockNumber = block_number;
-	this.overwriteSymbol = overwrite_symbol;
-
+function StepInformationContainer(step_state,original_track,block_number,overwrite_symbol) {
+	this._stepState = step_state;
+	this._indexOfOriginalTrack = original_track;
+	this._iBlockNumber = block_number;
+	this._overwriteSymbol = overwrite_symbol;
+	this.getStepState = function () {
+    		return this._stepState;
+   };
+   this.getIndexOfOriginalTrack = function () {
+    		return this._indexOfOriginalTrack;
+   };
+   this.getIBlockNumber = function () {
+    		return this._iBlockNumber;
+   };
+   this.getOverWriteSymbol = function () {
+    		return this._overWriteSymbol;
+   };
+	this.getStepState = function () {
+    		return this._stepState;
+   };     
 }
 
 
