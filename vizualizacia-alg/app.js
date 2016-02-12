@@ -156,14 +156,17 @@ function StepInformationContainer(step_state,original_track,block_number,overwri
    this.getIBlockNumber = function () {
     		return this._iBlockNumber;
    };
-   this.getOverWriteSymbol = function () {
-    		return this._overWriteSymbol;
+   this.getOverwriteSymbol = function () {
+    		return this._overwriteSymbol;
    };
 	this.getStepState = function () {
     		return this._stepState;
    };     
 }
 
-
+function printingSquare(_x,_y) {
+	this.x = _x;
+	this.y = _y;
+};
 
 

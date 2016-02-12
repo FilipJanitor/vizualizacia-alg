@@ -109,9 +109,10 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', func
         /*pre kSourceTapes vyrobime negativearrays*/
         for (var i = 0; i < $scope.kNumber; i++) {
             $scope.simulationStorageTapeArray.push(new NegativeArray());
-            /*prvu pasku naplnime doplna, alebo viac , podla toho, ci uzivatel zadal dostatocne dlhe vstupne slovo*/
+            /*prvu pasku naplnime doplna, alebo viac , podla toho, ci uzivatel zadal dostatocne dlhe vstupne slovo Ak zada dlhe, dorovame to blankmi tak, aby bol skonceny uplny posledny blok*/
             if (i === 0) {
-                var endOfCopy = Math.max($scope.kSourceTapes[0].length - 8, 9);
+            	 var endOfLastBlockAfterLength = Math.pow(2,(Math.floor(Math.log($scope.kSourceTapes[0].length - 8)/Math.LN2)+1))-1;
+                var endOfCopy = Math.max(endOfLastBlockAfterLength, 9);
                 /*$window.alert(endOfCopy);*/
                 for (var j = 0; j < $scope.kSourceTapes[0].length; j++) {
                     $scope.simulationStorageTapeArray[0].add(j, new StorageNode(" ", $scope.kSourceTapes[0].charAt(j + 8)));

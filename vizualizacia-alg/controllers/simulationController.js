@@ -84,11 +84,14 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     $scope.simulationMode = $scope.stateEnum.IDLE;
     /*premenna ktoru naplni mainSimulationFunkcia objektami, ktore budu obsahovat riadiace prikazy pre simulaciu.*/
     $scope.currentSimulationStateArray = [];
+    $scope.pointerToCurrentSimulationState = 0;
 
     /*Polia na printing textu a stvorcov. Obsahuju dynamicky ulozene suradnice*/
     $scope.originalMachinePrintingArray = [];
     $scope.reducedMachineStorageTapePrintingArray = [];
-
+	 
+	 /*pole na printing zelenych storage stvorcov*/
+	 $scope.greenStoragePrintingArray=[];
 
 
     /*Watch, ktory spravne nastavi prazdne polia na vykreslovanie, ked sa nastavi kNumber. 
@@ -183,16 +186,49 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 
     /*Funkcia upravuje výstup simulačnej funkcie tak, aby bol vykresliteľný*/
     $scope.nextStep = function() {
-
+    	/*ak sme vsetko posimulovali, upraceme a vypneme simulaciu*/
+    		if($scope.pointerToCurrentSimulationState === $scope.currentSimulationStateArray.length){
+				 $scope.currentSimulationStateArray.length = 0;
+				 $scope.simulationMode = $scope.stateEnum.IDLE;
+				 return;
+    		}
+			var tempContainer = $scope.currentSimulationStateArray[$scope.pointerToCurrentSimulationState];
+			switch (tempContainer.getStepState()) {
+    			 case $scope.simulationStateEnum.OVERWRITING_HOME_COLUMN:
+    			 		$window.alert(tempContainer.getOverwriteSymbol());
+        				$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get($scope.reducedMachineStorageTapeViews.getCurrentHeadPosition()).lowerLevel = tempContainer.getOverwriteSymbol();
+						$scope.greenStoragePrintingArray.push(new printingSquare(380,$scope.storageTapeOffset.value+40+tempContainer.getIndexOfOriginalTrack()*80));	
+        				break;
+   			 case 1:
+        				day = "Monday";
+        				break;
+    			 case 2:
+        				day = "Tuesday";
+        				break;
+    			 case 3:
+        				day = "Wednesday";
+        				break;
+    			 case 4:
+        				day = "Thursday";
+        				break;
+    			 case 5:
+        				day = "Friday";
+        				break;
+    			 case 6:
+        				day = "Saturday";
+        				break;
+			} 
+			$scope.pointerToCurrentSimulationState++;
     };
 
     /*tato funkcia bude vsetko pocitat*/
+    /*TODO dat tam nejake medzi stavy tak, aby sa tie veci dali pekne obrazkovo ukazovat*/
     $scope.mainSimulatingFunction = function(writingArr, movementArr) {
         /*najskor vyprazdnime pole, v ktrom zostali veci z prerdch. simulacie*/
         $scope.currentSimulationStateArray.length = 0;
         /*velky cyklus, prechadzajuci cez vsetky pasky postupne odhora dolu*/
         for (var j = 0; j < $scope.kNumber.value; j++) {
-        	$window.alert("spracuvam pasku "+j);
+        	/*$window.alert("spracuvam pasku "+j);*/
             /*musime sa spravne pohhybovat a najst ity blok co splna nasu podmienku (Pouzivam algoritmus z Petovho clanku, nie ten originalny, pretoze jednoduchost)*/
             /*prepis znaku*/
             $scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.OVERWRITING_HOME_COLUMN, j, null, writingArr[j]));

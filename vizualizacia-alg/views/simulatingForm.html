@@ -34,6 +34,7 @@
                   	<rect ng-repeat="node in simulatingArray.value" ng-attr-x="{{380+node.movement*40}}" ng-attr-y="{{40+$index*60}}" width="40" height="40" style="fill:rgb(255,0,0);stroke-width:0;"/>
 						</g>					
 					<!-- green squares - tie budu oznacovat aktualne zmeny  krokov simulacie na sim. stroji-->
+						<rect ng-repeat="square in greenStoragePrintingArray" ng-attr-x="{{square.x}}" ng-attr-y="{{square.y}}" width="40" height="40" style="fill:rgb(0,255,0);stroke-width:0;"/>
 					
 					<!-- texty na vykreslovanie -->
 
@@ -84,6 +85,8 @@ Toto nefunguje
 <br />  {{reducedMachineStorageTapeViews}}
 
 <br />  {{currentSimulationStateArray}}
+
+<br /> {{simulationStorageTapeArray.value[0].get(reducedMachineStorageTapeViews.getCurrentHeadPosition())}}
        
          </p>
       </div>
