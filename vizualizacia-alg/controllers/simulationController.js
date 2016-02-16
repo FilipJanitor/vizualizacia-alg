@@ -203,18 +203,23 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
     		}
 			var tempContainer = $scope.currentSimulationStateArray[$scope.pointerToCurrentSimulationState];
 			switch (tempContainer.getStepState()) {
+				
+				
     			 case $scope.simulationStateEnum.OVERWRITING_HOME_COLUMN:
     			 		$window.alert(tempContainer.getOverwriteSymbol());
         				$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get($scope.reducedMachineStorageTapeViews.getCurrentHeadPosition()).lowerLevel = tempContainer.getOverwriteSymbol();
 						$scope.greenStoragePrintingArray.push(new printingSquare(380,$scope.storageTapeOffset.value+40+tempContainer.getIndexOfOriginalTrack()*80));	
         				break;
+        				
+        				
    			 case $scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS:
         				/*preusporiadaj symboly v blokoch B0;B1;...;Bi-1 tak, aby boli uložené na spodných úrovniach blokov B1;B2;...;Bi a aby reprezentované slovo ostalo nezmenené*/
         				/*POZOR V MOJOM CISLOVANI SU INDEXY POSUNUTE CIZE BLOK BI ZO SKRIPT JE U MNA BLOK BI-1*/ 
         				var iBlockIndex = tempContainer.getIBlockNumber();
-        				/*zatial osetrujem len pravu stranu - ten priklad co je v skriptach*/
+        				
+        				/*prava strana - ten priklad co je v skriptach*/
         				if(iBlockIndex >= 0){
-        					 var lastIndexOfUsedBlock = Math.pow(2,iBlockIndex)-1;
+        					 var lastIndexOfUsedBlock = Math.pow(2,iBlockIndex)-1; /*CO JE UCEL TEJTO PREMENNEJ - ONO TO JE LEN PRE UCEL TOHO NASLEDNEHO VRACANIA NA TIE BLOKY*/
         					 /*najdeme vsetky konce blokov az po blok ktory aktualne spracuvame*/
         					 var endBlocksArray = [0];
         					 for(var i = 0; i < iBlockIndex;i++){
@@ -239,11 +244,38 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 							 	  }
         					 }       					 
         				} else {
-        				/*to iste len pre negativne*/
-        				
+        				/*to iste len pre negativne. Robim to vsetko len zmenami znamienok, tie cykly by boli skarede, ak by boli negativne*/
+        					 var lastIndexOfUsedBlock = Math.pow(2,-iBlockIndex)-1;
+        					 /*najdeme vsetky konce blokov az po blok ktory aktualne spracuvame*/
+        					 var endBlocksArray = [0];
+        					 for(var i = 0; i < -iBlockIndex;i++){
+        					 	  /*polootvorene intervaly*/
+							 	  endBlocksArray.push(-Math.pow(2,i+1)/*-1*/);        				
+        					 }
+        					 /*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
+        					 for(var j = 1; j < endBlocksArray.length;j++){
+							 	  for(var k = -endBlocksArray[j-1];k<-endBlocksArray[j];k++){
+							 	  	   /*if(k===0){
+							 	  	   	  
+							 	  	   	  $scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-k).lowerLevel);
+											  continue;							 	  	   
+							 	  	   }*/
+									   $scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-k).lowerLevel);								 							 
+							 	  }
+							 	  for(var k = -endBlocksArray[j-1];k<-endBlocksArray[j];k++){
+								 		if(k===0){
+								 			  /*v homesquare mame len spodok*/
+							 	  	   	  continue;							 	  	   
+							 	  	   }
+									   $scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-k).upperLevel);
+							 	  }
+        					 }
+        					 /*POZOR - TO POLE BUDE OPACNE, PRETOZE SLOVO BUDE OD KONCA> NEVADI<. BUD TO OTOCIME, TAK AKO TERAZ, ALEBO TEN CELY VONKAJSI FORCYKLUS SPRAVIME OPACNE - OD LAVA AZ PO ZACIATOK*/
+        					 $scope.reducedMachineCopyTapeArray.reverse();
         				}
-        				/*prejdeme po blokoch - zalezi ci ideme napravo alebo nalavo, pretoze od toho zavisi, kde sa cita co.*/
         				break;
+        				
+        				
     			 case $scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE:
     			 		/*preusporiadaj symboly v blokoch B0;B1;...;Bi-1 tak, aby boli uložené na spodných úrovniach blokov B1;B2;...;Bi a aby reprezentované slovo ostalo nezmenené*/
         				/*POZOR V MOJOM CISLOVANI SU INDEXY POSUNUTE CIZE BLOK BI ZO SKRIPT JE U MNA BLOK BI-1*/ 
@@ -253,14 +285,19 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
         					 var lastIndexOfUsedBlock = Math.pow(2,iBlockIndex+1)-1;
         			   	 for (var i = 1; i <= lastIndexOfUsedBlock;i++) {
         			   	 	  $scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i-1];
-        			   	 }
+        			   	 } /*Lava strana*/
         			   } else {
-        			   
+        			   	 var lastIndexOfUsedBlock = Math.pow(2,-iBlockIndex+1)-1;
+        			   	 for (var i = 1; i <= lastIndexOfUsedBlock;i++) {
+        			   	 	  $scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-i).lowerLevel = $scope.reducedMachineCopyTapeArray[i-1];
+        			   	 }
         			   }
         			   /*mozeme vymazat pole copy*/
 						$scope.reducedMachineCopyTapeArray.length = 0;        			   
         				break;
-    			 case 3:
+        				
+        				
+    			 case $scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS:
         				day = "Wednesday";
         				break;
     			 case 4:
