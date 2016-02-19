@@ -1,20 +1,4 @@
 app.controller('simulationController', ['$scope', '$window', 'simulationService', function($scope, $window, simulationService) {
-    /*if(simulationService.isActive){
-		$scope.kNumber = simulationService.getK();
-		$scope.kSourceTapes = simulationService.getKSourceTapes();			
-		$scope.mode = simulationService.getMode();	
-		if($scope.mode == 6){
-			$scope.deltaFunction = simulationService.getDeltaFunction();
-		}
-		$scope.activeSimulation = true
-	 }
- 	 $scope.activeSimulation = false;	
-	 $scope.mode = {};
-    $scope.kNumber = {};
-    $scope.kSourceTapes = {};
-    $scope.deltaFunction = {};
-    */
-
     $scope.stateEnum = {
         IDLE: 1,
         IN_PROGRESS: 2,
