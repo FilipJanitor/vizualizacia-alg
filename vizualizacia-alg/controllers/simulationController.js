@@ -1,4 +1,4 @@
-app.controller('simulationController', ['$scope', '$window', 'simulationService', function($scope, $window, simulationService) {
+app.controller('simulationController', ['$scope', '$window', '$log', 'simulationService', function($scope, $window, $log, simulationService) {
 	/*hlavne stavy. Maju dopad na to, co sa objavuje na obrazovke*/
 	$scope.stateEnum = {
 		IDLE: 1,
@@ -58,7 +58,7 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 
 	/*TODO ZMENIT NA POLE MEDZERNIKOV< BUDE SA POUZIVAT MISTO STRINGU*/
 	/*String copy zatial obsahuje iba medzerniky*/
-	$scope.reducedMachineCopyTape = "                 "
+	$scope.reducedMachineCopyTape = "                 ";
 		/*ZATIAL TEMPOVE POLE NA POUZIVANIE< NIE NA VYKRESLOVANIE*/
 	$scope.reducedMachineCopyTapeArray = [];
 
@@ -112,10 +112,11 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 	/*Funkcia na restartovanie celeho simulacneho procesu do state beginning*/
 	$scope.restartSimulation = function() {
 		$window.location.reload();
-	}
+	};
 
 	/*Funkcia, ktorá prijme vstup od používateľa, spracuje ho a pošle hlavnej simulačnej funkcií*/
 	$scope.checkAndStartStep = function() {
+		$log.info("STARTING_SIMULATION");
 		/*zapne simulaciu*/
 		$scope.simulationMode = $scope.stateEnum.IN_PROGRESS;
 		var writing = [];
@@ -178,39 +179,47 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 		switch (tempContainer.getStepState()) {
 
 			case $scope.simulationStateEnum.OVERWRITING_HOME_COLUMN:
+				$log.info("OVERWRITING_HOME_COLUMN");
 				$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get($scope.reducedMachineStorageTapeViews.getCurrentHeadPosition()).lowerLevel = tempContainer.getOverwriteSymbol();
 				$scope.greenStoragePrintingArray.push(new printingSquare(380, $scope.storageTapeOffset.value + 40 + tempContainer.getIndexOfOriginalTrack() * 80));
 				break;
 
 
 			case $scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS:
+				$log.info("EMPTY_BLOCK_REARRANGE_SYMBOLS");
 				$scope.greenStoragePrintingArray.length = 0;
 				/*preusporiadaj symboly v blokoch B0;B1;...;Bi-1 tak, aby boli uložené na spodných úrovniach blokov B1;B2;...;Bi a aby reprezentované slovo ostalo nezmenené*/
 				var iBlockIndex = tempContainer.getIBlockNumber();
-
+				
+				$log.info("i "+iBlockIndex);
 				/*prava strana - ten priklad co je v skriptach*/
 				if (iBlockIndex > 0) {
 					var lastIndexOfUsedBlock = Math.pow(2, iBlockIndex-1) - 1; /*CO JE UCEL TEJTO PREMENNEJ - ONO TO JE LEN PRE UCEL TOHO NASLEDNEHO VRACANIA NA TIE BLOKY*/
-					/*najdeme vsetky konce blokov az po blok ktory aktualne spracuvame*/
+					/*najdeme vsetky konce blokov az po blok ktory aktualne spracuvame (nevratane - chceme na copytape davat len veci az po blok Bi-1)*/
 					var endBlocksArray = [0];
-					for (var i = 0; i <= iBlockIndex; i++) {
+					for (var i = 0; i < iBlockIndex; i++) {
 						/*polootvorene intervaly*/
 						endBlocksArray.push(Math.pow(2, i) /*-1*/ );
 					}
+					
+					$log.info("pole koncov blokov: " + endBlocksArray);
 					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
 					for (var j = 1; j < endBlocksArray.length; j++) {
 						for (var k = endBlocksArray[j - 1]; k < endBlocksArray[j]; k++) {
 							if (k === 0) {
 								/*v home square mame len spodok*/
+								$log.info("reading home square");
 								$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
 								continue;
 							}
+							$log.info("reading "+k+" column upper");
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel);
 						}
 						for (var k = endBlocksArray[j - 1]; k < endBlocksArray[j]; k++) {
 							if (k === 0) {
 								continue;
 							}
+							$log.info("reading "+k+" column lower");
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
 						}
 					}
@@ -219,10 +228,11 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 					var lastIndexOfUsedBlock = Math.pow(2, -(iBlockIndex+1)) - 1;
 					/*najdeme vsetky konce blokov az po blok ktory aktualne spracuvame*/
 					var endBlocksArray = [0];
-					for (var i = 0; i <= -iBlockIndex; i++) {
+					for (var i = 0; i < -iBlockIndex; i++) {
 						/*polootvorene intervaly*/
 						endBlocksArray.push(-Math.pow(2, i) /*-1*/ );
 					}
+					$log.info("pole koncov blokov: " + endBlocksArray);
 					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
 					for (var j = 1; j < endBlocksArray.length; j++) {
 						for (var k = -endBlocksArray[j - 1]; k < -endBlocksArray[j]; k++) {
@@ -230,6 +240,7 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 							 	  	   	  $scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-k).lowerLevel);
 											  continue;							 	  	   
 							 	  	   }*/
+							$log.info("reading "+k+" column lower with symbol" + $scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-k).lowerLevel);
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-k).lowerLevel);
 						}
 						for (var k = -endBlocksArray[j - 1]; k < -endBlocksArray[j]; k++) {
@@ -237,27 +248,30 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 								/*v homesquare mame len spodok*/
 								continue;
 							}
+							$log.info("reading "+k+" column upper with symbol "+ $scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-k).upperLevel);
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-k).upperLevel);
 						}
 					}
-					/*POZOR - TO POLE BUDE OPACNE, PRETOZE SLOVO BUDE OD KONCA> NEVADI<. BUD TO OTOCIME, TAK AKO TERAZ, ALEBO TEN CELY VONKAJSI FORCYKLUS SPRAVIME OPACNE - OD LAVA AZ PO ZACIATOK*/
-					$scope.reducedMachineCopyTapeArray.reverse();
 				}
 				break;
-/*POTIALTO SU INDEXY BLOKOV OPRAVENE*/
 
 			case $scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE:
+				$log.info("EMPTY_BLOCK_FROM_COPY_TAPE");
+				/*tu vymazeme home sqr*/
+				$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(0).lowerLevel= " ";
 				/*preusporiadaj symboly v blokoch B0;B1;...;Bi-1 tak, aby boli uložené na spodných úrovniach blokov B1;B2;...;Bi a aby reprezentované slovo ostalo nezmenené*/
 				var iBlockIndex = tempContainer.getIBlockNumber();
 				/*zatial osetrujem len pravu stranu - ten priklad co je v skriptach*/
 				if (iBlockIndex >= 0) {
-					var lastIndexOfUsedBlock = Math.pow(2, iBlockIndex + 1) - 1;
-					for (var i = 1; i <= lastIndexOfUsedBlock; i++) {
+					var lastIndexOfIBlock = Math.pow(2, iBlockIndex) -1;
+					for (var i = 1; i <= lastIndexOfIBlock; i++) {
+						$log.info("from copy tape, iblocknumber >= i z tempcontaineru, citam" + $scope.reducedMachineCopyTapeArray[i - 1] + "na poziciu " + i);
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i - 1];
 					} /*Lava strana*/
 				} else {
-					var lastIndexOfUsedBlock = Math.pow(2, -iBlockIndex + 1) - 1;
-					for (var i = 1; i <= lastIndexOfUsedBlock; i++) {
+					var lastIndexOfIBlock = Math.pow(2, -iBlockIndex) -1;
+					for (var i = 1; i <= lastIndexOfIBlock; i++) {
+						$log.info("from copy tape, iblocknumber < i z tempcontaineru, citam" + $scope.reducedMachineCopyTapeArray[i - 1] + "na poziciu -" + i);
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-i).lowerLevel = $scope.reducedMachineCopyTapeArray[i - 1];
 					}
 				}
@@ -267,50 +281,56 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 
 
 			case $scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS:
+				$log.info("NOT_IMPLEMENTED_YET");
 				day = "Wednesday";
 				break;
-			case 5:
+			case $scope.simulationStateEnum.HALF_EMPTY_BLOCK_FROM_COPY_TAPE:
+				$log.info("NOT_IMPLEMENTED_YET");
 				day = "Thursday";
 				break;
+				
 			case $scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE:
+				$log.info("FULL_BLOCK_ON_OPPOSITE_SIDE");
 				/*Ak je blok B-i plný, preusporiadaj symboly na hornej úrovni bloku B-i tak, aby boli uložené na spodných úrovniach blokov B-(i-1) az B0 a aby slovo zostalo nezmenene*/
+				/*iBlockindex obsahuje uz to -I*/				
 				var iBlockIndex = tempContainer.getIBlockNumber();
 
 				/*Spracuvanie druhej casti pravej strana - ten priklad co je v skriptach*/
 				if (iBlockIndex <= 0) {
 					/*tento interval nieje polootvoreny, pretoze sa slovo ajtak musi citat zlava doprava. Urobim ho teda uzavrety*/
-					var lastIndexOfMinusIFullBlock = -(Math.pow(2, -iBlockIndex + 1) - 1);
+					var lastIndexOfMinusIFullBlock = -(Math.pow(2, -iBlockIndex) - 1);
 					/*najdeme zaciatok minus iteho */
-					var firstIndexOfMinusIBlock = -(Math.pow(2, -iBlockIndex));
+					var firstIndexOfMinusIBlock = -(Math.pow(2, -iBlockIndex - 1));
 					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
 					for (var j = lastIndexOfMinusIFullBlock; j <= firstIndexOfMinusIBlock; j++) {
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel);
 					}
 				} else {
-					/*to iste len pre negativne. Robim to vsetko len zmenami znamienok, tie cykly by boli skarede, ak by boli negativne*/
-					/*tento interval nieje polootvoreny, pretoze sa slovo ajtak musi citat zlava doprava. Urobim ho teda uzavrety*/
-					var lastIndexOfMinusIFullBlock = (Math.pow(2, iBlockIndex + 1) - 1);
+					/*to iste len pre negativne I, cize teraz pozitivne -I. Robim to vsetko len zmenami znamienok, tie cykly by boli skarede, ak by boli negativne*/
+					/*tento interval je uzavrety*/
+					var lastIndexOfMinusIFullBlock = (Math.pow(2, iBlockIndex) - 1);
 					/*najdeme zaciatok minus iteho */
-					var firstIndexOfMinusIBlock = (Math.pow(2, iBlockIndex));
+					var firstIndexOfMinusIBlock = (Math.pow(2, iBlockIndex-1));
 					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
 					for (var j = firstIndexOfMinusIBlock; j <= lastIndexOfMinusIFullBlock; j++) {
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel);
 					}
-					/*pole v tomto pripade nebude opacne, lebo citame prave jeden blok*/
+
 				}
 				break;
 
 			case $scope.simulationStateEnum.FULL_BLOCK_FROM_COPY_TAPE:
+				$log.info("FULL_BLOCK_FROM_COPY_TAPE");
 				var iBlockIndex = tempContainer.getIBlockNumber();
 				if (iBlockIndex <= 0) {
-					var lastIndexOfFirstEmptyBlock = (Math.pow(2, -iBlockIndex) - 1);
-					for (var i = 0; i <= lastIndexOfFirstEmptyBlock; i++) {
-						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-(lastIndexOfFirstEmptyBlock - i)).lowerLevel = $scope.reducedMachineCopyTapeArray[i0];
+					var lastIndexOfIMinusOneEmptyBlock = (Math.pow(2, -iBlockIndex -1) - 1);
+					for (var i = 0; i <= lastIndexOfIMinusOneEmptyBlock; i++) {
+						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-(lastIndexOfIMinusOneEmptyBlock - i)).lowerLevel = $scope.reducedMachineCopyTapeArray[i];
 					}
 				} else {
-					var lastIndexOfUsedBlock = Math.pow(2, iBlockIndex) - 1;
-					for (var i = 0; i <= lastIndexOfFFirstEmptyBlock; i++) {
-						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i - 1];
+					var lastIndexOfIMinusOneEmptyBlock = Math.pow(2, iBlockIndex -1) - 1;
+					for (var i = 0; i <= lastIndexOfIMinusOneEmptyBlock; i++) {
+						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i];
 					}
 				}
 				/*mozeme vymazat pole copy POZOR-SKUTOCNE SA CELE ODALOKUJE A PRESTANE SA VYPISOVAT??*/
@@ -331,7 +351,7 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 			/*prepis znaku*/
 			$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.OVERWRITING_HOME_COLUMN, j, null, writingArr[j]));
 			if (movementArr[j] == 0) {
-				continue
+				continue;
 			}
 			var blockNumber;
 			/*osetrenie pohybu hlavy dolava*/
@@ -341,12 +361,16 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 					if ($scope.simulationStorageTapeArray.value[j].get(k).isEmpty() === 1) {
 						blocknumber = Math.floor(Math.log(k) / Math.LN2) + 1;
 						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_FROM_COPY_TAPE, j, blocknumber, null));						
 						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_FROM_COPY_TAPE, j, -blocknumber, null));
 						break;
 					} else if ($scope.simulationStorageTapeArray.value[j].get(k).isEmpty() === 2) {
 						blocknumber = Math.floor(Math.log(k) / Math.LN2) + 1;
 						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE, j, blocknumber, null));
 						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_FROM_COPY_TAPE, j, -blocknumber, null));
 						break;
 					} else {
 						continue;
@@ -362,7 +386,9 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 						$scope.simulationStorageTapeArray.value[j].add(-m, new StorageNode(" ", " "));
 					}
 					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok + 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE, j, poslednyBlok + 1, null));
 					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -poslednyBlok - 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_FROM_COPY_TAPE, j, -poslednyBlok - 1, null));
 				}
 			}
 			/*osetrenie pohybu hlavy doprava*/
@@ -371,12 +397,16 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 					if ($scope.simulationStorageTapeArray.value[j].get(-k).isEmpty() === 1) {
 						blocknumber = -(Math.floor(Math.log(k) / Math.LN2)+1);
 						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_FROM_COPY_TAPE, j, blocknumber, null));						
 						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_FROM_COPY_TAPE, j, -blocknumber, null));
 						break;
 					} else if ($scope.simulationStorageTapeArray.value[j].get(-k).isEmpty() === 2) {
 						blocknumber = -(Math.floor(Math.log(k) / Math.LN2) + 1);
 						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE, j, blocknumber, null));
 						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_FROM_COPY_TAPE, j, -blocknumber, null));
 						break;
 					} else {
 
@@ -390,8 +420,10 @@ app.controller('simulationController', ['$scope', '$window', 'simulationService'
 						$scope.simulationStorageTapeArray.value[j].add(-m, new StorageNode(" ", " "));
 						$scope.simulationStorageTapeArray.value[j].add(m, new StorageNode(" ", " "));
 					}
-					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok -1, null));
-					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -poslednyBlok + 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok + 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE, j, poslednyBlok + 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -poslednyBlok - 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_FROM_COPY_TAPE, j, -poslednyBlok - 1, null));
 				}
 			}
 		}
