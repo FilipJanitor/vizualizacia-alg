@@ -294,15 +294,18 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				/*Ak je blok B-i plný, preusporiadaj symboly na hornej úrovni bloku B-i tak, aby boli uložené na spodných úrovniach blokov B-(i-1) az B0 a aby slovo zostalo nezmenene*/
 				/*iBlockindex obsahuje uz to -I*/				
 				var iBlockIndex = tempContainer.getIBlockNumber();
-
+				$log.info("ZAPORNE I "+ iBlockIndex);
 				/*Spracuvanie druhej casti pravej strana - ten priklad co je v skriptach*/
 				if (iBlockIndex <= 0) {
 					/*tento interval nieje polootvoreny, pretoze sa slovo ajtak musi citat zlava doprava. Urobim ho teda uzavrety*/
 					var lastIndexOfMinusIFullBlock = -(Math.pow(2, -iBlockIndex) - 1);
+					$log.info("lastIndexOfMinusIFullBlock "+ lastIndexOfMinusIFullBlock);
 					/*najdeme zaciatok minus iteho */
 					var firstIndexOfMinusIBlock = -(Math.pow(2, -iBlockIndex - 1));
+					$log.info("firstIndexOfMinusIFullBlock " +firstIndexOfMinusIFullBlock);
 					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
 					for (var j = lastIndexOfMinusIFullBlock; j <= firstIndexOfMinusIBlock; j++) {
+						$log.info("beriem z horneho ");
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel);
 					}
 				} else {
