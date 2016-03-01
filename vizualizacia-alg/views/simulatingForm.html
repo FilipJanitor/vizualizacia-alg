@@ -56,44 +56,66 @@
             </div>
          </div>
          <p>
-
-            Ci je aktivne simulacia alebo idle<br />
-            {{	simulationMode != stateEnum.IDLE	}}	
-<br />            Mod 
-<br />            {{	mainMode.value	}}
-Toto nefunguje 
-<br /> {{simulationStorageTapeArray.value}}  jeho dlzka {{simulationStorageTapeArray.value[0].getLength()}}
-<br />				{{simulationMode}}		
-<br />            /*Kolko paskovy stroj chceme simulovat*/
-<br />            {{	kNumber.value	}}
-	<br />					dlzka
-<br />            {{	reducedMachineStorageTapeViews.beginning	}}
-<br />            /*pole obsahujuce stringy vstupnych slov na k paskach*/
-<br />            {{	kSourceTapes.value	}}
-<br />            /*pole objektov deltafunkcii*/
-<br />            {{	deltaFunction.value	}}
-<br />            /*simulacne pole*/
-<br />            {{simulatingArray.value}}
-<br />            /*printingarray*/
-<br />            {{originalMachinePrintingArray}}
-<br />            reducedMachineCopyTapeOffset
-<br />                {{ reducedMachineCopyTapeOffset }}
-<br />neededHeightOfSvg    
-<br />    {{neededHeightOfSvg }}
-<br />storageTapeOffset  
-<br />  {{storageTapeOffset}}
-<br />  {{reducedMachineStorageTapeViews}}
-
-<br />  {{currentSimulationStateArray}}
-
-<br /> {{reducedMachineCopyTapeArray}}
-       
+            Ci je aktivne simulacia alebo idle
+            <br />
+            {{	simulationMode != stateEnum.IDLE	}}
+            <br />
+            Mod 
+            <br />
+            {{	mainMode.value	}}
+            <br /> 
+            {{simulationStorageTapeArray.value}}  jeho dlzka {{simulationStorageTapeArray.value[0].getLength()}}
+            <br />
+            {{simulationMode}}		
+            <br /> 
+            /*Kolko paskovy stroj chceme simulovat*/
+            <br /> 
+            {{	kNumber.value	}}
+            <br />
+            dlzka
+            <br />
+            {{	reducedMachineStorageTapeViews.beginning	}}
+            <br />
+            /*pole obsahujuce stringy vstupnych slov na k paskach*/
+            <br />
+            {{	kSourceTapes.value	}}
+            <br />
+            /*pole objektov deltafunkcii*/
+            <br />
+            {{	deltaFunction.value	}}
+            <br />
+            /*simulacne pole*/
+            <br />
+            {{simulatingArray.value}}
+            <br />
+            /*printingarray*/
+            <br />
+            {{originalMachinePrintingArray}}
+            <br />
+            reducedMachineCopyTapeOffset
+            <br />
+            {{ reducedMachineCopyTapeOffset }}
+            <br />
+            neededHeightOfSvg    
+            <br />
+            {{neededHeightOfSvg }}
+            <br />
+            storageTapeOffset  
+            <br />
+            {{storageTapeOffset}}
+            <br />
+            {{reducedMachineStorageTapeViews}}
+            <br />
+            {{currentSimulationStateArray}}
+            <br /> 
+            {{reducedMachineCopyTapeArray}}
          </p>
       </div>
    </div>
 </div>
 <!-- Doplnit spravne ng-disabled pre mod s deltafunkciou-->
 <div class="col-sm-3">
+   <button type="button" class="btn btn-danger btn-block" ng-click="restartSimulation()">Zrušiť simuláciu</button>
    <form name="simulationForm" novalidate>
    <!-- formular sa cely stane readonly. Ukazeme ho len v pripade, ze mod je jedna-->
       <fieldset  ng-if="mainMode.value == stateEnum.MODE_1_SIMULATE" data-ng-repeat="choice in simulatingArray.value">
@@ -106,14 +128,13 @@ Toto nefunguje
          <input type="radio" name="movement{{$index}}" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="1"> 1 <br> <br>
       </fieldset>
       <br>
-      <button type="button" ng-show="mainMode.value == stateEnum.MODE_1_SIMULATE" ng-disabled="simulationMode == stateEnum.IN_PROGRESS || !simulationForm.$valid" class="btn btn-primary" ng-click="checkAndStartStep()">Odsimulovať krok</button>
+      <button type="button" ng-show="mainMode.value == stateEnum.MODE_1_SIMULATE" ng-disabled="simulationMode == stateEnum.IN_PROGRESS || !simulationForm.$valid" class="btn btn-primary btn-block" ng-click="checkAndStartStep()">Odsimulovať krok</button>
       
-      <button type="button" ng-show="mainMode.value == stateEnum.MODE_2_SIMULATE" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-primary" ng-click="findDeltaAndStartStep()">Odsimulovať krok</button>
+      <button type="button" ng-show="mainMode.value == stateEnum.MODE_2_SIMULATE" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-primary btn-block" ng-click="findDeltaAndStartStep()">Odsimulovať krok</button>
          
-      <button type="button" ng-show="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-default" ng-click="nextStep()">Pokračovať ďalším krokom</button>
+      <button type="button" ng-show="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-default btn-block" ng-click="nextStep()">Pokračovať ďalším krokom</button>
       
-      <button type="button" ng-show="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-default" ng-click="previousStep()">Krok späť</button>
+      <button type="button" ng-show="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-default btn-block" ng-click="previousStep()">Krok späť</button>
 		      
    </form>
-   <button type="button" class="btn btn-danger" ng-click="restartSimulation()">Zrušiť simuláciu</button>
 </div>

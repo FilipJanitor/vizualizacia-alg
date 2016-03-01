@@ -1,4 +1,4 @@
-app.controller('mainController', ['$scope', 'simulationService', '$window', function($scope, simulationService, $window) {
+app.controller('mainController', ['$scope', 'simulationService', '$window', '$log', function($scope, simulationService, $window, $log) {
 
 	/*Enumerator hovoriaci, v akom stave simulacie sa nachadzame*/
 	$scope.stateEnum = {
@@ -16,7 +16,7 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', func
 	/*pole obsahujuce stringy vstupnych slov na k paskach*/
 	$scope.kSourceTapes = [];
 	/*Najskor sa nachadzame v stave BEGINNING, to sa bude casom menit podla uzivatelovho progresu. CurrentState obsahuje aktualny stav*/
-	$scope.currentState = $scope.stateEnum.BEGINNING
+	$scope.currentState = $scope.stateEnum.BEGINNING;
 		/*pole objektov riadkov deltafunkcii*/
 	$scope.deltaFunction = [];
 	/*pole stringov, ktore budu pri submitnuti otestovane a pretransformovane do deltafunkcnych objektov*/
@@ -27,8 +27,8 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', func
 	$scope.simulationStorageTapeArray = [];
 
 	/*Angular nevie evalovat ng-minlength a ng-maxlength v inputoch, musi tam byt bud konstanta alebo premenna - vyraz nie. Tieto premenne su len na toto urcene*/
-	$scope.myMinLength;
-	$scope.myMaxLength;
+	$scope.myMinLength = 0;
+	$scope.myMaxLength = 0;
 
 	/*premenna indikujuca, ci je automat s zvolenou deltafunkciou deterministicky*/
 	$scope.isDeterministic = {
@@ -88,27 +88,27 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', func
 		for (var i = 1; i < $scope.kNumber.value; i++) {
 			$scope.kSourceTapes[i] = "                 " + $scope.kSourceTapes[i];
 		}
-
-		/*pre kSourceTapes vyrobime negativearrays tak aby bol zachovany invariant Pozor aby to nevracalo undefind pri skorolovani*/
+		/*vypocitame udaje, na vyplnanie stop blankami a dorovnavanie prvej stopy*/
+		var endOfLastBlockAfterLength = Math.pow(2, (Math.floor(Math.log($scope.kSourceTapes[0].length - 8 -1) / Math.LN2) + 1)) - 1; /*je to index posledneho prvku*/
+		var endOfCopy = Math.max(endOfLastBlockAfterLength, 8);
+		/*pre kSourceTapes vyrobime negativearrays tak aby bol zachovany invariant Pozor aby to nevracalo undefiend pri skorolovani - vyriesime tak, ze vsetky negativearrays budu mat vzdy rovnaku dlzku aj do plusu aj do minusu*/
 		for (var i = 0; i < $scope.kNumber.value; i++) {
 			$scope.simulationStorageTapeArray.push(new NegativeArray());
-			/*prvu pasku naplnime doplna, alebo viac , podla toho, ci uzivatel zadal dostatocne dlhe vstupne slovo Ak zada dlhe, dorovame to blankmi tak, aby bol skonceny uplny posledny blok*/
+			/*prvu stopu naplnime doplna, alebo viac , podla toho, ci uzivatel zadal dostatocne dlhe vstupne slovo Ak zada dlhe, dorovame to blankmi tak, aby bol skonceny uplny posledny blok*/
 			if (i === 0) {
-				var endOfLastBlockAfterLength = Math.pow(2, (Math.floor(Math.log($scope.kSourceTapes[0].length - 8) / Math.LN2) + 1)) - 1;
-				var endOfCopy = Math.max(endOfLastBlockAfterLength, 9);
-				/*$window.alert(endOfCopy);*/
-				for (var j = 0; j < $scope.kSourceTapes[0].length; j++) {
+				for (var j = 0; j < $scope.kSourceTapes[0].length-8; j++) {
 					$scope.simulationStorageTapeArray[0].add(j, new StorageNode(" ", $scope.kSourceTapes[0].charAt(j + 8)));
 				}
-				for (var r = $scope.kSourceTapes[0].length; r < endOfCopy; r++) {
-					$scope.simulationStorageTapeArray[0].add(r, new StorageNode(" ", " "));
+				for (var r = $scope.kSourceTapes[0].length-8; r <= endOfCopy; r++) {
+					$log.info("appending blanks on 0 track");
+					$scope.simulationStorageTapeArray[0].add(r, new StorageNode(" ", "×"));
 				}
-				for (var f = 1; f < endOfCopy; f++) {
-					$scope.simulationStorageTapeArray[0].add(-f, new StorageNode(" ", " "));
+				for (var f = 1; f <= endOfCopy; f++) {
+					$scope.simulationStorageTapeArray[0].add(-f, new StorageNode(" ", "×"));
 				}
 			} else {
-				for (var j = -8; j < 9; j++) {
-					$scope.simulationStorageTapeArray[i].add(j, new StorageNode(" ", " "));
+				for (var j = -endOfCopy; j <= endOfCopy; j++) {
+					$scope.simulationStorageTapeArray[i].add(j, new StorageNode(" ", "×"));
 				}
 			}
 		}

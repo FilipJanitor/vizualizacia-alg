@@ -44,6 +44,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	/*pole obsahujuci pre copy pasku simulacneho stroja interval <) ktory bude vykreslovany. On sa asi bude posuvat len pre stav, ze sa cosi bude diat as na moc vzdialenom konci, tak aby to uzivatel videl. Ma mat beginning nastavey na -8 */
 	$scope.reducedMachineCopyTapeViews = new MachineView();
 
+
 	/*Objekty s datami, ktore su odoslane cez service z maincontrolleru. Obsahuju presne to, co aj tam - aj nazvy su rovnake. Vsetko je v  .value*/
 	$scope.kSourceTapes = simulationService.kSourceTapes;
 	$scope.kNumber = simulationService.kNumber;
@@ -379,14 +380,16 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						continue;
 					}
 				}
-				/*tu treba skontrolovat, ci skutocne plati invariant, ze zaporny index je vzdy rovnaky ako kladny*/
+				/*tu treba skontrolovat, ci skutocne plati invariant, ze zaporny index je vzdy rovnaky ako kladny. Pridame invariant, pocet blokov na kazdej stope nalavo aj napravo je vzdy jednotny*/
 				if (blocknumber === undefined) { /*narazili sme na koniec pola a je cele plne, vytvorme novy blok na oboch stranach*/
 					var poslednyIndex = $scope.simulationStorageTapeArray.value[j].positiveLength() - 1; /*posledny zaplneny index, ktory este mame definovany*/
 					var poslednyBlok = Math.floor(Math.log(poslednyIndex) / Math.LN2) + 1;/*posledny blok, co este mame*/
 					var poslednyIndexVNovomBloku = Math.pow(2, (poslednyblok + 2)-1) - 1; /*+2 -1 je tam preto, lebo blok i ma dlzku 2^(i-1)*/
-					for (var m = poslednyIndex + 1; m <= poslednyIndexVNovomBloku; m++) { /*pridavame symetricky na obe strany*/
-						$scope.simulationStorageTapeArray.value[j].add(m, new StorageNode(" ", " "));
-						$scope.simulationStorageTapeArray.value[j].add(-m, new StorageNode(" ", " "));
+					for(var f = 0; f < $scope.kNumber.value;f++){
+						for (var m = poslednyIndex + 1; m <= poslednyIndexVNovomBloku; m++) { /*pridavame symetricky na obe strany. Povodne tam bolo tapeArray.value[j], ale teraz to rpidavame vsetkym*/
+							$scope.simulationStorageTapeArray.value[f].add(m, new StorageNode(" ", "×"));
+							$scope.simulationStorageTapeArray.value[f].add(-m, new StorageNode(" ", "×"));
+						}
 					}
 					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok + 1, null));
 					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE, j, poslednyBlok + 1, null));
@@ -419,9 +422,11 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					var poslednyIndex = - ($scope.simulationStorageTapeArray.value[j].negativeLength() - 1);
 					var poslednyBlok = -(Math.floor(Math.log(poslednyIndex) / Math.LN2) +1);
 					var poslednyIndexVNovomBloku = -(Math.pow(2, (-poslednyblok + 2) -1) - 1);
-					for (var m = -poslednyIndex + 1; m <= -poslednyIndexVNovomBloku; m++) {
-						$scope.simulationStorageTapeArray.value[j].add(-m, new StorageNode(" ", " "));
-						$scope.simulationStorageTapeArray.value[j].add(m, new StorageNode(" ", " "));
+					for(var f = 0; f < $scope.kNumber.value;f++){
+						for (var m = -poslednyIndex + 1; m <= -poslednyIndexVNovomBloku; m++) {
+							$scope.simulationStorageTapeArray.value[j].add(-m, new StorageNode(" ", "×"));
+							$scope.simulationStorageTapeArray.value[j].add(m, new StorageNode(" ", "×"));
+						}
 					}
 					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok + 1, null));
 					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE, j, poslednyBlok + 1, null));
