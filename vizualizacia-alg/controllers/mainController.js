@@ -100,7 +100,6 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 					$scope.simulationStorageTapeArray[0].add(j, new StorageNode(" ", $scope.kSourceTapes[0].charAt(j + 8)));
 				}
 				for (var r = $scope.kSourceTapes[0].length-8; r <= endOfCopy; r++) {
-					$log.info("appending blanks on 0 track");
 					$scope.simulationStorageTapeArray[0].add(r, new StorageNode(" ", "×"));
 				}
 				for (var f = 1; f <= endOfCopy; f++) {
