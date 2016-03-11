@@ -327,13 +327,16 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					for (var j = endBlocksArray.length - 1; j > 0; j--) {
 						for (var k = endBlocksArray[j]+1; k <= endBlocksArray[j-1]; k++) {
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
+							$log.info("citam z spodneho levelu " + $scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel + " a nulujem to");
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
 						}
 						for (var k = endBlocksArray[j]+1; k <= endBlocksArray[j-1]; k++) {
 							if (k === 0) {
 								/*v homesquare mame len spodok*/
+								$log.info("citam vrch homesquaru");
 								continue;
 							}
+							$log.info("citam z upperlevelu " + $scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel);
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel);
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel = " ";
 						}
@@ -358,13 +361,20 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel = $scope.reducedMachineCopyTapeArray[j - 1];
 					}
 				} else {
+					$log.info("potom som tu");
 					var lastIndexOfIBlock = -Math.pow(2, -iBlockIndex);
 					var lastIndexOfIMinusOneBlock = -Math.pow(2,-iBlockIndex-1);
-					for (var i = lastIndexOfIMinusOneBlock + 1; i <= 1; i++) {
-						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i-lastIndexOfIMinusOneBlock-1];
-					}
+					$log.info("lastindexofi "+lastIndexOfIBlock+"; a lastindexofiminusone" + lastIndexOfIMinusOneBlock);
+					var counter = 0;
 					for (var j = lastIndexOfIBlock + 1; j <= lastIndexOfIMinusOneBlock; j++) {
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel = $scope.reducedMachineCopyTapeArray[j-lastIndexOfIBlock-1];
+						$log.info("pisem na " + j + "ty stlpec na vrch a citam z copytapu na indexe "+(counter /*j-lastIndexOfIBlock-1*/));
+						counter++;
+					}
+					for (var i = lastIndexOfIMinusOneBlock + 1; i <= -1; i++) {
+						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[counter/*i-lastIndexOfIMinusOneBlock-1*/];
+						$log.info("pisem na " + i + "ty stlpec na spodok a citam z copytapu na indexe "+(counter/*i-lastIndexOfIMinusOneBlock-1*/));
+						counter++;
 					}
 				}
 				/*mozeme vymazat pole copy POZOR-SKUTOCNE SA CELE ODALOKUJE A PRESTANE SA VYPISOVAT??*/
@@ -406,7 +416,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				if (iBlockIndex < 0) {
 					var lastIndexOfIMinusOneEmptyBlock = -Math.pow(2, -iBlockIndex -1);
 					for (var i = lastIndexOfIMinusOneEmptyBlock+1 ; i <= 0; i++) {
-						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i-LastIndexOfIMinusOneEmptyBlock-1];
+						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i-LastIndexOfIMinusOneEmpt];
 					}
 				} else {
 					var lastIndexOfIMinusOneEmptyBlock = Math.pow(2, iBlockIndex -1);
@@ -550,10 +560,10 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 							$scope.simulationStorageTapeArray.value[j].add(m, new StorageNode(" ", "×"));
 						}
 					}
-					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok + 1, null));
-					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE, j, poslednyBlok + 1, null));
-					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -poslednyBlok - 1, null));
-					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_FROM_COPY_TAPE, j, -poslednyBlok - 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok - 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE, j, poslednyBlok - 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -poslednyBlok + 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_FROM_COPY_TAPE, j, -poslednyBlok + 1, null));
 				}
 			}
 		}
