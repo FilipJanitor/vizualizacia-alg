@@ -121,7 +121,7 @@
       <fieldset  ng-if="mainMode.value == stateEnum.MODE_1_SIMULATE" data-ng-repeat="choice in simulatingArray.value">
       	<label>Páska číslo: {{ $index }}</label>
          <p class="help-block">Znak, ktorým bude prepísaný aktuálny znak:</p>
-         <input type="text" ng-model="choice.overwriteValue" name="" ng-readonly="simulationMode == stateEnum.IN_PROGRESS" required minlength="0" ng-pattern="/\S/" maxlength="1"> <br>
+         <input type="text" ng-model="choice.overwriteValue" name="" ng-readonly="simulationMode == stateEnum.IN_PROGRESS" required minlength="0" ng-pattern="/[^×\s]/" maxlength="1"> <br>
          <p class="help-block">Posun hlavy:</p>
          <input type="radio" name="movement{{$index}}" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="-1"> -1<br>
          <input type="radio" name="movement{{$index}}" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="0"> 0<br>

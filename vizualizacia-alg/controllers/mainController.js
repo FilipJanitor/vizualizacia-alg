@@ -84,9 +84,16 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 	$scope.startSimulation = function(value) {
 		$scope.simulatingArray = $scope.prepareSimulatingArray();
 		/*na zaciatku sa pred kazdy string pasky pridaju medzery, tak aby sa pohodlne vykreslovalo.*/
-		$scope.kSourceTapes[0] = "        " + $scope.kSourceTapes[0];
+		if($scope.kSourceTapes[0].length < 9){
+			var tempString = "";
+			for(var temp = 9 - $scope.kSourceTapes[0].length;temp > 0; temp--){
+				tempString += "×"
+			}
+			$scope.kSourceTapes[0] = $scope.kSourceTapes[0] + tempString;
+		}
+		$scope.kSourceTapes[0] = "××××××××" + $scope.kSourceTapes[0];
 		for (var i = 1; i < $scope.kNumber.value; i++) {
-			$scope.kSourceTapes[i] = "                 " + $scope.kSourceTapes[i];
+			$scope.kSourceTapes[i] = "×××××××××××××××××" + $scope.kSourceTapes[i];
 		}
 		/*vypocitame udaje, na vyplnanie stop blankami a dorovnavanie prvej stopy*/
 		var endOfLastBlockAfterLength = Math.pow(2, (Math.floor(Math.log($scope.kSourceTapes[0].length - 8 -1) / Math.LN2) + 1)) - 1; /*je to index posledneho prvku*/

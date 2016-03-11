@@ -192,13 +192,11 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				break;
 
 
-			case $scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS:
+			case $scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS: /*checked + pridane mazanie*/
 				$log.info("EMPTY_BLOCK_REARRANGE_SYMBOLS");
 				$scope.greenStoragePrintingArray.length = 0;
 				/*preusporiadaj symboly v blokoch B0;B1;...;Bi-1 tak, aby boli uložené na spodných úrovniach blokov B1;B2;...;Bi a aby reprezentované slovo ostalo nezmenené*/
 				var iBlockIndex = tempContainer.getIBlockNumber();
-
-				$log.info("i "+iBlockIndex);
 				/*prava strana - ten priklad co je v skriptach*/
 				if (iBlockIndex > 0) {
 					/*var lastIndexOfUsedBlock = Math.pow(2, iBlockIndex-1) - 1; CO JE UCEL TEJTO PREMENNEJ - ONO TO JE LEN PRE UCEL TOHO NASLEDNEHO VRACANIA NA TIE BLOKY*/
@@ -206,28 +204,25 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					var endBlocksArray = [0];
 					for (var i = 0; i < iBlockIndex; i++) {
 						/*polootvorene intervaly*/
-						endBlocksArray.push(Math.pow(2, i) /*-1*/ );
+						endBlocksArray.push(Math.pow(2, i));
 					}
-
-					$log.info("pole koncov blokov: " + endBlocksArray);
 					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
 					for (var j = 1; j < endBlocksArray.length; j++) {
 						for (var k = endBlocksArray[j - 1]; k < endBlocksArray[j]; k++) {
 							if (k === 0) {
 								/*v home square mame len spodok*/
-								$log.info("reading home square");
 								$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
 								continue;
 							}
-							$log.info("reading "+k+" column upper");
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel);
+							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel = " ";
 						}
 						for (var k = endBlocksArray[j - 1]; k < endBlocksArray[j]; k++) {
 							if (k === 0) {
 								continue;
 							}
-							$log.info("reading "+k+" column lower");
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
+							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
 						}
 					}
 				} else {
@@ -239,47 +234,45 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						/*polootvorene intervaly*/
 						endBlocksArray.push(-Math.pow(2, i) /*-1*/ );
 					}
-					$log.info("pole koncov blokov: " + endBlocksArray);
 					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
-					for (var j = 1; j < endBlocksArray.length; j++) {
-						for (var k = -endBlocksArray[j - 1]; k < -endBlocksArray[j]; k++) {
+					for (var j = endBlocksArray.length -1; j > 0 ; j--) {
+						for (var k = endBlocksArray[j]+1; k <= endBlocksArray[j-1]; k++) {
 							/*if(k===0){
 							 	  	   	  $scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-k).lowerLevel);
 											  continue;
 							 	  	   }*/
-							$log.info("reading "+k+" column lower with symbol" + $scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-k).lowerLevel);
-							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-k).lowerLevel);
+							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
+							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
 						}
-						for (var k = -endBlocksArray[j - 1]; k < -endBlocksArray[j]; k++) {
+						for (var k = endBlocksArray[j]+1; k <= endBlocksArray[j-1]; k++) {
 							if (k === 0) {
 								/*v homesquare mame len spodok*/
 								continue;
 							}
-							$log.info("reading "+k+" column upper with symbol "+ $scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-k).upperLevel);
-							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-k).upperLevel);
+							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel);
+							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel = " ";
 						}
 					}
 				}
 				break;
 
-			case $scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE:
+			case $scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE: /*checked*/
 				$log.info("EMPTY_BLOCK_FROM_COPY_TAPE");
 				/*tu vymazeme home sqr*/
 				$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(0).lowerLevel= " ";
 				/*preusporiadaj symboly v blokoch B0;B1;...;Bi-1 tak, aby boli uložené na spodných úrovniach blokov B1;B2;...;Bi a aby reprezentované slovo ostalo nezmenené*/
 				var iBlockIndex = tempContainer.getIBlockNumber();
 				/*zatial osetrujem len pravu stranu - ten priklad co je v skriptach*/
-				if (iBlockIndex >= 0) {
-					var lastIndexOfIBlock = Math.pow(2, iBlockIndex) -1;
-					for (var i = 1; i <= lastIndexOfIBlock; i++) {
-						$log.info("from copy tape, iblocknumber >= i z tempcontaineru, citam" + $scope.reducedMachineCopyTapeArray[i - 1] + "na poziciu " + i);
+				if (iBlockIndex > 0) {
+					var lastIndexOfIBlock = Math.pow(2, iBlockIndex);
+					for (var i = 1; i < lastIndexOfIBlock; i++) {
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i - 1];
-					} /*Lava strana*/
+					}
+				/*Lava strana*/
 				} else {
-					var lastIndexOfIBlock = Math.pow(2, -iBlockIndex) -1;
-					for (var i = 1; i <= lastIndexOfIBlock; i++) {
-						$log.info("from copy tape, iblocknumber < i z tempcontaineru, citam" + $scope.reducedMachineCopyTapeArray[i - 1] + "na poziciu -" + i);
-						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-i).lowerLevel = $scope.reducedMachineCopyTapeArray[i - 1];
+					var lastIndexOfIBlock = -Math.pow(2, -iBlockIndex);
+					for (var i = lastIndexOfIBlock + 1; i <= -1; i++) {
+						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i-lastIndexOfIBlock -1];
 					}
 				}
 				/*mozeme vymazat pole copy POZOR-SKUTOCNE SA CELE ODALOKUJE A PRESTANE SA VYPISOVAT??*/
@@ -308,11 +301,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						for (var k = endBlocksArray[j - 1]; k < endBlocksArray[j]; k++) {
 							if (k === 0) {
 								/*v home square mame len spodok*/
-								$log.info("reading home square");
 								$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
 								continue;
 							}
-							$log.info("reading "+k+" column upper");
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel);
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel = " ";
 						}
@@ -320,7 +311,6 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 							if (k === 0) {
 								continue;
 							}
-							$log.info("reading "+k+" column lower");
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
 						}
@@ -334,7 +324,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					}
 					$log.info("pole koncov blokov: " + endBlocksArray);
 					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE- toto je rovnake v empty aj v halfempty*/
-					for (var j = endBlocksArray.length - 1; j > 0; j++) {
+					for (var j = endBlocksArray.length - 1; j > 0; j--) {
 						for (var k = endBlocksArray[j]+1; k <= endBlocksArray[j-1]; k++) {
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
@@ -381,49 +371,46 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				$scope.reducedMachineCopyTapeArray.length = 0;
 				break;
 
-			case $scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE:
+			case $scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE: /*checked + pridane mazanie*/
 				$log.info("FULL_BLOCK_ON_OPPOSITE_SIDE");
 				/*Ak je blok B-i plný, preusporiadaj symboly na hornej úrovni bloku B-i tak, aby boli uložené na spodných úrovniach blokov B-(i-1) az B0 a aby slovo zostalo nezmenene*/
 				/*iBlockindex obsahuje uz to -I*/
 				var iBlockIndex = tempContainer.getIBlockNumber();
-				$log.info("ZAPORNE I "+ iBlockIndex);
 				/*Spracuvanie druhej casti pravej strana - ten priklad co je v skriptach*/
-				if (iBlockIndex <= 0) {
-					/*tento interval nieje polootvoreny, pretoze sa slovo ajtak musi citat zlava doprava. Urobim ho teda uzavrety*/
-					var lastIndexOfMinusIFullBlock = -(Math.pow(2, -iBlockIndex) - 1);
-					$log.info("lastIndexOfMinusIFullBlock "+ lastIndexOfMinusIFullBlock);
+				if (iBlockIndex < 0) {
+					var lastIndexOfMinusIFullBlock = -Math.pow(2, -iBlockIndex);
 					/*najdeme zaciatok minus iteho */
-					var firstIndexOfMinusIBlock = -(Math.pow(2, -iBlockIndex - 1));
-					$log.info("firstIndexOfMinusIFullBlock " +firstIndexOfMinusIFullBlock);
+					var firstIndexOfMinusIFullBlock = -Math.pow(2, -iBlockIndex - 1);
 					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
-					for (var j = lastIndexOfMinusIFullBlock; j <= firstIndexOfMinusIBlock; j++) {
-						$log.info("beriem z horneho ");
+					for (var j = lastIndexOfMinusIFullBlock + 1; j <= firstIndexOfMinusIFullBlock; j++) {
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel);
+						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel = " ";
 					}
 				} else {
 					/*to iste len pre negativne I, cize teraz pozitivne -I. Robim to vsetko len zmenami znamienok, tie cykly by boli skarede, ak by boli negativne*/
 					/*tento interval je uzavrety*/
-					var lastIndexOfMinusIFullBlock = (Math.pow(2, iBlockIndex) - 1);
+					var lastIndexOfMinusIFullBlock = Math.pow(2, iBlockIndex);
 					/*najdeme zaciatok minus iteho */
-					var firstIndexOfMinusIBlock = (Math.pow(2, iBlockIndex-1));
+					var firstIndexOfMinusIFullBlock = Math.pow(2, iBlockIndex-1);
 					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
-					for (var j = firstIndexOfMinusIBlock; j <= lastIndexOfMinusIFullBlock; j++) {
+					for (var j = firstIndexOfMinusIFullBlock; j < lastIndexOfMinusIFullBlock; j++) {
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel);
+						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel = " ";
 					}
 				}
 				break;
 
-			case $scope.simulationStateEnum.FULL_BLOCK_FROM_COPY_TAPE: /*todo - odstranenie toho bloku*/
+			case $scope.simulationStateEnum.FULL_BLOCK_FROM_COPY_TAPE: /*checked*/
 				$log.info("FULL_BLOCK_FROM_COPY_TAPE");
 				var iBlockIndex = tempContainer.getIBlockNumber();
-				if (iBlockIndex <= 0) {
-					var lastIndexOfIMinusOneEmptyBlock = (Math.pow(2, -iBlockIndex -1) - 1);
-					for (var i = 0; i <= lastIndexOfIMinusOneEmptyBlock; i++) {
-						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-(lastIndexOfIMinusOneEmptyBlock - i)).lowerLevel = $scope.reducedMachineCopyTapeArray[i];
+				if (iBlockIndex < 0) {
+					var lastIndexOfIMinusOneEmptyBlock = -Math.pow(2, -iBlockIndex -1);
+					for (var i = lastIndexOfIMinusOneEmptyBlock+1 ; i <= 0; i++) {
+						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i-LastIndexOfIMinusOneEmptyBlock-1];
 					}
 				} else {
-					var lastIndexOfIMinusOneEmptyBlock = Math.pow(2, iBlockIndex -1) - 1;
-					for (var i = 0; i <= lastIndexOfIMinusOneEmptyBlock; i++) {
+					var lastIndexOfIMinusOneEmptyBlock = Math.pow(2, iBlockIndex -1);
+					for (var i = 0; i < lastIndexOfIMinusOneEmptyBlock; i++) {
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i];
 					}
 				}
@@ -588,17 +575,17 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 
 			if (movementArr[i] == -1) {
 				$scope.originalMachineViews[i].moveRight();
-				/*ak sme sa posunuli tak daleko, ze pozerame za pomysleny koniec pasky - koniec stringu ktory pasku reprezentuje, apendneme mu medzernik*/
+				/*ak sme sa posunuli tak daleko, ze pozerame za pomysleny koniec pasky - koniec stringu ktory pasku reprezentuje, apendneme mu blank*/
 				if ($scope.originalMachineViews[i].getEnd() > $scope.kSourceTapes.value[i].length) {
-					$scope.kSourceTapes.value[i] += " ";
+					$scope.kSourceTapes.value[i] += "×";
 				}
 				continue;
 			}
 			if (movementArr[i] == 1) {
 				$scope.originalMachineViews[i].moveLeft();
-				/*ak sme sa posunuli tak daleko, ze pozerame pred pomysleny koniec pasky - zaciatok stringu ktory pasku reprezentuje, preppendneme mu medzernik a nastavime spravne view (posunu sa prependnutim indexy)*/
+				/*ak sme sa posunuli tak daleko, ze pozerame pred pomysleny koniec pasky - zaciatok stringu ktory pasku reprezentuje, preppendneme mu blank a nastavime spravne view (posunu sa prependnutim indexy)*/
 				if ($scope.originalMachineViews[i].getBeginning() < 0) {
-					$scope.kSourceTapes.value[i] = " " + $scope.kSourceTapes.value[i];
+					$scope.kSourceTapes.value[i] = "×" + $scope.kSourceTapes.value[i];
 					$scope.originalMachineViews[i].moveRight();
 				}
 				continue;
