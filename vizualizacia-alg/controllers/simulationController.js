@@ -416,7 +416,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				if (iBlockIndex < 0) {
 					var lastIndexOfIMinusOneEmptyBlock = -Math.pow(2, -iBlockIndex -1);
 					for (var i = lastIndexOfIMinusOneEmptyBlock+1 ; i <= 0; i++) {
-						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i-LastIndexOfIMinusOneEmpt];
+						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i-lastIndexOfIMinusOneEmptyBlock - 1];
 					}
 				} else {
 					var lastIndexOfIMinusOneEmptyBlock = Math.pow(2, iBlockIndex -1);
