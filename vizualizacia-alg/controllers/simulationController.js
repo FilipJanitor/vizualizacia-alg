@@ -28,7 +28,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	/*pole, ktore sa nebude menit a bude sluzit len na iterovanie cez view na paskach. Je na vykreslenie celeho riadku / tj textu*/
 	$scope.CONSTANT_VIEW_ARRAY = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 	/*je na vykreslovanie stvorcekov ako riadku, ma spravne suradnice okrem prostredneho stvorceka, ten chyba*/
-	$scope.CONSTANT_X_VIEW_ARRAY = [60, 100, 140, 180, 220, 260, 300, 340, 420, 460, 500, 540, 580, 620, 660, 700];
+	$scope.CONSTANT_X_VIEW_ARRAY = [60, 100, 140, 180, 220, 260, 300, 340,/**/380,/**/ 420, 460, 500, 540, 580, 620, 660, 700];
 
 	/*Offsety sluziace na orientaciu na ploche svg. Na zaklade nich vieme urcit, kde sa zacinaju jednotlive pasky strojov, hoci je ich poloha dynamicka*/
 	$scope.reducedMachineCopyTapeOffset = {
@@ -472,13 +472,18 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				/*mozeme vymazat pole copy POZOR-SKUTOCNE SA CELE ODALOKUJE A PRESTANE SA VYPISOVAT??*/
 				$scope.reducedMachineCopyTapeArray.length = 0;
 				break;
+			default:
+				$log.error("Wrong type of simulation step");
+				break;
 		}
 		$scope.pointerToCurrentSimulationState++;
 	};
 
 	/*tato funkcia bude vsetko pocitat*/
 	/*TODO dat tam nejake medzi stavy tak, aby sa tie veci dali pekne obrazkovo ukazovat*/
+	/*opravit to treba aby to bolo krajsie*/
 	$scope.mainSimulatingFunction = function(writingArr, movementArr) {
+		$log.info("calling main function");
 		/*najskor vyprazdnime pole, v ktrom zostali veci z prerdch. simulacie*/
 		$scope.currentSimulationStateArray.length = 0;
 		/*velky cyklus, prechadzajuci cez vsetky pasky postupne odhora dolu*/
@@ -493,77 +498,81 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 			/*osetrenie pohybu hlavy dolava*/
 			/*najdeme prvy neplny stlpec v danom smere. Na zaklade neho vyratame blok*/
 			if (movementArr[j] == 1) { /*mozno je dobre cachovat tu dlzku*/
+				$log.info("counting for movement 1");
 				for (var k = 1; k < $scope.simulationStorageTapeArray.value[j].positiveLength(); k++) {
 					if ($scope.simulationStorageTapeArray.value[j].get(k).isEmpty() === 1) {
-						blocknumber = Math.floor(Math.log(k) / Math.LN2) + 1;
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_FROM_COPY_TAPE, j, blocknumber, null));
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_FROM_COPY_TAPE, j, -blocknumber, null));
+						blockNumber = Math.floor(Math.log(k) / Math.LN2) + 1;
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blockNumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_FROM_COPY_TAPE, j, blockNumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blockNumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_FROM_COPY_TAPE, j, -blockNumber, null));
+						$log.info("boldefined");
 						break;
 					} else if ($scope.simulationStorageTapeArray.value[j].get(k).isEmpty() === 2) {
-						blocknumber = Math.floor(Math.log(k) / Math.LN2) + 1;
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE, j, blocknumber, null));
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_FROM_COPY_TAPE, j, -blocknumber, null));
+						blockNumber = Math.floor(Math.log(k) / Math.LN2) + 1;
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blockNumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE, j, blockNumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blockNumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_FROM_COPY_TAPE, j, -blockNumber, null));
 						break;
+						$log.info("boldefined");
 					} else {
 						continue;
 					}
 				}
 				/*tu treba skontrolovat, ci skutocne plati invariant, ze zaporny index je vzdy rovnaky ako kladny. Pridame invariant, pocet blokov na kazdej stope nalavo aj napravo je vzdy jednotny*/
-				if (blocknumber === undefined) { /*narazili sme na koniec pola a je cele plne, vytvorme novy blok na oboch stranach*/
+				if (blockNumber === undefined) { /*narazili sme na koniec pola a je cele plne, vytvorme novy blok na oboch stranach*/
+					$log.info("bol undefined");
 					var poslednyIndex = $scope.simulationStorageTapeArray.value[j].positiveLength() - 1; /*posledny zaplneny index, ktory este mame definovany*/
 					var poslednyBlok = Math.floor(Math.log(poslednyIndex) / Math.LN2) + 1;/*posledny blok, co este mame*/
-					var poslednyIndexVNovomBloku = Math.pow(2, (poslednyblok + 2)-1) - 1; /*+2 -1 je tam preto, lebo blok i ma dlzku 2^(i-1)*/
+					var poslednyIndexVNovomBloku = Math.pow(2, (poslednyBlok + 2)-1) - 1; /*+2 -1 je tam preto, lebo blok i ma dlzku 2^(i-1)*/
 					for(var f = 0; f < $scope.kNumber.value;f++){
 						for (var m = poslednyIndex + 1; m <= poslednyIndexVNovomBloku; m++) { /*pridavame symetricky na obe strany. Povodne tam bolo tapeArray.value[j], ale teraz to rpidavame vsetkym*/
 							$scope.simulationStorageTapeArray.value[f].add(m, new StorageNode(" ", "×"));
 							$scope.simulationStorageTapeArray.value[f].add(-m, new StorageNode(" ", "×"));
 						}
 					}
-					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok + 1, null));
-					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE, j, poslednyBlok + 1, null));
-					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -poslednyBlok - 1, null));
-					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_FROM_COPY_TAPE, j, -poslednyBlok - 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok + 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_FROM_COPY_TAPE, j, poslednyBlok + 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE, j, -poslednyBlok - 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_FROM_COPY_TAPE, j, -poslednyBlok - 1, null));
 				}
 			}
 			/*osetrenie pohybu hlavy doprava*/
 			if (movementArr[j] == -1) { /*mozno je dobre cachovat tu dlzku*/
 				for (var k = 1; k < $scope.simulationStorageTapeArray.value[j].negativeLength(); k++) {
 					if ($scope.simulationStorageTapeArray.value[j].get(-k).isEmpty() === 1) {
-						blocknumber = -(Math.floor(Math.log(k) / Math.LN2)+1);
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_FROM_COPY_TAPE, j, blocknumber, null));
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_FROM_COPY_TAPE, j, -blocknumber, null));
+						blockNumber = -(Math.floor(Math.log(k) / Math.LN2)+1);
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blockNumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_FROM_COPY_TAPE, j, blockNumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blockNumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_FROM_COPY_TAPE, j, -blockNumber, null));
 						break;
 					} else if ($scope.simulationStorageTapeArray.value[j].get(-k).isEmpty() === 2) {
-						blocknumber = -(Math.floor(Math.log(k) / Math.LN2) + 1);
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blocknumber, null));
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE, j, blocknumber, null));
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blocknumber, null));
-						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_FROM_COPY_TAPE, j, -blocknumber, null));
+						blockNumber = -(Math.floor(Math.log(k) / Math.LN2) + 1);
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, blockNumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE, j, blockNumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blockNumber, null));
+						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_FROM_COPY_TAPE, j, -blockNumber, null));
 						break;
 					} else {
 
 					}
 				}
-				if (blocknumber === undefined) { /*narazili sme na koniec pola a je cele plne, vytvorme novy blok na oboch stranach*/
+				if (blockNumber === undefined) { /*narazili sme na koniec pola a je cele plne, vytvorme novy blok na oboch stranach*/
 					var poslednyIndex = - ($scope.simulationStorageTapeArray.value[j].negativeLength() - 1);
-					var poslednyBlok = -(Math.floor(Math.log(poslednyIndex) / Math.LN2) +1);
-					var poslednyIndexVNovomBloku = -(Math.pow(2, (-poslednyblok + 2) -1) - 1);
+					var poslednyBlok = -(Math.floor(Math.log(-poslednyIndex) / Math.LN2) +1);
+					var poslednyIndexVNovomBloku = -(Math.pow(2, (-poslednyBlok + 2) -1) - 1);
 					for(var f = 0; f < $scope.kNumber.value;f++){
 						for (var m = -poslednyIndex + 1; m <= -poslednyIndexVNovomBloku; m++) {
 							$scope.simulationStorageTapeArray.value[j].add(-m, new StorageNode(" ", "×"));
 							$scope.simulationStorageTapeArray.value[j].add(m, new StorageNode(" ", "×"));
 						}
 					}
-					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok - 1, null));
-					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE, j, poslednyBlok - 1, null));
-					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -poslednyBlok + 1, null));
-					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_FROM_COPY_TAPE, j, -poslednyBlok + 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS, j, poslednyBlok - 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_FROM_COPY_TAPE, j, poslednyBlok - 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE, j, -poslednyBlok + 1, null));
+					$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_FROM_COPY_TAPE, j, -poslednyBlok + 1, null));
 				}
 			}
 		}

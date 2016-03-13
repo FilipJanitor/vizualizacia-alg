@@ -109,6 +109,11 @@
             {{currentSimulationStateArray}}
             <br />
             {{reducedMachineCopyTapeArray}}
+            <br />
+            Dlzky poli - ci su skutocne konstantne
+            <p ng-repeat="values in simulationStorageTapeArray.value">
+            {{values.positiveLength()}}      {{values.negativeLength()}}
+            </p>
          </p>
       </div>
    </div>
