@@ -58,7 +58,7 @@ function NegativeArray() {
 				this.__negative[(-index) - 1] = val;
 			}
 		} else {
-			console.log("indexing to array must be done with integer");
+			console.error("indexing to array must be done with integer");
 		}
 	};
 	this.get = function(index) {
@@ -69,7 +69,7 @@ function NegativeArray() {
 				return this.__negative[(-index) - 1];
 			}
 		} else {
-			console.log("indexing to array must be done with integer - returning null");
+			console.error("indexing to array must be done with integer - returning null");
 			return null;
 		}
 	};
@@ -102,26 +102,50 @@ function NegativeArray() {
 function MachineView() {
 	this._beginning = 0;
 	this._end = 17;
+	this._head = 8
 	this.changeInterval = function(beg, end) {
+		if(beg + 17 != end){
+			console.error("beginning in machine view must be end -17");
+			return false;
+		}
 		this._beginning = beg;
 		this._end = end;
 	};
+	this.reInitialise = function(beg,end,head){
+		if(beg + 17 != end || beg + 8 != head){
+
+			console.error("beginning in machine view must be end -17 and head -8");
+			return false;
+		}
+		this._beginning = beg;
+		this._end = end;
+		this._head =head;
+	}
 	this.getCurrentHeadPosition = function() {
-		return this._beginning + 8;
+		return this._head;
+	};
+	this.getViewHeadPosition = function() {
+		return this._head - (this._beginning + 8);
 	};
 	this.moveRight = function() {
 		this._beginning++;
 		this._end++;
+		this._head++;
 	};
 	this.moveLeft = function() {
 		this._beginning--;
 		this._end--;
+		this._head--;
 	};
 	this.getBeginning = function() {
 		return this._beginning;
 	};
 	this.getEnd = function() {
 		return this._end;
+	};
+	this.moveView = function(direction){
+		this._beginning += direction;
+		this._end += direction;
 	};
 };
 

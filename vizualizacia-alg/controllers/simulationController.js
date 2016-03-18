@@ -111,7 +111,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		}
 
 		/*ked sa spusti tento watch - on sa spusti aj pri uplnej inicializacii vsetkeho aj pri nastaveni ksourcetapes - nastavime rovno aj spravny zaciatok storage tejpu*/
-		$scope.reducedMachineStorageTapeViews.changeInterval(-8, 9);
+		$scope.reducedMachineStorageTapeViews.reInitialise(-8, 9, 0);
 	}, true);
 
 	/*Funkcia na restartovanie celeho simulacneho procesu do state beginning*/
@@ -172,6 +172,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	/*Funkcia upravuje výstup simulačnej funkcie tak, aby bol vykresliteľný*/
 	/*TODO _ ZELENE STVORCEKY SA ESTE NEDEJU< TAKZE TO TREBA ESTE PODOPLNAT*/
 	/*TODO OSETRIT DIVNE VSTUPY - I = 0*/
+	/*Kazdy krok zrestuje view storagetape.*/
 	$scope.nextStep = function() {
 		/*ak sme vsetko posimulovali, upraceme a vypneme simulaciu*/
 		if ($scope.pointerToCurrentSimulationState === $scope.currentSimulationStateArray.length) {
@@ -181,6 +182,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 			return;
 		}
 
+		$scope.reducedMachineStorageTapeViews.reInitialise(-8, 9, 0);
 		var tempContainer = $scope.currentSimulationStateArray[$scope.pointerToCurrentSimulationState];
 		switch (tempContainer.getStepState()) {
 
@@ -610,5 +612,10 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				continue;
 			}
 		}
+	};
+
+	/*funkcia posuvajuca nas view na storage paske.*/
+	$scope.moveStorageTape = function(direction){
+		$scope.reducedMachineStorageTapeViews.moveView(-direction);
 	};
 }]);

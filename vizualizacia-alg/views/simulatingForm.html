@@ -1,5 +1,13 @@
 <div class="col-sm-9">
    <div class="row">
+      <div class="col-sm-6">
+            <button type="button" class="btn btn-block btn-default" ng-click="moveStorageTape(1)">Posunúť view na storage páske vľavo</button>
+      </div>
+      <div class="col-sm-6">
+            <button type="button" class="btn btn-block btn-default" ng-click="moveStorageTape(-1)">Posunúť view na storage páske vpravo</button>
+      </div>
+   </div>
+   <div class="row">
       <div class="col-sm-12">
          <div class="wrap-svg">
             <div class="spacer.svg">
@@ -22,7 +30,7 @@
                		<rect ng-repeat="xval in CONSTANT_X_VIEW_ARRAY" ng-attr-x="{{xval}}" ng-attr-y="{{node.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
                	</g>
 					<!-- specialny stvorcek, oznacujuci homecolumn, bude sa este menit aby sa dal polohovat-->
-                  <rect ng-repeat="node in reducedMachineStorageTapePrintingArray" x="380" ng-attr-y="{{node.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)"/>
+                  <rect ng-repeat="node in reducedMachineStorageTapePrintingArray" x="{{ 380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition() }}" ng-attr-y="{{node.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)"/>
 
                <!-- copy tape -->
 
@@ -34,7 +42,7 @@
                   	<rect ng-repeat="node in simulatingArray.value" ng-attr-x="{{380+node.movement*40}}" ng-attr-y="{{40+$index*60}}" width="40" height="40" style="fill:rgb(255,0,0);stroke-width:0;"/>
 						</g>
 					<!-- green squares - tie budu oznacovat aktualne zmeny  krokov simulacie na sim. stroji-->
-						<rect ng-repeat="square in greenStoragePrintingArray" ng-attr-x="{{square.x}}" ng-attr-y="{{square.y}}" width="40" height="40" style="fill:rgb(0,255,0);stroke-width:0;"/>
+						<rect ng-repeat="square in greenStoragePrintingArray" ng-attr-x="{{square.x + 40* reducedMachineStorageTapeViews.getViewHeadPosition() }}" ng-attr-y="{{square.y}}" width="40" height="40" style="fill:rgb(0,255,0);stroke-width:0;"/>
 
 					<!-- texty na vykreslovanie -->
 
