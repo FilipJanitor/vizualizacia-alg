@@ -173,7 +173,17 @@ function StepInformationContainer(step_state, original_track, block_number, over
 }
 
 /*Objekt stvorceka*/
-function printingSquare(_x, _y) {
-	this.x = _x;
-	this.y = _y;
+function PrintingSquare(index,row, simulatedTrack) {
+	this._row = row; /*1 znamena spodny riadok, 0 vrchny*/
+	this._index = index;
+	this._simulatedTrack = simulatedTrack;
+	this.getRow = function(){
+		return this._row;
+	}
+	this.getIndex = function(){
+		return this._index;
+	}
+	this.getSimulatedTrack = function(){
+		return this._simulatedTrack;
+	}
 };

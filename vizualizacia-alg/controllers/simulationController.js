@@ -178,6 +178,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		if ($scope.pointerToCurrentSimulationState === $scope.currentSimulationStateArray.length) {
 			$scope.currentSimulationStateArray.length = 0;
 			$scope.pointerToCurrentSimulationState = 0;
+			$scope.greenStoragePrintingArray.length = 0;
 			$scope.simulationMode = $scope.stateEnum.IDLE;
 			return;
 		}
@@ -188,15 +189,15 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 
 			case $scope.simulationStateEnum.OVERWRITING_HOME_COLUMN:
 				$log.info("OVERWRITING_HOME_COLUMN");
+				$scope.greenStoragePrintingArray.length = 0;
 				$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get($scope.reducedMachineStorageTapeViews.getCurrentHeadPosition()).lowerLevel = tempContainer.getOverwriteSymbol();
 
-				$scope.greenStoragePrintingArray.push(new printingSquare(380, $scope.storageTapeOffset.value + 40 + tempContainer.getIndexOfOriginalTrack() * 80));
+				$scope.greenStoragePrintingArray.push(new PrintingSquare(0,1,tempContainer.getIndexOfOriginalTrack()));
 				break;
 
 
-			case $scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS: /*checked + pridane mazanie*/
+			case $scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS: /*checked + pridane mazanie + green*/
 				$log.info("EMPTY_BLOCK_REARRANGE_SYMBOLS");
-				$scope.greenStoragePrintingArray.length = 0;
 				/*preusporiadaj symboly v blokoch B0;B1;...;Bi-1 tak, aby boli uložené na spodných úrovniach blokov B1;B2;...;Bi a aby reprezentované slovo ostalo nezmenené*/
 				var iBlockIndex = tempContainer.getIBlockNumber();
 				/*prava strana - ten priklad co je v skriptach*/
@@ -227,6 +228,12 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
 						}
 					}
+
+					/*zelene stvorceky oznacujuce policka, s ktorymi sa hybe TODO doplnit na copy pasku*/
+					for (var i = 1; i < endBlocksArray[endBlocksArray.length-1]; i++) {
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,0,tempContainer.getIndexOfOriginalTrack()));
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
+					}
 				} else {
 					/*to iste len pre negativne. Robim to vsetko len zmenami znamienok, tie cykly by boli skarede, ak by boli negativne*/
 					/*var lastIndexOfUsedBlock = Math.pow(2, -(iBlockIndex+1)) - 1;*/
@@ -255,11 +262,17 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel = " ";
 						}
 					}
+					/*zelene stvorceky oznacujuce policka, s ktorymi sa hybe TODO doplnit na copy pasku*/
+					for (var i = -1; i > endBlocksArray[endBlocksArray.length-1]; i--) {
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,0,tempContainer.getIndexOfOriginalTrack()));
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
+					}
 				}
 				break;
 
-			case $scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE: /*checked*/
+			case $scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE: /*checked+ green*/
 				$log.info("EMPTY_BLOCK_FROM_COPY_TAPE");
+				$scope.greenStoragePrintingArray.length = 0;
 				/*tu vymazeme home sqr*/
 				$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(0).lowerLevel= " ";
 				/*preusporiadaj symboly v blokoch B0;B1;...;Bi-1 tak, aby boli uložené na spodných úrovniach blokov B1;B2;...;Bi a aby reprezentované slovo ostalo nezmenené*/
@@ -269,12 +282,14 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					var lastIndexOfIBlock = Math.pow(2, iBlockIndex);
 					for (var i = 1; i < lastIndexOfIBlock; i++) {
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i - 1];
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
 					}
 				/*Lava strana*/
 				} else {
 					var lastIndexOfIBlock = -Math.pow(2, -iBlockIndex);
 					for (var i = lastIndexOfIBlock + 1; i <= -1; i++) {
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i-lastIndexOfIBlock -1];
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
 					}
 				}
 				/*mozeme vymazat pole copy POZOR-SKUTOCNE SA CELE ODALOKUJE A PRESTANE SA VYPISOVAT??*/
@@ -282,10 +297,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				break;
 
 
-			case $scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS: /*checked + pridane mazanie*/
+			case $scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS: /*checked + pridane mazanie + green*/
 				$log.info("HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS");
 				/*preusporiadaj symboly v blokoch B0;B1;:::;Bi-1 tak, aby boli ulozene na spodnych urovniach blokov B1;B2....Bi-1 a hornej urovni Bi a aby reprezentovane slovo zostalo nezmenene.*/
-				$scope.greenStoragePrintingArray.length = 0;
 				var iBlockIndex = tempContainer.getIBlockNumber();
 				$log.info("i "+iBlockIndex);
 
@@ -317,6 +331,11 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
 						}
 					}
+					/*zelene pomocne stvorceky*/
+					for (var i = 1; i < endBlocksArray[endBlocksArray.length-1]; i++) {
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,0,tempContainer.getIndexOfOriginalTrack()));
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
+					}
 				} else {
 					/*najdeme vsetky konce blokov az po blok ktory aktualne spracuvame*/
 					var endBlocksArray = [0];
@@ -324,31 +343,33 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						/*polootvorene intervaly*/
 						endBlocksArray.push(-Math.pow(2, i) /*-1*/ );
 					}
-					$log.info("pole koncov blokov: " + endBlocksArray);
 					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE- toto je rovnake v empty aj v halfempty*/
 					for (var j = endBlocksArray.length - 1; j > 0; j--) {
 						for (var k = endBlocksArray[j]+1; k <= endBlocksArray[j-1]; k++) {
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
-							$log.info("citam z spodneho levelu " + $scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel + " a nulujem to");
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
 						}
 						for (var k = endBlocksArray[j]+1; k <= endBlocksArray[j-1]; k++) {
 							if (k === 0) {
 								/*v homesquare mame len spodok*/
-								$log.info("citam vrch homesquaru");
 								continue;
 							}
-							$log.info("citam z upperlevelu " + $scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel);
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel);
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel = " ";
 						}
+					}
+					/*zelene stvorceky oznacujuce policka, s ktorymi sa hybe TODO doplnit na copy pasku*/
+					for (var i = -1; i > endBlocksArray[endBlocksArray.length-1]; i--) {
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,0,tempContainer.getIndexOfOriginalTrack()));
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
 					}
 				}
 				break;
 
 
-			case $scope.simulationStateEnum.HALF_EMPTY_BLOCK_FROM_COPY_TAPE: /*checked*/
+			case $scope.simulationStateEnum.HALF_EMPTY_BLOCK_FROM_COPY_TAPE: /*checked + green*/
 				$log.info("HALF_EMPTY_BLOCK_FROM_COPY_TAPE");
+				$scope.greenStoragePrintingArray.length = 0;
 				/*tu vymazeme home sqr*/
 				$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(0).lowerLevel= " ";
 				/*preusporiadaj symboly v blokoch B0;B1;:::;Bi-1 tak, aby boli ulozene na spodnych urovniach blokov B1;B2....Bi-1 a hornej urovni Bi a aby reprezentovane slovo zostalo nezmenene.*/
@@ -358,33 +379,36 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					var lastIndexOfIMinusOneBlock = Math.pow(2,iBlockIndex-1);
 					for (var i = 1; i < lastIndexOfIMinusOneBlock; i++) {
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i - 1];
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
 					}
 					for (var j = lastIndexOfIMinusOneBlock; j < lastIndexOfIBlock; j++) {
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel = $scope.reducedMachineCopyTapeArray[j - 1];
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(j,0,tempContainer.getIndexOfOriginalTrack()));
 					}
+
 				} else {
-					$log.info("potom som tu");
 					var lastIndexOfIBlock = -Math.pow(2, -iBlockIndex);
 					var lastIndexOfIMinusOneBlock = -Math.pow(2,-iBlockIndex-1);
-					$log.info("lastindexofi "+lastIndexOfIBlock+"; a lastindexofiminusone" + lastIndexOfIMinusOneBlock);
 					var counter = 0;
 					for (var j = lastIndexOfIBlock + 1; j <= lastIndexOfIMinusOneBlock; j++) {
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel = $scope.reducedMachineCopyTapeArray[j-lastIndexOfIBlock-1];
-						$log.info("pisem na " + j + "ty stlpec na vrch a citam z copytapu na indexe "+(counter /*j-lastIndexOfIBlock-1*/));
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(j,0,tempContainer.getIndexOfOriginalTrack()));
 						counter++;
+
 					}
 					for (var i = lastIndexOfIMinusOneBlock + 1; i <= -1; i++) {
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[counter/*i-lastIndexOfIMinusOneBlock-1*/];
-						$log.info("pisem na " + i + "ty stlpec na spodok a citam z copytapu na indexe "+(counter/*i-lastIndexOfIMinusOneBlock-1*/));
 						counter++;
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
 					}
 				}
 				/*mozeme vymazat pole copy POZOR-SKUTOCNE SA CELE ODALOKUJE A PRESTANE SA VYPISOVAT??*/
 				$scope.reducedMachineCopyTapeArray.length = 0;
 				break;
 
-			case $scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE: /*checked + pridane mazanie*/
+			case $scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE: /*checked + pridane mazanie + green*/
 				$log.info("FULL_BLOCK_ON_OPPOSITE_SIDE");
+				$scope.greenStoragePrintingArray.length=0;
 				/*Ak je blok B-i plný, preusporiadaj symboly na hornej úrovni bloku B-i tak, aby boli uložené na spodných úrovniach blokov B-(i-1) az B0 a aby slovo zostalo nezmenene*/
 				/*iBlockindex obsahuje uz to -I*/
 				var iBlockIndex = tempContainer.getIBlockNumber();
@@ -397,6 +421,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					for (var j = lastIndexOfMinusIFullBlock + 1; j <= firstIndexOfMinusIFullBlock; j++) {
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel);
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel = " ";
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(j,0,tempContainer.getIndexOfOriginalTrack()));
 					}
 				} else {
 					/*to iste len pre negativne I, cize teraz pozitivne -I. Robim to vsetko len zmenami znamienok, tie cykly by boli skarede, ak by boli negativne*/
@@ -408,31 +433,36 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					for (var j = firstIndexOfMinusIFullBlock; j < lastIndexOfMinusIFullBlock; j++) {
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel);
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel = " ";
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(j,0,tempContainer.getIndexOfOriginalTrack()));
 					}
 				}
 				break;
 
-			case $scope.simulationStateEnum.FULL_BLOCK_FROM_COPY_TAPE: /*checked*/
+			case $scope.simulationStateEnum.FULL_BLOCK_FROM_COPY_TAPE: /*checked + green*/
 				$log.info("FULL_BLOCK_FROM_COPY_TAPE");
+				$scope.greenStoragePrintingArray.length =0;
 				var iBlockIndex = tempContainer.getIBlockNumber();
 				if (iBlockIndex < 0) {
 					var lastIndexOfIMinusOneEmptyBlock = -Math.pow(2, -iBlockIndex -1);
 					for (var i = lastIndexOfIMinusOneEmptyBlock+1 ; i <= 0; i++) {
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i-lastIndexOfIMinusOneEmptyBlock - 1];
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
 					}
 				} else {
 					var lastIndexOfIMinusOneEmptyBlock = Math.pow(2, iBlockIndex -1);
 					for (var i = 0; i < lastIndexOfIMinusOneEmptyBlock; i++) {
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i];
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
 					}
 				}
 				/*mozeme vymazat pole copy POZOR-SKUTOCNE SA CELE ODALOKUJE A PRESTANE SA VYPISOVAT??*/
 				$scope.reducedMachineCopyTapeArray.length = 0;
 				break;
 
-			case $scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE: /*checked + vymazavanie*/
+			case $scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE: /*checked + vymazavanie + green*/
 				/*Ak je blok B-i poloprázdny, preusporiadaj symboly na spodnej úrovni bloku B-i tak, aby boli uložené na spodných úrovniach blokov B-i-1 az B0 a aby reprezentovane slovo ostalo nezmenene*/
 				$log.info("HALF_FULL_BLOCK_ON_OPPOSITE_SIDE");
+				$scope.greenStoragePrintingArray.length=0;
 				var iBlockIndex = tempContainer.getIBlockNumber();
 				/*Spracuvanie druhej casti pravej strana - ten priklad co je v skriptach*/
 				if (iBlockIndex < 0) {
@@ -442,6 +472,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					for (var j = lastIndexOfMinusIHalfFullBlock + 1; j <= firstIndexOfMinusIHalfFullBlock; j++) {
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).lowerLevel);
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).lowerLevel = " ";
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(j,1,tempContainer.getIndexOfOriginalTrack()));
 					}
 				} else {
 					/*to iste len pre negativne I, cize teraz pozitivne -I. Robim to vsetko len zmenami znamienok, */
@@ -452,6 +483,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					for (var j = firstIndexOfMinusIHalfFullBlock; j < lastIndexOfMinusIHalfFullBlock; j++) {
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).lowerLevel);
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).lowerLevel = " ";
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(j,1,tempContainer.getIndexOfOriginalTrack()));
 					}
 				}
 
@@ -459,16 +491,19 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 
 			case $scope.simulationStateEnum.HALF_FULL_BLOCK_FROM_COPY_TAPE: /*checked*/
 				$log.info("HALF_FULL_BLOCK_FROM_COPY_TAPE");
+				$scope.greenStoragePrintingArray.length=0;
 				var iBlockIndex = tempContainer.getIBlockNumber();
 				if (iBlockIndex < 0) {
 					var lastIndexOfIMinusOneEmptyBlock = -Math.pow(2, -iBlockIndex-1);
 					for (var i = lastIndexOfIMinusOneEmptyBlock+1; i <= 0; i++) {
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i-lastIndexOfIMinusOneEmptyBlock-1];
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
 					}
 				} else {
 					var lastIndexOfIMinusOneEmptyBlock = Math.pow(2, iBlockIndex -1);
 					for (var i = 0; i < lastIndexOfIMinusOneEmptyBlock; i++) {
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i];
+						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
 					}
 				}
 				/*mozeme vymazat pole copy POZOR-SKUTOCNE SA CELE ODALOKUJE A PRESTANE SA VYPISOVAT??*/
@@ -485,7 +520,6 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	/*TODO dat tam nejake medzi stavy tak, aby sa tie veci dali pekne obrazkovo ukazovat*/
 	/*opravit to treba aby to bolo krajsie*/
 	$scope.mainSimulatingFunction = function(writingArr, movementArr) {
-		$log.info("calling main function");
 		/*najskor vyprazdnime pole, v ktrom zostali veci z prerdch. simulacie*/
 		$scope.currentSimulationStateArray.length = 0;
 		/*velky cyklus, prechadzajuci cez vsetky pasky postupne odhora dolu*/
@@ -500,7 +534,6 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 			/*osetrenie pohybu hlavy dolava*/
 			/*najdeme prvy neplny stlpec v danom smere. Na zaklade neho vyratame blok*/
 			if (movementArr[j] == 1) { /*mozno je dobre cachovat tu dlzku*/
-				$log.info("counting for movement 1");
 				for (var k = 1; k < $scope.simulationStorageTapeArray.value[j].positiveLength(); k++) {
 					if ($scope.simulationStorageTapeArray.value[j].get(k).isEmpty() === 1) {
 						blockNumber = Math.floor(Math.log(k) / Math.LN2) + 1;
@@ -508,7 +541,6 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_EMPTY_BLOCK_FROM_COPY_TAPE, j, blockNumber, null));
 						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blockNumber, null));
 						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.HALF_FULL_BLOCK_FROM_COPY_TAPE, j, -blockNumber, null));
-						$log.info("boldefined");
 						break;
 					} else if ($scope.simulationStorageTapeArray.value[j].get(k).isEmpty() === 2) {
 						blockNumber = Math.floor(Math.log(k) / Math.LN2) + 1;
@@ -517,14 +549,12 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_ON_OPPOSITE_SIDE, j, -blockNumber, null));
 						$scope.currentSimulationStateArray.push(new StepInformationContainer($scope.simulationStateEnum.FULL_BLOCK_FROM_COPY_TAPE, j, -blockNumber, null));
 						break;
-						$log.info("boldefined");
 					} else {
 						continue;
 					}
 				}
 				/*tu treba skontrolovat, ci skutocne plati invariant, ze zaporny index je vzdy rovnaky ako kladny. Pridame invariant, pocet blokov na kazdej stope nalavo aj napravo je vzdy jednotny*/
 				if (blockNumber === undefined) { /*narazili sme na koniec pola a je cele plne, vytvorme novy blok na oboch stranach*/
-					$log.info("bol undefined");
 					var poslednyIndex = $scope.simulationStorageTapeArray.value[j].positiveLength() - 1; /*posledny zaplneny index, ktory este mame definovany*/
 					var poslednyBlok = Math.floor(Math.log(poslednyIndex) / Math.LN2) + 1;/*posledny blok, co este mame*/
 					var poslednyIndexVNovomBloku = Math.pow(2, (poslednyBlok + 2)-1) - 1; /*+2 -1 je tam preto, lebo blok i ma dlzku 2^(i-1)*/
