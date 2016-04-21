@@ -170,7 +170,7 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 		var errLog = "Chyba nedeterminizmu pri riadkoch: ";
 		for (var i = 0; i < $scope.deltaFunction.length; i++) {
 			for (var j = i + 1; j < $scope.deltaFunction.length; j++) {
-				if ($scope.deltaFunction[i].originalState == $scope.deltaFunction[j].originalState && $scope.deltaFunction[i].reading.toString() === $scope.deltaFunction[j].reading.toString()) {
+				if ($scope.deltaFunction[i].getOriginalState() == $scope.deltaFunction[j].getOriginalState() && $scope.deltaFunction[i].getReading().toString() === $scope.deltaFunction[j].getReading().toString()) {
 					overallSuccess = false;
 					determinism = false;
 					errLog += " " + i + " a " + j + ";";
