@@ -64,6 +64,8 @@
                <!-- texty na copypaske -->
                   <text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{reducedMachineCopyTapeOffset.value+25}}" fill="black">{{ reducedMachineCopyTapeArray[$index] }}</text>
 
+               <!--ukazovatel stavu pre mod 2 -->
+                  <text style="text-anchor: middle" ng-if="mainMode.value == stateEnum.MODE_2_SIMULATE" x="540" y="30" fill="black"> Stav: {{originalMachineState}} </text>
                </svg>
             </div>
          </div>

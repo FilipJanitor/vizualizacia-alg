@@ -128,6 +128,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		var moving = [];
 		for (var i = 0; i < $scope.kNumber.value; i++) {
 			writing.push($scope.simulatingArray.value[i].overwriteValue);
+			//chyba s znamienkami v pohybe. Musim ich otocit. Menim to v tych 2 funkciach
 			moving.push($scope.simulatingArray.value[i].movement);
 		}
 
@@ -519,7 +520,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	/*tato funkcia bude vsetko pocitat*/
 	/*TODO dat tam nejake medzi stavy tak, aby sa tie veci dali pekne obrazkovo ukazovat*/
 	/*opravit to treba aby to bolo krajsie*/
-	$scope.mainSimulatingFunction = function(writingArr, movementArr) {
+	$scope.mainSimulatingFunction = function(writingArr, movementArr) { /*vymienam 1 a -1*/
 		/*najskor vyprazdnime pole, v ktrom zostali veci z prerdch. simulacie*/
 		$scope.currentSimulationStateArray.length = 0;
 		/*velky cyklus, prechadzajuci cez vsetky pasky postupne odhora dolu*/
