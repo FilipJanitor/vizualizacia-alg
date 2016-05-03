@@ -128,7 +128,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		var moving = [];
 		for (var i = 0; i < $scope.kNumber.value; i++) {
 			writing.push($scope.simulatingArray.value[i].overwriteValue);
-			//chyba s znamienkami v pohybe. Musim ich otocit. Menim to v tych 2 funkciach
+			//chyba s znamienkami v pohybe. Musim ich otocit. robim to v dvoch funkciach redraw a main
 			moving.push($scope.simulatingArray.value[i].movement);
 		}
 
@@ -520,7 +520,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	/*tato funkcia bude vsetko pocitat*/
 	/*TODO dat tam nejake medzi stavy tak, aby sa tie veci dali pekne obrazkovo ukazovat*/
 	/*opravit to treba aby to bolo krajsie*/
-	$scope.mainSimulatingFunction = function(writingArr, movementArr) { /*vymienam 1 a -1*/
+	$scope.mainSimulatingFunction = function(writingArr, movementArr) {
 		/*najskor vyprazdnime pole, v ktrom zostali veci z prerdch. simulacie*/
 		$scope.currentSimulationStateArray.length = 0;
 		/*velky cyklus, prechadzajuci cez vsetky pasky postupne odhora dolu*/
@@ -534,7 +534,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 			var blockNumber;
 			/*osetrenie pohybu hlavy dolava*/
 			/*najdeme prvy neplny stlpec v danom smere. Na zaklade neho vyratame blok*/
-			if (movementArr[j] == 1) { /*mozno je dobre cachovat tu dlzku*/
+			if (movementArr[j] == -1) { /*mozno je dobre cachovat tu dlzku*/
 				for (var k = 1; k < $scope.simulationStorageTapeArray.value[j].positiveLength(); k++) {
 					if ($scope.simulationStorageTapeArray.value[j].get(k).isEmpty() === 1) {
 						blockNumber = Math.floor(Math.log(k) / Math.LN2) + 1;
@@ -572,7 +572,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				}
 			}
 			/*osetrenie pohybu hlavy doprava*/
-			if (movementArr[j] == -1) { /*mozno je dobre cachovat tu dlzku*/
+			if (movementArr[j] == 1) { /*mozno je dobre cachovat tu dlzku*/
 				for (var k = 1; k < $scope.simulationStorageTapeArray.value[j].negativeLength(); k++) {
 					if ($scope.simulationStorageTapeArray.value[j].get(-k).isEmpty() === 1) {
 						blockNumber = -(Math.floor(Math.log(k) / Math.LN2)+1);
@@ -625,7 +625,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				continue;
 			}
 
-			if (movementArr[i] == -1) {
+			if (movementArr[i] == 1) {
 				$scope.originalMachineViews[i].moveRight();
 				/*ak sme sa posunuli tak daleko, ze pozerame za pomysleny koniec pasky - koniec stringu ktory pasku reprezentuje, apendneme mu blank*/
 				if ($scope.originalMachineViews[i].getEnd() > $scope.kSourceTapes.value[i].length) {
@@ -633,7 +633,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				}
 				continue;
 			}
-			if (movementArr[i] == 1) {
+			if (movementArr[i] == -1) {
 				$scope.originalMachineViews[i].moveLeft();
 				/*ak sme sa posunuli tak daleko, ze pozerame pred pomysleny koniec pasky - zaciatok stringu ktory pasku reprezentuje, preppendneme mu blank a nastavime spravne view (posunu sa prependnutim indexy)*/
 				if ($scope.originalMachineViews[i].getBeginning() < 0) {
