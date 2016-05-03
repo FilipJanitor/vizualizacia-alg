@@ -649,4 +649,11 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	$scope.moveStorageTape = function(direction){
 		$scope.reducedMachineStorageTapeViews.moveView(-direction);
 	};
+
+	/*funkcia posuvajuca view na vs. paskach origo stroja*/
+	$scope.moveOriginalTapes = function(direction){
+		for (var i = 0; i < $scope.originalMachineViews.length ; i++) {
+			$scope.originalMachineViews[i].moveView(-direction);
+		}
+	};
 }]);

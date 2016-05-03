@@ -6,8 +6,18 @@
       <div class="col-sm-6">
             <button type="button" class="btn btn-block btn-default" ng-disabled="reducedMachineStorageTapeViews.getEnd() == simulationStorageTapeArray.value[0].positiveLength() " ng-click="moveStorageTape(-1)">Posunúť view na storage páske vpravo</button>
       </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-6">
+            <!-- Vyriesit ng disabled pre vsetky veci-->
+            <button type="button" class="btn btn-block btn-default" ng-disabled="reducedMachineStorageTapeViews.getBeginning() == - (simulationStorageTapeArray.value[0].negativeLength() -1 )" ng-click="moveOriginalTapes(1)">Posunúť view na original páske vľavo</button>
+      </div>
+      <div class="col-sm-6">
+            <button type="button" class="btn btn-block btn-default" ng-disabled="reducedMachineStorageTapeViews.getEnd() == simulationStorageTapeArray.value[0].positiveLength() " ng-click="moveOriginalTapes(-1)">Posunúť view na original páske vpravo</button>
+      </div>
       <!-- este doplnit posuvatko na copytape-->
    </div>
+
    <div class="row">
       <div class="col-sm-12">
          <div class="wrap-svg">
