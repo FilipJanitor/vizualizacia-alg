@@ -124,6 +124,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		$log.info("STARTING_SIMULATION");
 		/*zapne simulaciu*/
 		$scope.simulationMode = $scope.stateEnum.IN_PROGRESS;
+		for (var i = 0; i < $scope.kNumber.value; i++) {
+			$scope.originalMachineViews[i].resetOriginalView();
+		}
 		var writing = [];
 		var moving = [];
 		for (var i = 0; i < $scope.kNumber.value; i++) {
@@ -142,6 +145,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		var readingArr = [];
 		for (var i = 0; i < $scope.kNumber.value; i++) {
 			readingArr.push($scope.kSourceTapes.value[i].charAt($scope.originalMachineViews[i].getCurrentHeadPosition()));
+			$scope.originalMachineViews[i].resetOriginalView();
 		}
 		var writing;
 		var moving;
@@ -651,9 +655,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	};
 
 	/*funkcia posuvajuca view na vs. paskach origo stroja*/
-	$scope.moveOriginalTapes = function(direction){
-		for (var i = 0; i < $scope.originalMachineViews.length ; i++) {
-			$scope.originalMachineViews[i].moveView(-direction);
-		}
+	$scope.moveOriginalTapes = function(index,direction){
+		$scope.originalMachineViews[index].moveOriginalView(-direction);
 	};
 }]);

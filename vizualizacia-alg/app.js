@@ -102,10 +102,12 @@ function NegativeArray() {
 function MachineView() {
 	this._beginning = 0;
 	this._end = 17;
-	this._head = 8
+	this._head = 8;
+	this._originalViewBeginning = 0;
+	this._originalViewEnd = 17;
 	this.changeInterval = function(beg, end) {
 		if(beg + 17 != end){
-			console.error("beginning in machine view must be end -17");
+			console.error("beginning in machine view must be (end-17)");
 			return false;
 		}
 		this._beginning = beg;
@@ -147,6 +149,23 @@ function MachineView() {
 		this._beginning += direction;
 		this._end += direction;
 	};
+	this.moveOriginalView = function(direction){
+		this._originalViewBeginning += direction;
+		this._originalViewEnd += direction;
+	};
+	this.getOriginalViewHeadPosition = function(){
+		return this._originalViewBeginning+8;
+	};
+	this.getOriginalViewBeginning = function(){
+		return this._originalViewBeginning;
+	};
+	this.getOriginalViewEnd = function(){
+		return this._originalViewEnd;
+	};
+	this.resetOriginalView = function(){
+		this._originalViewBeginning = this._beginning;
+		this._originalViewEnd = this._end;
+	}
 };
 
 /*Objekt, obsahuci vsetky potrebne informacie pre podkrok simulacie. Je tvoreny mainsimulation funkciou a citany nextstepom*/

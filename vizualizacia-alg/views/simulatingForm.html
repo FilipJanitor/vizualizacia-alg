@@ -1,19 +1,15 @@
 <div class="col-sm-9">
+
    <div class="row">
       <div class="col-sm-6">
             <button type="button" class="btn btn-block btn-default" ng-disabled="reducedMachineStorageTapeViews.getBeginning() == - (simulationStorageTapeArray.value[0].negativeLength() -1 )" ng-click="moveStorageTape(1)">Posunúť view na storage páske vľavo</button>
+
+            <button type="button" class="btn btn-block btn-default" ng-repeat="val in kSourceTapes.value" ng-disabled="originalMachineViews[$index].getOriginalViewBeginning() == 0" ng-click="moveOriginalTapes($index,1)">Posunúť view na original páske {{$index + 1}} vľavo</button>
       </div>
       <div class="col-sm-6">
             <button type="button" class="btn btn-block btn-default" ng-disabled="reducedMachineStorageTapeViews.getEnd() == simulationStorageTapeArray.value[0].positiveLength() " ng-click="moveStorageTape(-1)">Posunúť view na storage páske vpravo</button>
-      </div>
-   </div>
-   <div class="row">
-      <div class="col-sm-6">
-            <!-- Vyriesit ng disabled pre vsetky veci-->
-            <button type="button" class="btn btn-block btn-default" ng-disabled="reducedMachineStorageTapeViews.getBeginning() == - (simulationStorageTapeArray.value[0].negativeLength() -1 )" ng-click="moveOriginalTapes(1)">Posunúť view na original páske vľavo</button>
-      </div>
-      <div class="col-sm-6">
-            <button type="button" class="btn btn-block btn-default" ng-disabled="reducedMachineStorageTapeViews.getEnd() == simulationStorageTapeArray.value[0].positiveLength() " ng-click="moveOriginalTapes(-1)">Posunúť view na original páske vpravo</button>
+
+            <button type="button" class="btn btn-block btn-default" ng-repeat="val in kSourceTapes.value" ng-disabled="originalMachineViews[$index].getOriginalViewEnd() == kSourceTapes.value[$index].length" ng-click="moveOriginalTapes($index,-1)">Posunúť view na original páske {{$index + 1}} vpravo</button>
       </div>
       <!-- este doplnit posuvatko na copytape-->
    </div>
@@ -28,11 +24,16 @@
                   <text style="text-anchor: middle" x="400" ng-attr-y="{{storageTapeOffset.value-20}}" fill="black">Storage páska simulujúceho stroja</text>
                   <text style="text-anchor: middle" x="400" ng-attr-y="{{reducedMachineCopyTapeOffset.value-10}}" fill="black">Copy páska simulujúceho stroja</text>
 
+               <!-- Stav automatu-->
+                  <text style="text-anchor: beginning" x="30" y="30" ng-if="mainMode.value == stateEnum.MODE_2_SIMULATE" fill="black">Stav stroja: {{ originalMachineState }}</text>
+
 
                <!-- red squares - tie budu oznacovat zmenu na orig. stroji-->
                   <g ng-if="simulationMode == stateEnum.IN_PROGRESS">
                      <rect ng-repeat="node in simulatingArray.value" ng-attr-x="{{380+(-(node.movement))*40}}" ng-attr-y="{{40+$index*60}}" width="40" height="40" style="fill:rgb(255,0,0);stroke-width:0;"/>
                   </g>
+
+
                <!-- green squares - tie budu oznacovat aktualne zmeny  krokov simulacie na sim. stroji-->
                   <rect ng-repeat="square in greenStoragePrintingArray" ng-if="(380 + 40*(reducedMachineStorageTapeViews.getViewHeadPosition() + square.getIndex())) >= 60 && (380 + 40*(reducedMachineStorageTapeViews.getViewHeadPosition() + square.getIndex()) ) <= 700" ng-attr-x="{{380 + 40*(reducedMachineStorageTapeViews.getViewHeadPosition()+square.getIndex()) }}" ng-attr-y="{{storageTapeOffset.value + 80*square.getSimulatedTrack() + 40*square.getRow()}}" width="40" height="40" style="fill:rgb(0,255,0);stroke-width:0;"/>
 
@@ -42,13 +43,13 @@
                   </g>
 
                <!-- specialny stvorcek, oznacujuci hlavy-->
-                  <rect ng-repeat="node in originalMachinePrintingArray" x="380" ng-attr-y="{{node.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0);fill-opacity:0;"/>
+                  <rect ng-repeat="node in originalMachinePrintingArray" ng-attr-x="{{ 380 + (originalMachineViews[$index].getOriginalViewHeadPosition()-8)*40 }}" ng-if="380 + (originalMachineViews[$index].getOriginalViewHeadPosition()-8)*40 >= 60 && 380 + (originalMachineViews[$index].getOriginalViewHeadPosition()-8)*40 <= 700" ng-attr-y="{{node.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0);fill-opacity:0;"/>
 
                <!-- storage tape-->
                	<g ng-repeat="node in reducedMachineStorageTapePrintingArray">
                		<rect ng-repeat="xval in CONSTANT_X_VIEW_ARRAY" ng-attr-x="{{xval}}" ng-attr-y="{{node.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0);fill-opacity:0;"/>
                	</g>
-					<!-- specialny stvorcek, oznacujuci homecolumn, bude sa este menit aby sa dal polohovat-->
+					<!-- specialny stvorcek, oznacujuci homecolumn-->
                   <rect ng-if="(380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition()) >= 60 && (380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition()) <= 700" ng-repeat="node in reducedMachineStorageTapePrintingArray" x="{{ 380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition() }}" ng-attr-y="{{node.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0);fill-opacity:0;"/>
 
                <!-- copy tape -->
@@ -62,7 +63,7 @@
 
 					<!-- texty na orig. stroji TODO ten range spravit nejak normalnejsie mozno-->
 						<g ng-repeat="tape in kSourceTapes.value track by $index">
-							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{40+25+$parent.$index*60}}" fill="black">{{ tape.charAt($index+ originalMachineViews[$parent.$index].getBeginning()) }}</text>
+							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{40+25+$parent.$index*60}}" fill="black">{{ tape.charAt($index+ originalMachineViews[$parent.$index].getOriginalViewBeginning()) }}</text>
 						</g>
 
 					<!-- texty na simulujucom stroji. Vzhladom k tomu, ze sa bude chodit aj do minusu castejsie ako v origo, ide to cez to negativeArray;-->
@@ -73,70 +74,17 @@
 
                <!-- texty na copypaske -->
                   <text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{reducedMachineCopyTapeOffset.value+25}}" fill="black">{{ reducedMachineCopyTapeArray[$index] }}</text>
-
-               <!--ukazovatel stavu pre mod 2 -->
-                  <text style="text-anchor: middle" ng-if="mainMode.value == stateEnum.MODE_2_SIMULATE" x="540" y="30" fill="black"> Stav: {{originalMachineState}} </text>
                </svg>
             </div>
          </div>
          <p>
             Ci je aktivne simulacia alebo idle
             <br />
-            {{	simulationMode != stateEnum.IDLE	}}
-            <br />
-            Mod
-            <br />
-            {{	mainMode.value	}}
-            <br />
-            {{simulationStorageTapeArray.value}}  jeho dlzka {{simulationStorageTapeArray.value[0].getLength()}}
-            <br />
-            {{simulationMode}}
-            <br />
-            /*Kolko paskovy stroj chceme simulovat*/
-            <br />
-            {{	kNumber.value	}}
-            <br />
-            dlzka
-            <br />
-            {{	reducedMachineStorageTapeViews.beginning	}}
-            <br />
-            /*pole obsahujuce stringy vstupnych slov na k paskach*/
-            <br />
-            {{	kSourceTapes.value	}}
-            <br />
-            /*pole objektov deltafunkcii*/
-            <br />
-            {{	deltaFunction.value	}}
-            <br />
-            /*simulacne pole*/
-            <br />
-            {{simulatingArray.value}}
-            <br />
-            /*printingarray*/
-            <br />
-            {{originalMachinePrintingArray}}
-            <br />
-            reducedMachineCopyTapeOffset
-            <br />
-            {{ reducedMachineCopyTapeOffset }}
-            <br />
-            neededHeightOfSvg
-            <br />
-            {{neededHeightOfSvg }}
-            <br />
-            storageTapeOffset
-            <br />
-            {{storageTapeOffset}}
-            <br />
-            {{reducedMachineStorageTapeViews}}
-            <br />
-            {{currentSimulationStateArray}}
-            <br />
-            {{reducedMachineCopyTapeArray}}
-            <br />
-            Dlzky poli - ci su skutocne konstantne
-            <p ng-repeat="values in simulationStorageTapeArray.value">
-            {{values.positiveLength()}}      {{values.negativeLength()}}
+            {{	 originalMachineViews[0].getOriginalViewEnd() == kSourceTapes.value[0].length-1 }}
+            asfg
+            {{kSourceTapes.value[0].length}}
+satrtaeryae
+            {{originalMachineViews[0].getOriginalViewEnd()}}
             </p>
          </p>
       </div>
