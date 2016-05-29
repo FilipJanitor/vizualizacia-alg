@@ -4,12 +4,12 @@
       <div class="col-sm-6">
             <button type="button" class="btn btn-block btn-default" ng-disabled="reducedMachineStorageTapeViews.getBeginning() == - (simulationStorageTapeArray.value[0].negativeLength() -1 )" ng-click="moveStorageTape(1)">Posunúť view na storage páske vľavo</button>
 
-            <button type="button" class="btn btn-block btn-default" ng-repeat="val in kSourceTapes.value" ng-disabled="originalMachineViews[$index].getOriginalViewBeginning() == 0" ng-click="moveOriginalTapes($index,1)">Posunúť view na original páske {{$index + 1}} vľavo</button>
+            <button type="button" class="btn btn-block btn-default" ng-repeat="val in originalMachinePrintingArray" ng-disabled="originalMachineViews[$index].getBeginning() == 0" ng-click="moveOriginalTapes($index,1)">Posunúť view na original páske {{$index + 1}} vľavo</button>
       </div>
       <div class="col-sm-6">
             <button type="button" class="btn btn-block btn-default" ng-disabled="reducedMachineStorageTapeViews.getEnd() == simulationStorageTapeArray.value[0].positiveLength() " ng-click="moveStorageTape(-1)">Posunúť view na storage páske vpravo</button>
 
-            <button type="button" class="btn btn-block btn-default" ng-repeat="val in kSourceTapes.value" ng-disabled="originalMachineViews[$index].getOriginalViewEnd() == kSourceTapes.value[$index].length" ng-click="moveOriginalTapes($index,-1)">Posunúť view na original páske {{$index + 1}} vpravo</button>
+            <button type="button" class="btn btn-block btn-default" ng-repeat="val in originalMachinePrintingArray" ng-disabled="originalMachineViews[$index].getEnd() == kSourceTapes.value[$index].length" ng-click="moveOriginalTapes($index,-1)">Posunúť view na original páske {{$index + 1}} vpravo</button>
       </div>
       <!-- este doplnit posuvatko na copytape-->
    </div>
@@ -30,7 +30,7 @@
 
                <!-- red squares - tie budu oznacovat zmenu na orig. stroji-->
                   <g ng-if="simulationMode == stateEnum.IN_PROGRESS">
-                     <rect ng-repeat="node in simulatingArray.value" ng-attr-x="{{380+(-(node.movement))*40}}" ng-attr-y="{{40+$index*60}}" width="40" height="40" style="fill:rgb(255,0,0);stroke-width:0;"/>
+                     <rect ng-repeat="node in simulatingArray.value" ng-if="(380+ (originalMachineViews[$index].getViewHeadPosition())*40 + (-node.movement)*40 ) >= 60 && (380 + (originalMachineViews[$index].getViewHeadPosition())*40 + (-node.movement)*40 )  <= 700" ng-attr-x="{{ 380+ (originalMachineViews[$index].getViewHeadPosition())*40 + (-node.movement)*40 }}" ng-attr-y="{{40+$index*60}}" width="40" height="40" style="fill:rgb(255,0,0);stroke-width:0;"/>
                   </g>
 
 
@@ -43,14 +43,14 @@
                   </g>
 
                <!-- specialny stvorcek, oznacujuci hlavy-->
-                  <rect ng-repeat="node in originalMachinePrintingArray" ng-attr-x="{{ 380 + (originalMachineViews[$index].getOriginalViewHeadPosition()-8)*40 }}" ng-if="380 + (originalMachineViews[$index].getOriginalViewHeadPosition()-8)*40 >= 60 && 380 + (originalMachineViews[$index].getOriginalViewHeadPosition()-8)*40 <= 700" ng-attr-y="{{node.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0);fill-opacity:0;"/>
+                  <rect ng-repeat="node in originalMachinePrintingArray" ng-attr-x="{{ 380 + (originalMachineViews[$index].getViewHeadPosition())*40 }}" ng-if="380 + (originalMachineViews[$index].getViewHeadPosition())*40 >= 60 && 380 + (originalMachineViews[$index].getViewHeadPosition())*40 <= 700" ng-attr-y="{{node.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0);fill-opacity:0;"/>
 
                <!-- storage tape-->
                	<g ng-repeat="node in reducedMachineStorageTapePrintingArray">
                		<rect ng-repeat="xval in CONSTANT_X_VIEW_ARRAY" ng-attr-x="{{xval}}" ng-attr-y="{{node.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0);fill-opacity:0;"/>
                	</g>
 					<!-- specialny stvorcek, oznacujuci homecolumn-->
-                  <rect ng-if="(380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition()) >= 60 && (380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition()) <= 700" ng-repeat="node in reducedMachineStorageTapePrintingArray" x="{{ 380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition() }}" ng-attr-y="{{node.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0);fill-opacity:0;"/>
+                  <rect ng-if="(380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition()) >= 60 && (380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition()) <= 700" ng-repeat="node in reducedMachineStorageTapePrintingArray" ng-attr-x="{{ 380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition() }}" ng-attr-y="{{node.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0);fill-opacity:0;"/>
 
                <!-- copy tape -->
 
@@ -63,7 +63,7 @@
 
 					<!-- texty na orig. stroji TODO ten range spravit nejak normalnejsie mozno-->
 						<g ng-repeat="tape in kSourceTapes.value track by $index">
-							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{40+25+$parent.$index*60}}" fill="black">{{ tape.charAt($index+ originalMachineViews[$parent.$index].getOriginalViewBeginning()) }}</text>
+							<text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{40+25+$parent.$index*60}}" fill="black">{{ tape.charAt($index+ originalMachineViews[$parent.$index].getBeginning()) }}</text>
 						</g>
 
 					<!-- texty na simulujucom stroji. Vzhladom k tomu, ze sa bude chodit aj do minusu castejsie ako v origo, ide to cez to negativeArray;-->
@@ -78,13 +78,15 @@
             </div>
          </div>
          <p>
-            Ci je aktivne simulacia alebo idle
-            <br />
-            {{	 originalMachineViews[0].getOriginalViewEnd() == kSourceTapes.value[0].length-1 }}
-            asfg
-            {{kSourceTapes.value[0].length}}
 satrtaeryae
-            {{originalMachineViews[0].getOriginalViewEnd()}}
+            {{originalMachineViews[0].getBeginning()}}
+tento problem
+
+
+{{simulatingArray.value[0].movement}}
+
+a teraz toto :
+{{380 + (originalMachineViews[0].getViewHeadPosition())*40 + (-simulatingArray.value[0].movement)*40 }}
             </p>
          </p>
       </div>

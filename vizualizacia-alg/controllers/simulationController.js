@@ -123,10 +123,10 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	$scope.checkAndStartStep = function() {
 		$log.info("STARTING_SIMULATION");
 		/*zapne simulaciu*/
-		$scope.simulationMode = $scope.stateEnum.IN_PROGRESS;
 		for (var i = 0; i < $scope.kNumber.value; i++) {
-			$scope.originalMachineViews[i].resetOriginalView();
+			$scope.originalMachineViews[i].reInitialiseOriginal();
 		}
+		$scope.simulationMode = $scope.stateEnum.IN_PROGRESS;
 		var writing = [];
 		var moving = [];
 		for (var i = 0; i < $scope.kNumber.value; i++) {
@@ -136,6 +136,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		}
 
 		$scope.redrawOriginalMachine(writing, moving);
+		/*for (var i = 0; i < $scope.kNumber.value; i++) {
+			$scope.originalMachineViews[i].resetOriginalView();
+		}*/
 		$scope.mainSimulatingFunction(writing, moving);
 	};
 
@@ -145,7 +148,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		var readingArr = [];
 		for (var i = 0; i < $scope.kNumber.value; i++) {
 			readingArr.push($scope.kSourceTapes.value[i].charAt($scope.originalMachineViews[i].getCurrentHeadPosition()));
-			$scope.originalMachineViews[i].resetOriginalView();
+			$scope.originalMachineViews[i].reInitialiseOriginal();
 		}
 		var writing;
 		var moving;
@@ -171,6 +174,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 			$scope.simulatingArray.value[i].movement = moving[i];
 		}
 		$scope.redrawOriginalMachine(writing, moving);
+		/*for (var i = 0; i < $scope.kNumber.value; i++) {
+			$scope.originalMachineViews[i].resetOriginalView();
+		}*/
 		$scope.mainSimulatingFunction(writing, moving);
 	};
 
@@ -656,6 +662,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 
 	/*funkcia posuvajuca view na vs. paskach origo stroja*/
 	$scope.moveOriginalTapes = function(index,direction){
-		$scope.originalMachineViews[index].moveOriginalView(-direction);
+		/*$scope.originalMachineViews[index].moveOriginalView(-direction);*/
+		$scope.originalMachineViews[index].moveView(-direction);
 	};
 }]);

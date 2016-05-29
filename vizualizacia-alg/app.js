@@ -163,9 +163,19 @@ function MachineView() {
 		return this._originalViewEnd;
 	};
 	this.resetOriginalView = function(){
+		/*
 		this._originalViewBeginning = this._beginning;
 		this._originalViewEnd = this._end;
+		*/
+		this._originalViewBeginning = 0;
+		this._originalViewEnd = 17;
+
+	};
+	this.reInitialiseOriginal = function(){
+		this._beginning = this._head-8
+		this._end = this._beginning + 17;
 	}
+
 };
 
 /*Objekt, obsahuci vsetky potrebne informacie pre podkrok simulacie. Je tvoreny mainsimulation funkciou a citany nextstepom*/
