@@ -85,6 +85,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	$scope.greenStoragePrintingArray = [];
 
 
+	/*stack historie. Obsahuje poslednych 100 pohybov*/
+	$scope.historyStack = new Stack();
+
 	/*Watch, ktory spravne nastavi prazdne polia na vykreslovanie, ked sa nastavi kNumber.Robi sa to takto, pretoze kNumber sa pocas simulacie menit nebude, na rozdiel od ksourceTapes, takze nebude treba spracuvat tolko eventov - tento by sa mal invariantne spustit prave raz pocaz celeho pouzitia aplikacie(raz pri spusteni a inicializovani tohoto controlleru, ale to nepocitame)*/
 	$scope.$watch('kNumber.value', function() {
 		for (var i = 0; i < $scope.kNumber.value; i++) {
@@ -135,10 +138,8 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 			moving.push($scope.simulatingArray.value[i].movement);
 		}
 
+		$scope.backupTapes();
 		$scope.redrawOriginalMachine(writing, moving);
-		/*for (var i = 0; i < $scope.kNumber.value; i++) {
-			$scope.originalMachineViews[i].resetOriginalView();
-		}*/
 		$scope.mainSimulatingFunction(writing, moving);
 	};
 
@@ -173,10 +174,8 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		for (var i = 0; i < $scope.kNumber.value; i++) {
 			$scope.simulatingArray.value[i].movement = moving[i];
 		}
+		$scope.backupTapes();
 		$scope.redrawOriginalMachine(writing, moving);
-		/*for (var i = 0; i < $scope.kNumber.value; i++) {
-			$scope.originalMachineViews[i].resetOriginalView();
-		}*/
 		$scope.mainSimulatingFunction(writing, moving);
 	};
 
@@ -665,4 +664,14 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		/*$scope.originalMachineViews[index].moveOriginalView(-direction);*/
 		$scope.originalMachineViews[index].moveView(-direction);
 	};
+
+	$scope.backupTapes = function(){
+		var backup = new Object();
+		backup[originalTapes] = $scope.kSourceTapes.value;
+		backup[originalViews] = $scope.originalMachineViews;
+		backup[storageTape] = $scope.simulationStorageTapeArray.value;
+		backup[storageTapeViews] = $scope.reducedMachineStorageTapeViews;
+
+		$scope.historyStack.push(angular.copy(backup));
+	}
 }]);

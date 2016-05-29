@@ -216,3 +216,44 @@ function PrintingSquare(index,row, simulatedTrack) {
 		return this._simulatedTrack;
 	}
 };
+
+
+function Stack(){
+	var stack  = [];
+	var beginning = 0;
+	var end = 0;
+ 	var LENGTH = 100;
+	/*dlzka obsahu fronty*/
+	this.getLength = function(){
+		return (stack.length - offset);
+	}
+	this.isEmpty = function(){
+		return (stack.length == 0);
+	}
+
+	this.isFull = function(){
+		return (stack.length == LENGTH)
+	}
+
+
+	this.push = function(item){
+		if(stack.length < LENGTH-1){
+ 			stack.push(item);
+ 			end++;
+ 		}else{
+ 			gueue[end] = item;
+ 			end = (end+1)$LENGTH;
+ 		}
+	}
+
+	this.pop = function(){
+    	if (beginning == end){
+    		console.warning("stack is empty");
+    		return undefined;
+		} else {
+			item = stack[beginning];
+			beginning = (beginning+1)%LENGTH;
+			return item;
+		}
+	}
+}
