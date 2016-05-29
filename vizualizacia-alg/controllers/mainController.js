@@ -233,7 +233,7 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 		for (var i = $scope.kNumber.value + 2; i < 2 + 2 * $scope.kNumber.value; i++) {
 			if (arr[i].length != 1) {
 				deltaInvalid.value = true;
-				errLog += "Hlava môže písať práve jeden znak. Problém je v prepisovaní " + (i - $scope.kNumber.value + 2) + " pásky. ";
+				errLog += "Hlava môže písať práve jeden znak. Problém je v prepisovaní " + (i - ($scope.kNumber.value + 2)) + " pásky. ";
 			} else {
 				printing.push(arr[i]);
 			}
@@ -245,7 +245,7 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 				moving.push(arr[i]);
 			} else {
 				deltaInvalid.value = true;
-				errLog += "Pohyb hlavy môže byť označovaný len -1 0 1. Problém je s hlavou " + (i - 2 + 2 * $scope.kNumber.value) + ". ";
+				errLog += "Pohyb hlavy môže byť označovaný len -1 0 1. Problém je s hlavou " + (i - (2 + 2 * $scope.kNumber.value)) + ". ";
 			}
 		}
 		if (deltaInvalid.value == true) {
