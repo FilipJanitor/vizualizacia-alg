@@ -86,7 +86,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 
 
 	/*stack historie. Obsahuje poslednych 100 pohybov*/
-	$scope.historyStack = new Stack();
+	$scope.historyStack = new CircularStack();
 
 	/*Watch, ktory spravne nastavi prazdne polia na vykreslovanie, ked sa nastavi kNumber.Robi sa to takto, pretoze kNumber sa pocas simulacie menit nebude, na rozdiel od ksourceTapes, takze nebude treba spracuvat tolko eventov - tento by sa mal invariantne spustit prave raz pocaz celeho pouzitia aplikacie(raz pri spusteni a inicializovani tohoto controlleru, ale to nepocitame)*/
 	$scope.$watch('kNumber.value', function() {

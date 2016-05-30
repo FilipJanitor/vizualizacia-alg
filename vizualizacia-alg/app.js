@@ -75,7 +75,7 @@ function NegativeArray() {
 	};
 
 	/*tieto funkcie predpokladaju, ze pole obsahuje 0. Ak nie, budu sa robit diery. Ale pasky su konstruovbane tak, ze home row je na nule, teda situacia, ked by sa to pokazilo nevznikne*/
-	this.ePush = function(val) {
+	/*this.ePush = function(val) {
 		this.__positive.push(val);
 	};
 	this.ePop = function() {
@@ -86,7 +86,7 @@ function NegativeArray() {
 	};
 	this.bPop = function(val) {
 		return this.__negative.pop();
-	};
+	};*/
 	this.positiveLength = function() {
 		return this.__positive.length;
 	};
@@ -146,33 +146,10 @@ function MachineView() {
 		this._beginning += direction;
 		this._end += direction;
 	};
-	this.moveOriginalView = function(direction){
-		this._originalViewBeginning += direction;
-		this._originalViewEnd += direction;
-	};
-	this.getOriginalViewHeadPosition = function(){
-		return this._originalViewBeginning+8;
-	};
-	this.getOriginalViewBeginning = function(){
-		return this._originalViewBeginning;
-	};
-	this.getOriginalViewEnd = function(){
-		return this._originalViewEnd;
-	};
-	this.resetOriginalView = function(){
-		/*
-		this._originalViewBeginning = this._beginning;
-		this._originalViewEnd = this._end;
-		*/
-		this._originalViewBeginning = 0;
-		this._originalViewEnd = 17;
-
-	};
 	this.reInitialiseOriginal = function(){
 		this._beginning = this._head-8
 		this._end = this._beginning + 17;
-	}
-
+	};
 };
 
 /*Objekt, obsahuci vsetky potrebne informacie pre podkrok simulacie. Je tvoreny mainsimulation funkciou a citany nextstepom*/
@@ -215,7 +192,7 @@ function PrintingSquare(index,row, simulatedTrack) {
 };
 
 
-function Stack(){
+function CircularStack(){
 	var stack  = [];
 	var beginning = 0;
 	var end = 0;
@@ -231,8 +208,6 @@ function Stack(){
 	this.isFull = function(){
 		return (stack.length == LENGTH)
 	}
-
-
 	this.push = function(item){
  		stack[end] = item;
  		end = (end+1)%LENGTH;
