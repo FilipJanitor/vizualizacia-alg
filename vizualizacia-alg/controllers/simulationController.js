@@ -84,9 +84,12 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	/*pole na printing zelenych storage stvorcov - treba ich robit dynamicky na zaklade toho, co sa deje a aka cast pasky sa vykresluje*/
 	$scope.greenStoragePrintingArray = [];
 
-
 	/*stack historie. Obsahuje poslednych 100 pohybov*/
 	$scope.historyStack = new CircularStack();
+
+	/*Pole, obsahujuce suradnice separatorov, relativne ku stredu vykreslovaneho stroju. Pozitivne a negativne. Budu v nich  mocniny dvojky*/
+	$scope.separatorArrayPositive = [0];
+	$scope.separatorArrayNegative = [0];
 
 	/*Watch, ktory spravne nastavi prazdne polia na vykreslovanie, ked sa nastavi kNumber.Robi sa to takto, pretoze kNumber sa pocas simulacie menit nebude, na rozdiel od ksourceTapes, takze nebude treba spracuvat tolko eventov - tento by sa mal invariantne spustit prave raz pocaz celeho pouzitia aplikacie(raz pri spusteni a inicializovani tohoto controlleru, ale to nepocitame)*/
 	$scope.$watch('kNumber.value', function() {
@@ -192,9 +195,23 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 			$scope.simulationMode = $scope.stateEnum.IDLE;
 			return;
 		}
-
+		/*vratime pohlad na stred*/
 		$scope.reducedMachineStorageTapeViews.reInitialise(-8, 9, 0);
 		var tempContainer = $scope.currentSimulationStateArray[$scope.pointerToCurrentSimulationState];
+
+		/*pridanie novej ciary bloku ak je to potrebne (robi sa to v prvom kroku)*/
+		if(tempContainer.getStepState() == $scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS || tempContainer.getStepState() == $scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS){
+			if(tempContainer.getIBlockNumber() > 0){
+				if(Math.pow(2,tempContainer.getIBlockNumber()-1) > $scope.separatorArrayPositive[$scope.separatorArrayPositive.length-1]){
+					$scope.separatorArrayPositive.push(Math.pow(2,tempContainer.getIBlockNumber()-1));
+				}
+			} else {
+				if(Math.pow(2,tempContainer.getIBlockNumber()-1)<$scope.separatorArrayNegative[$scope.separatorArrayNegative.length-1]){
+					$scope.separatorArrayNegative.push(Math.pow(2,tempContainer.getIBlockNumber()-1));
+				}
+			}
+		}
+
 		switch (tempContainer.getStepState()) {
 
 			case $scope.simulationStateEnum.OVERWRITING_HOME_COLUMN:
