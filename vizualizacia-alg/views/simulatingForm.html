@@ -95,6 +95,9 @@ a teraz toto :
 <!-- Doplnit spravne ng-disabled pre mod s deltafunkciou-->
 <div class="col-sm-3">
    <button type="button" class="btn btn-danger btn-block btn-responsive" ng-click="restartSimulation()">Zrušiť simuláciu</button>
+
+   <button type="button" ng-show="simulationMode == stateEnum.IDLE" class="btn btn-default btn-block btn-responsive" ng-click="previousStep()">Krok späť</button>
+
    <form name="simulationForm" novalidate>
    <!-- formular sa cely stane readonly. Ukazeme ho len v pripade, ze mod je jedna-->
       <fieldset  ng-if="mainMode.value == stateEnum.MODE_1_SIMULATE" data-ng-repeat="choice in simulatingArray.value">
@@ -112,8 +115,6 @@ a teraz toto :
       <button type="button" ng-show="mainMode.value == stateEnum.MODE_2_SIMULATE" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-primary btn-block btn-responsive" ng-click="findDeltaAndStartStep()">Odsimulovať krok</button>
 
       <button type="button" ng-show="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-default btn-block btn-responsive" ng-click="nextStep()">Pokračovať ďalším krokom</button>
-
-      <button type="button" ng-show="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-default btn-block btn-responsive" ng-click="previousStep()">Krok späť</button>
 
    </form>
 </div>

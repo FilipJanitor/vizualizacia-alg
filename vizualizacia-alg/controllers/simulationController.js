@@ -659,19 +659,35 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		$scope.reducedMachineStorageTapeViews.moveView(-direction);
 	};
 
-	/*funkcia posuvajuca view na vs. paskach origo stroja*/
+	/*funkcia posuvajuca view na paskach origo stroja*/
 	$scope.moveOriginalTapes = function(index,direction){
 		/*$scope.originalMachineViews[index].moveOriginalView(-direction);*/
 		$scope.originalMachineViews[index].moveView(-direction);
 	};
 
+	/*funkcia volana pri kazdom kroku simulacie - ulozi aktualny stav celeho automatu tak, aby sa dal neskor obnovit*/
 	$scope.backupTapes = function(){
 		var backup = new Object();
-		backup[originalTapes] = $scope.kSourceTapes.value;
-		backup[originalViews] = $scope.originalMachineViews;
-		backup[storageTape] = $scope.simulationStorageTapeArray.value;
-		backup[storageTapeViews] = $scope.reducedMachineStorageTapeViews;
+		backup.originalTapes = $scope.kSourceTapes.value;
+		backup.originalViews = $scope.originalMachineViews;
+		backup.storageTape = $scope.simulationStorageTapeArray.value;
+		backup.storageTapeViews = $scope.reducedMachineStorageTapeViews;
+		backup.originalMachineState = $scope.originalMachineState;
 
 		$scope.historyStack.push(angular.copy(backup));
-	}
+	};
+
+	$scope.previousStep = function(){
+		var backup = $scope.historyStack.pop();
+		if(backup == null){
+			return;
+		}
+
+		$scope.kSourceTapes.value = backup.originalTapes;
+		$scope.originalMachineViews = backup.originalViews;
+		$scope.simulationStorageTapeArray.value = backup.storageTape;
+		$scope.reducedMachineStorageTapeViews = backup.storageTapeViews;
+		$scope.originalMachineState = backup.originalMachineState;
+
+	};
 }]);

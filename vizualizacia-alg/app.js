@@ -107,7 +107,6 @@ function MachineView() {
 	this._originalViewEnd = 17;
 	this.changeInterval = function(beg, end) {
 		if(beg + 17 != end){
-			console.error("beginning in machine view must be (end-17)");
 			return false;
 		}
 		this._beginning = beg;
@@ -115,8 +114,6 @@ function MachineView() {
 	};
 	this.reInitialise = function(beg,end,head){
 		if(beg + 17 != end || beg + 8 != head){
-
-			console.error("beginning in machine view must be end -17 and head -8");
 			return false;
 		}
 		this._beginning = beg;
@@ -237,22 +234,27 @@ function Stack(){
 
 
 	this.push = function(item){
-		if(stack.length < LENGTH-1){
+		if(stack.length < LENGTH){
  			stack.push(item);
  			end++;
- 		}else{
+ 		}else{/*uz je rotujuci stack*/
  			gueue[end] = item;
- 			end = (end+1)$LENGTH;
+ 			end = (end+1)%LENGTH;
+ 			if(end == beginning){
+ 				beginning = (beginning+1)%LENGTH;
+ 			}
  		}
 	}
 
 	this.pop = function(){
     	if (beginning == end){
-    		console.warning("stack is empty");
     		return undefined;
 		} else {
-			item = stack[beginning];
-			beginning = (beginning+1)%LENGTH;
+			end -= 1;
+			if(end < 0){
+				end += LENGTH;
+			}
+			item = stack[end];
 			return item;
 		}
 	}
