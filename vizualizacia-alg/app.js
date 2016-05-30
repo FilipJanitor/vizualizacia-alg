@@ -234,15 +234,10 @@ function Stack(){
 
 
 	this.push = function(item){
-		if(stack.length < LENGTH){
- 			stack.push(item);
- 			end++;
- 		}else{/*uz je rotujuci stack*/
- 			gueue[end] = item;
- 			end = (end+1)%LENGTH;
- 			if(end == beginning){
- 				beginning = (beginning+1)%LENGTH;
- 			}
+ 		stack[end] = item;
+ 		end = (end+1)%LENGTH;
+ 		if(end == beginning){
+ 			beginning = (beginning+1)%LENGTH;
  		}
 	}
 
