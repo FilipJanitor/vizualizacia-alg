@@ -2,16 +2,15 @@
 
    <div class="row">
       <div class="col-sm-6">
-            <button type="button" class="btn btn-block btn-default" ng-disabled="reducedMachineStorageTapeViews.getBeginning() == - (simulationStorageTapeArray.value[0].negativeLength() -1 )" ng-click="moveStorageTape(1)">Posunúť view na storage páske vľavo</button>
+            <button type="button" class="btn btn-block btn-default" ng-disabled="reducedMachineStorageTapeViews.getBeginning() == - (simulationStorageTapeArray.value[0].negativeLength() -1 )" ng-click="moveStorageTape(1)">Posunúť pohľad na pracovnú pásku vľavo</button>
 
-            <button type="button" class="btn btn-block btn-default" ng-repeat="val in originalMachinePrintingArray" ng-disabled="originalMachineViews[$index].getBeginning() == 0" ng-click="moveOriginalTapes($index,1)">Posunúť view na original páske {{$index + 1}} vľavo</button>
+            <button type="button" class="btn btn-block btn-default" ng-repeat="val in originalMachinePrintingArray" ng-disabled="originalMachineViews[$index].getBeginning() == 0" ng-click="moveOriginalTapes($index,1)">Posunúť pohľad na {{$index + 1}}. pásku originálneho stroja vľavo</button>
       </div>
       <div class="col-sm-6">
-            <button type="button" class="btn btn-block btn-default" ng-disabled="reducedMachineStorageTapeViews.getEnd() == simulationStorageTapeArray.value[0].positiveLength() " ng-click="moveStorageTape(-1)">Posunúť view na storage páske vpravo</button>
+            <button type="button" class="btn btn-block btn-default" ng-disabled="reducedMachineStorageTapeViews.getEnd() == simulationStorageTapeArray.value[0].positiveLength() " ng-click="moveStorageTape(-1)">Posunúť pohľad na pracovnú pásku vpravo</button>
 
-            <button type="button" class="btn btn-block btn-default" ng-repeat="val in originalMachinePrintingArray" ng-disabled="originalMachineViews[$index].getEnd() == kSourceTapes.value[$index].length" ng-click="moveOriginalTapes($index,-1)">Posunúť view na original páske {{$index + 1}} vpravo</button>
+            <button type="button" class="btn btn-block btn-default" ng-repeat="val in originalMachinePrintingArray" ng-disabled="originalMachineViews[$index].getEnd() == kSourceTapes.value[$index].length" ng-click="moveOriginalTapes($index,-1)">Posunúť pohľad na {{$index + 1}}. pásku originálneho stroja vpravo</button>
       </div>
-      <!-- este doplnit posuvatko na copytape-->
    </div>
 
    <div class="row">
@@ -21,14 +20,14 @@
                <svg viewBox="0 0 800 {{ neededHeightOfSvg.value }}">
 
                   <text style="text-anchor: middle" x="400" y="30" fill="black">Pásky originálneho stroja</text>
-                  <text style="text-anchor: middle" x="400" ng-attr-y="{{storageTapeOffset.value-20}}" fill="black">Storage páska simulujúceho stroja</text>
-                  <text style="text-anchor: middle" x="400" ng-attr-y="{{reducedMachineCopyTapeOffset.value-10}}" fill="black">Copy páska simulujúceho stroja</text>
+                  <text style="text-anchor: middle" x="400" ng-attr-y="{{storageTapeOffset.value-20}}" fill="black">Pracovná páska simulujúceho stroja</text>
+                  <text style="text-anchor: middle" x="400" ng-attr-y="{{reducedMachineCopyTapeOffset.value-10}}" fill="black">Kopírovacia páska simulujúceho stroja</text>
 
                <!-- Stav automatu-->
-                  <text style="text-anchor: beginning" x="30" y="30" ng-if="mainMode.value == stateEnum.MODE_2_SIMULATE" fill="black">Stav stroja: {{ originalMachineState }}</text>
+                  <text style="text-anchor: beginning" x="30" y="30" ng-if="mainMode.value == stateEnum.MODE_2_SIMULATE" fill="black">Stav originálneho stroja: {{ originalMachineState }}</text>
 
                <!-- Aktualne pouzity riadok deltafunkcie-->
-                  <text style="text-anchor: beginning" x="530" y="30" ng-if="mainMode.value == stateEnum.MODE_2_SIMULATE" ng-hide="simulationMode == stateEnum.IDLE || visualizationMode == visualizationStateEnum.MODE_2_VISUALIZE" fill="black"> Použitý riadok deltafunkcie: &#948 ({{currentDelta.getOriginalState().toString()}},{{currentDelta.getReading().toString()}}) = ({{currentDelta.getNewState().toString()}},{{currentDelta.getPrinting().toString()}},{{currentDelta.getMoving().toString()}})</text>
+                  <text style="text-anchor: beginning" x="530" y="30" ng-if="mainMode.value == stateEnum.MODE_2_SIMULATE" ng-hide="simulationMode == stateEnum.IDLE || visualizationMode == visualizationStateEnum.MODE_2_VISUALIZE" fill="black"> Použitý riadok prechodovej funkcie: &#948 ({{currentDelta.getOriginalState().toString()}},{{currentDelta.getReading().toString()}}) = ({{currentDelta.getNewState().toString()}},{{currentDelta.getPrinting().toString()}},{{currentDelta.getMoving().toString()}})</text>
 
 
 
@@ -96,9 +95,10 @@
                </svg>
             </div>
          </div>
-         </p>
       </div>
    </div>
+
+
 </div>
 <!-- Doplnit spravne ng-disabled pre mod s deltafunkciou-->
 <div class="col-sm-3">
@@ -116,21 +116,21 @@
    <!-- formular sa cely stane readonly. Ukazeme ho len v pripade, ze mod je jedna-->
       <fieldset  ng-if="mainMode.value == stateEnum.MODE_1_SIMULATE" data-ng-repeat="choice in simulatingArray.value">
       	<label>Páska číslo: {{ $index }}</label>
-         <p class="help-block">Znak, ktorým bude prepísaný aktuálny znak:</p>
-         <input type="text" ng-model="choice.overwriteValue" name="" ng-readonly="simulationMode == stateEnum.IN_PROGRESS" required minlength="0" ng-pattern="/[^×\s]/" maxlength="1"> <br>
-         <p class="help-block">Posun hlavy:</p>
+         <span class="help-block">Znak, ktorým bude prepísaný aktuálne čítaný znak:</span>
+         <input type="text" ng-model="choice.overwriteValue" name="" ng-readonly="simulationMode == stateEnum.IN_PROGRESS" required minlength="0" ng-pattern="/[^×\s]/" maxlength="1">
+         <span class="help-block">Posun hlavy:</span>
          <input type="radio" name="movement{{$index}}" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="-1"> -1<br>
          <input type="radio" name="movement{{$index}}" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="0"> 0<br>
-         <input type="radio" name="movement{{$index}}" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="1"> 1 <br> <br>
+         <input type="radio" name="movement{{$index}}" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="1"> 1 <br> <!-- <br> -->
       </fieldset>
       <br>
 
-      <button type="button" ng-show="visualizationMode == visualizationStateEnum.MODE_2_VISUALIZE" class="btn btn-primary btn-block btn-responsive" ng-click="findDeltaAndStartStep()">Pokračovať</button>
+      <button type="button" ng-show="visualizationMode == visualizationStateEnum.MODE_2_VISUALIZE" class="btn btn-default btn-block btn-responsive" ng-click="findDeltaAndStartStep()">Pokračovať</button>
 
-      <button type="button" ng-show="visualizationMode== visualizationStateEnum.MODE_1_VISUALIZE" class="btn btn-primary btn-block btn-responsive" ng-click="checkAndStartStep()">Pokračovať</button>
+      <button type="button" ng-show="visualizationMode== visualizationStateEnum.MODE_1_VISUALIZE" class="btn btn-default btn-block btn-responsive" ng-click="checkAndStartStep()">Pokračovať</button>
 
 
-      <button type="button" ng-show="simulationMode == stateEnum.IN_PROGRESS && visualizationMode == visualizationStateEnum.NO_VISUALIZATION" class="btn btn-default btn-block btn-responsive" ng-click="nextStep()">Pokračovať ďalším krokom</button>
+      <button type="button" ng-show="simulationMode == stateEnum.IN_PROGRESS && visualizationMode == visualizationStateEnum.NO_VISUALIZATION" class="btn btn-default btn-block btn-responsive" ng-click="nextStep()">Pokračovať</button>
 
    </form>
 </div>

@@ -22,9 +22,9 @@
             	</div>
             	<!-- intro -->
 					<div class="col-sm-12">
-            		<p>Interaktívny simulátor práce 2 páskového Turingovho stroja simulujúceho K páskový Turingov stroj podľa algoritmu na redukciu počtu pások na 2 pre čas, vhodný pre študentov predmetu FOJA1. </p>
-					</div>				
-				</div>             
+            		<p>Interaktívny simulátor práce 2 páskového Turingovho stroja simulujúceho k páskový Turingov stroj podľa algoritmu na redukciu počtu pások na 2 pre čas, vhodný pre študentov predmetu FOJA1. </p>
+					</div>
+				</div>
             <!-- content -->
             <div ng-show="currentState == stateEnum.BEGINNING" class="row">
                <div ng-include="'views/beginning.html'"></div>
@@ -40,7 +40,7 @@
             </div>
          </div>
          <div ng-controller="simulationController">
-            <div  ng-show="activeSimulation.value" class="row">
+            <div  ng-if="activeSimulation.value" class="row">
                <div  ng-include="'views/simulatingForm.html'">
                </div>
             </div>
@@ -49,7 +49,7 @@
          <div class="row">
             <div class="col-sm-12">
                <hr />
-               Filip Janitor 2015 
+               Filip Janitor 2015/2016
                <a href="https://github.com/FilipJanitor/vizualizacia-alg">Repozitár projektu</a><br/>
             </div>
          </div>

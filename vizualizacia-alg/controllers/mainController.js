@@ -44,6 +44,11 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 		$scope.deltaTemp.value = angular.copy($scope.masterFormCommas);
 	};
 
+	/*Funkcia na restartovanie celeho simulacneho procesu do state beginning*/
+	$scope.restartSimulation = function() {
+		$window.location.reload();
+	};
+
 	/*funkcia volana z formularu nastavujuceho k. Inicializuje vstupne pasky a nastavi dalsi STATE*/
 	$scope.setMode = function(mode) {
 		for (var i = 0; i < $scope.kNumber.value; i++) {
@@ -173,7 +178,7 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 				if ($scope.deltaFunction[i].getOriginalState() == $scope.deltaFunction[j].getOriginalState() && $scope.deltaFunction[i].getReading().toString() === $scope.deltaFunction[j].getReading().toString()) {
 					overallSuccess = false;
 					determinism = false;
-					errLog += " " + i + " a " + j + ";";
+					errLog += " " + (i+1) + " a " + (j+1) + ";";
 				}
 			}
 		}
@@ -215,7 +220,7 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 		for (var i = 1; i < 1 + $scope.kNumber.value; i++) {
 			if (arr[i].length != 1) {
 				deltaInvalid.value = true;
-				errLog += "Hlava môže čítať práve jeden znak. Problém je v čítaní " + (i - 1) + " pásky. ";
+				errLog += "Hlava môže čítať práve jeden znak. Problém je v čítaní " + (i - 1 +1) + " pásky. ";
 			} else {
 				reading.push(arr[i]);
 			}
@@ -233,7 +238,7 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 		for (var i = $scope.kNumber.value + 2; i < 2 + 2 * $scope.kNumber.value; i++) {
 			if (arr[i].length != 1) {
 				deltaInvalid.value = true;
-				errLog += "Hlava môže písať práve jeden znak. Problém je v prepisovaní " + (i - ($scope.kNumber.value + 2)) + " pásky. ";
+				errLog += "Hlava môže písať práve jeden znak. Problém je v prepisovaní " + (i - ($scope.kNumber.value + 2) +1) + " pásky. ";
 			} else {
 				printing.push(arr[i]);
 			}
@@ -245,7 +250,7 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 				moving.push(arr[i]);
 			} else {
 				deltaInvalid.value = true;
-				errLog += "Pohyb hlavy môže byť označovaný len -1 0 1. Problém je s hlavou " + (i - (2 + 2 * $scope.kNumber.value)) + ". ";
+				errLog += "Pohyb hlavy môže byť označovaný len -1 0 1. Problém je s hlavou " + (i - (2 + 2 * $scope.kNumber.value) +1) + ". ";
 			}
 		}
 		if (deltaInvalid.value == true) {
