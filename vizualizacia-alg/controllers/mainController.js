@@ -204,9 +204,9 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 		}
 
 		/*toto mozno netreba - mozno povolime viacznakove stavy TODO*/
-		if (arr[0].length != 1) {
+		if (arr[0].length > 15) {
 			deltaInvalid.value = true;
-			errLog += "Stav musí mať 1 znak. ";
+			errLog += "Stav musí mať najviac 15 znakov. ";
 		}
 
 		/*tieto _state premenne su iba tempy, preto nepouzivaju camelcase*/
@@ -224,7 +224,7 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 		/*toto sa mozno tiez vyhodi - mozno povolime viacznakove stavy TODO*/
 		if (arr[1 + $scope.kNumber.value].length != 1) {
 			deltaInvalid.value = true;
-			errLog += "Nový stav môže byť len 1 znak. ";
+			errLog += "Nový stav môže mať najviac 15 znakov. ";
 		} else {
 			var new_state = arr[1 + $scope.kNumber.value];
 		}
