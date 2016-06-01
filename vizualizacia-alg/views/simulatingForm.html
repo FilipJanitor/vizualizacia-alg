@@ -27,6 +27,10 @@
                <!-- Stav automatu-->
                   <text style="text-anchor: beginning" x="30" y="30" ng-if="mainMode.value == stateEnum.MODE_2_SIMULATE" fill="black">Stav stroja: {{ originalMachineState }}</text>
 
+               <!-- Aktualne pouzity riadok deltafunkcie-->
+                  <text style="text-anchor: beginning" x="530" y="30" ng-if="mainMode.value == stateEnum.MODE_2_SIMULATE" ng-hide="simulationMode == stateEnum.IDLE || visualizationMode == visualizationStateEnum.MODE_2_VISUALIZE" fill="black"> Použitý riadok deltafunkcie: &#948 ({{currentDelta.getOriginalState().toString()}},{{currentDelta.getReading().toString()}}) = ({{currentDelta.getNewState().toString()}},{{currentDelta.getPrinting().toString()}},{{currentDelta.getMoving().toString()}})</text>
+
+
 
                <!-- blue squares - oznacuju vykonavane zmeny na orig. paske pocas vizualizacie pred samotnym krokom-->
 
@@ -90,11 +94,6 @@
                <!-- texty na copypaske -->
                   <text ng-repeat="symbol in CONSTANT_VIEW_ARRAY" style="text-anchor: middle" ng-attr-x="{{60+20+$index*40}}" ng-attr-y="{{reducedMachineCopyTapeOffset.value+25}}" fill="black">{{ reducedMachineCopyTapeArray[$index] }}</text>
                </svg>
-               <p>
-               {{reducedMachineCopyTapeOffset.value}}
-               {{reducedMachineCopyTapeOffset.value}}
-               {{greenCopyPrintingArray}}
-               </p>
             </div>
          </div>
          </p>

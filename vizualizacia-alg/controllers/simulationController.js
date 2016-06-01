@@ -110,6 +110,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	$scope.separatorArrayPositive = [0];
 	$scope.separatorArrayNegative = [0];
 
+	/*Aktualne pouzity riadok deltafunkcie*/
+	$scope.currentDelta = undefined;
+
 	/*Watch, ktory spravne nastavi prazdne polia na vykreslovanie, ked sa nastavi kNumber.Robi sa to takto, pretoze kNumber sa pocas simulacie menit nebude, na rozdiel od ksourceTapes, takze nebude treba spracuvat tolko eventov - tento by sa mal invariantne spustit prave raz pocaz celeho pouzitia aplikacie(raz pri spusteni a inicializovani tohoto controlleru, ale to nepocitame)*/
 	$scope.$watch('kNumber.value', function() {
 		for (var i = 0; i < $scope.kNumber.value; i++) {
@@ -167,6 +170,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 
 	/*Funkcia, ktorá porovná aktuálnu konfiguráciu s deltafunkciou a na základe toho stroj buď zasekne, alebo zavolá hlavnú simulačnú funkciu*/
 	$scope.findDeltaAndStartStep = function() {
+		$scope.currentDelta = undefined;
 		$scope.simulationMode = $scope.stateEnum.IN_PROGRESS;
 		$scope.visualizationMode = $scope.visualizationStateEnum.NO_VISUALIZATION;
 		var readingArr = [];
@@ -184,6 +188,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					moving = $scope.deltaFunction.value[i].getMoving();
 					$scope.originalMachineState = $scope.deltaFunction.value[i].getNewState();
 					wasSet = true;
+					$scope.currentDelta = $scope.deltaFunction.value[i];
 					break;
 				}
 			}
@@ -949,7 +954,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				break;
 
 			case 2:
-				$scope.visualizationMode = $scope.visualizationStateEnum.MODE_1_VISUALIZE;
+				$scope.visualizationMode = $scope.visualizationStateEnum.MODE_2_VISUALIZE;
 				break;
 		}
 	};
