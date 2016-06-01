@@ -212,9 +212,11 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 			$scope.currentSimulationStateArray.length = 0;
 			$scope.pointerToCurrentSimulationState = 0;
 			$scope.greenStoragePrintingArray.length = 0;
+			$scope.greenCopyPrintingArray.length = 0;
 			$scope.simulationMode = $scope.stateEnum.IDLE;
 			return;
 		}
+		var placeholder = 1;
 		/*vratime pohlad na stred*/
 		$scope.reducedMachineStorageTapeViews.reInitialise(-8, 9, 0);
 		var tempContainer = $scope.currentSimulationStateArray[$scope.pointerToCurrentSimulationState];
@@ -247,6 +249,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		switch (tempContainer.getStepState()) {
 
 			case $scope.simulationStateEnum.VISUALIZE_OVERWRITING_HOME_COLUMN:
+				$scope.greenCopyPrintingArray.length = 0;
 				$scope.greenStoragePrintingArray.length = 0;
 				$scope.greenStoragePrintingArray.push(new PrintingSquare(0,1,tempContainer.getIndexOfOriginalTrack()));
 				break;
@@ -298,10 +301,16 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 							if (k === 0) {
 								/*v home square mame len spodok*/
 								$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
+								if($scope.greenCopyPrintingArray.length < 17){
+									$scope.greenCopyPrintingArray.push(placeholder);
+								}
 								continue;
 							}
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel);
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel = " ";
+							if($scope.greenCopyPrintingArray.length < 17){
+								$scope.greenCopyPrintingArray.push(placeholder);
+							}
 						}
 						for (var k = endBlocksArray[j - 1]; k < endBlocksArray[j]; k++) {
 							if (k === 0) {
@@ -309,6 +318,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 							}
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
+							if($scope.greenCopyPrintingArray.length < 17){
+								$scope.greenCopyPrintingArray.push(placeholder);
+							}
 						}
 					}
 				} else {
@@ -329,6 +341,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 							 	  	   }*/
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
+							if($scope.greenCopyPrintingArray.length < 17){
+								$scope.greenCopyPrintingArray.push(placeholder);
+							}
 						}
 						for (var k = endBlocksArray[j]+1; k <= endBlocksArray[j-1]; k++) {
 							if (k === 0) {
@@ -337,6 +352,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 							}
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel);
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel = " ";
+							if($scope.greenCopyPrintingArray.length < 17){
+								$scope.greenCopyPrintingArray.push(placeholder);
+							}
 						}
 					}
 				}
@@ -426,10 +444,16 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 							if (k === 0) {
 								/*v home square mame len spodok*/
 								$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
+								if($scope.greenCopyPrintingArray.length < 17){
+									$scope.greenCopyPrintingArray.push(placeholder);
+								}
 								continue;
 							}
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel);
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel = " ";
+							if($scope.greenCopyPrintingArray.length < 17){
+								$scope.greenCopyPrintingArray.push(placeholder);
+							}
 						}
 						for (var k = endBlocksArray[j - 1]; k < endBlocksArray[j]; k++) {
 							if (k === 0) {
@@ -437,6 +461,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 							}
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
+							if($scope.greenCopyPrintingArray.length < 17){
+								$scope.greenCopyPrintingArray.push(placeholder);
+							}
 						}
 					}
 				} else {
@@ -451,6 +478,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						for (var k = endBlocksArray[j]+1; k <= endBlocksArray[j-1]; k++) {
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
+							if($scope.greenCopyPrintingArray.length < 17){
+								$scope.greenCopyPrintingArray.push(placeholder);
+							}
 						}
 						for (var k = endBlocksArray[j]+1; k <= endBlocksArray[j-1]; k++) {
 							if (k === 0) {
@@ -459,6 +489,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 							}
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel);
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).upperLevel = " ";
+							if($scope.greenCopyPrintingArray.length < 17){
+								$scope.greenCopyPrintingArray.push(placeholder);
+							}
 						}
 					}
 				}
@@ -525,6 +558,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				break;
 
 			case $scope.simulationStateEnum.VISUALIZE_FULL_BLOCK_ON_OPPOSITE_SIDE:
+				$scope.greenCopyPrintingArray.length = 0;
 				$scope.greenStoragePrintingArray.length=0;
 				var iBlockIndex = tempContainer.getIBlockNumber();
 				if (iBlockIndex < 0) {
@@ -561,6 +595,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					for (var j = lastIndexOfMinusIFullBlock + 1; j <= firstIndexOfMinusIFullBlock; j++) {
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel);
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel = " ";
+						if($scope.greenCopyPrintingArray.length < 17){
+							$scope.greenCopyPrintingArray.push(placeholder);
+						}
 					}
 				} else {
 					/*to iste len pre negativne I, cize teraz pozitivne -I. Robim to vsetko len zmenami znamienok, tie cykly by boli skarede, ak by boli negativne*/
@@ -572,6 +609,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					for (var j = firstIndexOfMinusIFullBlock; j < lastIndexOfMinusIFullBlock; j++) {
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel);
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel = " ";
+						if($scope.greenCopyPrintingArray.length < 17){
+							$scope.greenCopyPrintingArray.push(placeholder);
+						}
 					}
 				}
 				break;
@@ -612,6 +652,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 
 
 			case $scope.simulationStateEnum.VISUALIZE_HALF_FULL_BLOCK_ON_OPPOSITE_SIDE:
+				$scope.greenCopyPrintingArray.length = 0;
 				$scope.greenStoragePrintingArray.length=0;
 				var iBlockIndex = tempContainer.getIBlockNumber();
 				/*Spracuvanie druhej casti pravej strana - ten priklad co je v skriptach*/
@@ -646,6 +687,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					for (var j = lastIndexOfMinusIHalfFullBlock + 1; j <= firstIndexOfMinusIHalfFullBlock; j++) {
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).lowerLevel);
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).lowerLevel = " ";
+						if($scope.greenCopyPrintingArray.length < 17){
+							$scope.greenCopyPrintingArray.push(placeholder);
+						}
 					}
 				} else {
 					/*to iste len pre negativne I, cize teraz pozitivne -I. Robim to vsetko len zmenami znamienok, */
@@ -656,6 +700,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					for (var j = firstIndexOfMinusIHalfFullBlock; j < lastIndexOfMinusIHalfFullBlock; j++) {
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).lowerLevel);
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).lowerLevel = " ";
+						if($scope.greenCopyPrintingArray.length < 17){
+							$scope.greenCopyPrintingArray.push(placeholder);
+						}
 					}
 				}
 				break;
