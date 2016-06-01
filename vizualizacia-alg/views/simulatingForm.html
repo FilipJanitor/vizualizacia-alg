@@ -58,11 +58,14 @@
             		<rect x="380" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0);fill-opacity:0;"/>
 
                <!-- ciarny znazornujuce oddelene bloky.-->
-               <line ng-repeat="Xsep in separatorArrayPositive" ng-if="400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition() >= 60 && 400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition() <= 700" ng-attr-x1="{{400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y1="{{storageTapeOffset.value}}" ng-attr-x2="{{400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y2="{{storageTapeOffset.value+kNumber.value*80}}" style="stroke:rgb(255,0,0);stroke-width:4" />
+                  <line ng-repeat="Xsep in separatorArrayPositive" ng-if="400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition() >= 60 && 400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition() <= 700" ng-attr-x1="{{400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y1="{{storageTapeOffset.value}}" ng-attr-x2="{{400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y2="{{storageTapeOffset.value+kNumber.value*80}}" style="stroke:rgb(255,0,0);stroke-width:4" />
 
-               <line ng-repeat="Xsep in separatorArrayNegative" ng-if="400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()>=60 && 400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition() <= 700" ng-attr-x1="{{400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y1="{{storageTapeOffset.value}}" ng-attr-x2="{{400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y2="{{storageTapeOffset.value+kNumber.value*80}}" style="stroke:rgb(255,0,0);stroke-width:4" />
+                  <line ng-repeat="Xsep in separatorArrayNegative" ng-if="400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()>=60 && 400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition() <= 700" ng-attr-x1="{{400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y1="{{storageTapeOffset.value}}" ng-attr-x2="{{400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y2="{{storageTapeOffset.value+kNumber.value*80}}" style="stroke:rgb(255,0,0);stroke-width:4" />
 
+               <!--oznacenie nepouzitych stvorcekov nad homecolumnom -->
+                  <line ng-repeat="val in originalMachinePrintingArray" x1="380" ng-attr-y1="{{storageTapeOffset.value+$index*80}}" x2="420" ng-attr-y2="{{storageTapeOffset.value+$index*80+40}}" style="stroke:rgb(0,0,0);stroke-width:2" />
 
+                  <line ng-repeat="val in originalMachinePrintingArray" x1="420" ng-attr-y1="{{storageTapeOffset.value+$index*80}}" x2="380" ng-attr-y2="{{storageTapeOffset.value+$index*80+40}}" style="stroke:rgb(0,0,0);stroke-width:2" />
 					<!-- texty na vykreslovanie -->
 
 					<!-- texty na orig. stroji TODO ten range spravit nejak normalnejsie mozno-->
@@ -81,10 +84,6 @@
                </svg>
             </div>
          </div>
-         <p>
-         positive:{{separatorArrayPositive}} <br>
-         negative:{{separatorArrayNegative}}
-         </p>
          </p>
       </div>
    </div>
