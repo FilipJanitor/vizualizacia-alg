@@ -301,6 +301,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 							if (k === 0) {
 								/*v home square mame len spodok*/
 								$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
+								$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
 								if($scope.greenCopyPrintingArray.length < 17){
 									$scope.greenCopyPrintingArray.push(placeholder);
 								}
@@ -444,6 +445,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 							if (k === 0) {
 								/*v home square mame len spodok*/
 								$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
+								$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
 								if($scope.greenCopyPrintingArray.length < 17){
 									$scope.greenCopyPrintingArray.push(placeholder);
 								}
