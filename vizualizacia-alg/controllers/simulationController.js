@@ -23,6 +23,12 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		HALF_FULL_BLOCK_FROM_COPY_TAPE: 9,
 	};
 
+	$scope.visualizationStateEnum = {
+		NO_VISUALIZATION:0,
+		MODE_1_VISUALIZE:1,
+		MODE_2_VISUALIZE:2,
+	};
+
 
 	/*Pomocne polia na spravne vykreslenie*/
 	/*pole, ktore sa nebude menit a bude sluzit len na iterovanie cez view na paskach. Je na vykreslenie celeho riadku / tj textu*/
@@ -81,11 +87,15 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	$scope.originalMachinePrintingArray = [];
 	$scope.reducedMachineStorageTapePrintingArray = [];
 
-	/*pole na printing zelenych storage stvorcov - treba ich robit dynamicky na zaklade toho, co sa deje a aka cast pasky sa vykresluje*/
+	/*pole na printing zelenych storage a copy stvorcov - treba ich robit dynamicky na zaklade toho, co sa deje a aka cast pasky sa vykresluje*/
 	$scope.greenStoragePrintingArray = [];
+	$scope.greenCopyPrintingArray = [];
 
 	/*stack historie. Obsahuje poslednych 100 pohybov*/
 	$scope.historyStack = new CircularStack();
+
+	/*Stav oznacujuci, ci sa nachadzame v pomocnom vizualizacnom stave*/
+	$scope.visualizationMode = $scope.visualizationStateEnum.NO_VISUALIZATION;
 
 	/*Pole, obsahujuce suradnice separatorov, relativne ku stredu vykreslovaneho stroju. Pozitivne a negativne. Budu v nich  mocniny dvojky*/
 	$scope.separatorArrayPositive = [0];
@@ -132,6 +142,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 			$scope.originalMachineViews[i].reInitialiseOriginal();
 		}
 		$scope.simulationMode = $scope.stateEnum.IN_PROGRESS;
+		$scope.visualizationMode = $scope.visualizationStateEnum.NO_VISUALIZATION;
 		var writing = [];
 		var moving = [];
 		for (var i = 0; i < $scope.kNumber.value; i++) {
@@ -148,6 +159,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	/*Funkcia, ktorá porovná aktuálnu konfiguráciu s deltafunkciou a na základe toho stroj buď zasekne, alebo zavolá hlavnú simulačnú funkciu*/
 	$scope.findDeltaAndStartStep = function() {
 		$scope.simulationMode = $scope.stateEnum.IN_PROGRESS;
+		$scope.visualizationMode = $scope.visualizationStateEnum.NO_VISUALIZATION;
 		var readingArr = [];
 		for (var i = 0; i < $scope.kNumber.value; i++) {
 			readingArr.push($scope.kSourceTapes.value[i].charAt($scope.originalMachineViews[i].getCurrentHeadPosition()));
@@ -694,6 +706,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		$scope.historyStack.push(angular.copy(backup));
 	};
 
+	/*funkcia na obnovenie stroja do predch stavu*/
 	$scope.previousStep = function(){
 		var backup = $scope.historyStack.pop();
 		if(backup == null){
@@ -709,4 +722,18 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		$scope.separatorArrayPositive = backup.separatorArrayPositive;
 
 	};
+
+	$scope.startVisualize = function(type){
+		$scope.simulationMode = $scope.stateEnum.IN_PROGRESS;
+		switch (type) {
+			case 1:
+				$scope.visualizationMode = $scope.visualizationStateEnum.MODE_1_VISUALIZE;
+				break;
+
+			case 2:
+				$scope.visualizationMode = $scope.visualizationStateEnum.MODE_1_VISUALIZE;
+				break;
+		}
+	};
+
 }]);

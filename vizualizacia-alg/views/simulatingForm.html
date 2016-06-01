@@ -28,14 +28,23 @@
                   <text style="text-anchor: beginning" x="30" y="30" ng-if="mainMode.value == stateEnum.MODE_2_SIMULATE" fill="black">Stav stroja: {{ originalMachineState }}</text>
 
 
+               <!-- blue squares - oznacuju vykonavane zmeny na orig. paske pocas vizualizacie pred samotnym krokom-->
+
+                  <g ng-if="visualizationMode != visualizationStateEnum.NO_VISUALIZATION">
+                     <rect ng-repeat="node in simulatingArray.value" ng-if="(380+ (originalMachineViews[$index].getViewHeadPosition())*40) >= 60 && (380 + (originalMachineViews[$index].getViewHeadPosition())*40)  <= 700" ng-attr-x="{{ 380+ (originalMachineViews[$index].getViewHeadPosition())*40}}" ng-attr-y="{{40+$index*60}}" width="40" height="40" style="fill:rgb(0,0,255);stroke-width:0;"/>
+                  </g>
                <!-- red squares - tie budu oznacovat zmenu na orig. stroji-->
-                  <g ng-if="simulationMode == stateEnum.IN_PROGRESS">
+                  <g ng-if="simulationMode == stateEnum.IN_PROGRESS && visualizationMode == visualizationStateEnum.NO_VISUALIZATION">
                      <rect ng-repeat="node in simulatingArray.value" ng-if="(380+ (originalMachineViews[$index].getViewHeadPosition())*40 + (-node.movement)*40 ) >= 60 && (380 + (originalMachineViews[$index].getViewHeadPosition())*40 + (-node.movement)*40 )  <= 700" ng-attr-x="{{ 380+ (originalMachineViews[$index].getViewHeadPosition())*40 + (-node.movement)*40 }}" ng-attr-y="{{40+$index*60}}" width="40" height="40" style="fill:rgb(255,0,0);stroke-width:0;"/>
                   </g>
 
 
                <!-- green squares - tie budu oznacovat aktualne zmeny  krokov simulacie na sim. stroji-->
                   <rect ng-repeat="square in greenStoragePrintingArray" ng-if="(380 + 40*(reducedMachineStorageTapeViews.getViewHeadPosition() + square.getIndex())) >= 60 && (380 + 40*(reducedMachineStorageTapeViews.getViewHeadPosition() + square.getIndex()) ) <= 700" ng-attr-x="{{380 + 40*(reducedMachineStorageTapeViews.getViewHeadPosition()+square.getIndex()) }}" ng-attr-y="{{storageTapeOffset.value + 80*square.getSimulatedTrack() + 40*square.getRow()}}" width="40" height="40" style="fill:rgb(0,255,0);stroke-width:0;"/>
+
+
+               <!-- green copy squares - oznacuju zmeny na copy paske-->
+                  <rect ng-repeat="square in greenCopyPrintingArray" ng-if="60 + $index*40 >= 60 && 60 + $index*40 <= 700" ng-attr-x="{{60 + $index*40}}" ng-attr-y="{{copyTapeOffset.value}}" width="40" height="40" style="fill:rgb(0,255,0);stroke-width:0;"/>
 
                <!-- original machine-->
                   <g ng-repeat="node in originalMachinePrintingArray">
@@ -94,6 +103,12 @@
 
    <button type="button" ng-show="simulationMode == stateEnum.IDLE" class="btn btn-default btn-block btn-responsive" ng-click="previousStep()">Krok späť</button>
 
+
+   <button type="button" ng-show="mainMode.value == stateEnum.MODE_1_SIMULATE" ng-disabled="simulationMode == stateEnum.IN_PROGRESS || !simulationForm.$valid" class="btn btn-primary btn-block btn-responsive" ng-click="startVisualize(1)">Odsimulovať krok</button>
+
+   <button type="button" ng-show="mainMode.value == stateEnum.MODE_2_SIMULATE" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-primary btn-block btn-responsive" ng-click="startVisualize(2)">Odsimulovať krok</button>
+
+
    <form name="simulationForm" novalidate>
    <!-- formular sa cely stane readonly. Ukazeme ho len v pripade, ze mod je jedna-->
       <fieldset  ng-if="mainMode.value == stateEnum.MODE_1_SIMULATE" data-ng-repeat="choice in simulatingArray.value">
@@ -106,11 +121,13 @@
          <input type="radio" name="movement{{$index}}" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" ng-model="choice.movement" value="1"> 1 <br> <br>
       </fieldset>
       <br>
-      <button type="button" ng-show="mainMode.value == stateEnum.MODE_1_SIMULATE" ng-disabled="simulationMode == stateEnum.IN_PROGRESS || !simulationForm.$valid" class="btn btn-primary btn-block btn-responsive" ng-click="checkAndStartStep()">Odsimulovať krok</button>
 
-      <button type="button" ng-show="mainMode.value == stateEnum.MODE_2_SIMULATE" ng-disabled="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-primary btn-block btn-responsive" ng-click="findDeltaAndStartStep()">Odsimulovať krok</button>
+      <button type="button" ng-show="visualizationMode == visualizationStateEnum.MODE_2_VISUALIZE" class="btn btn-primary btn-block btn-responsive" ng-click="findDeltaAndStartStep()">Pokračovať</button>
 
-      <button type="button" ng-show="simulationMode == stateEnum.IN_PROGRESS" class="btn btn-default btn-block btn-responsive" ng-click="nextStep()">Pokračovať ďalším krokom</button>
+      <button type="button" ng-show="visualizationMode== visualizationStateEnum.MODE_1_VISUALIZE" class="btn btn-primary btn-block btn-responsive" ng-click="checkAndStartStep()">Pokračovať</button>
+
+
+      <button type="button" ng-show="simulationMode == stateEnum.IN_PROGRESS && visualizationMode == visualizationStateEnum.NO_VISUALIZATION" class="btn btn-default btn-block btn-responsive" ng-click="nextStep()">Pokračovať ďalším krokom</button>
 
    </form>
 </div>
