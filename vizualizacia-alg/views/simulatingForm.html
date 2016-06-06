@@ -17,7 +17,7 @@
       <div class="col-sm-12">
          <div class="wrap-svg">
             <div class="spacer.svg">
-               <svg viewBox="0 0 800 {{ neededHeightOfSvg.value }}">
+               <svg viewBox="0 0 800 {{ neededHeightOfSvg.value }}" shape-rendering="crispEdges">
 
                   <text style="text-anchor: middle" x="400" y="30" fill="black">Pásky originálneho stroja</text>
                   <text style="text-anchor: middle" x="400" ng-attr-y="{{storageTapeOffset.value-20}}" fill="black">Pracovná páska simulujúceho stroja</text>
@@ -34,20 +34,20 @@
                <!-- blue squares - oznacuju vykonavane zmeny na orig. paske pocas vizualizacie pred samotnym krokom-->
 
                   <g ng-if="visualizationMode != visualizationStateEnum.NO_VISUALIZATION">
-                     <rect ng-repeat="node in simulatingArray.value" ng-if="(380+ (originalMachineViews[$index].getViewHeadPosition())*40) >= 60 && (380 + (originalMachineViews[$index].getViewHeadPosition())*40)  <= 700" ng-attr-x="{{ 380+ (originalMachineViews[$index].getViewHeadPosition())*40}}" ng-attr-y="{{40+$index*60}}" width="40" height="40" style="fill:rgb(0,0,255);stroke-width:0;"/>
+                     <rect ng-repeat="node in simulatingArray.value" ng-if="(380+ (originalMachineViews[$index].getViewHeadPosition())*40) >= 60 && (380 + (originalMachineViews[$index].getViewHeadPosition())*40)  <= 700" ng-attr-x="{{ 380+ (originalMachineViews[$index].getViewHeadPosition())*40}}" ng-attr-y="{{40+$index*60}}" width="40" height="40" style="fill:#5bc0de;stroke-width:0;"/>
                   </g>
                <!-- red squares - tie budu oznacovat zmenu na orig. stroji-->
                   <g ng-if="simulationMode == stateEnum.IN_PROGRESS && visualizationMode == visualizationStateEnum.NO_VISUALIZATION">
-                     <rect ng-repeat="node in simulatingArray.value" ng-if="(380+ (originalMachineViews[$index].getViewHeadPosition())*40 + (-node.movement)*40 ) >= 60 && (380 + (originalMachineViews[$index].getViewHeadPosition())*40 + (-node.movement)*40 )  <= 700" ng-attr-x="{{ 380+ (originalMachineViews[$index].getViewHeadPosition())*40 + (-node.movement)*40 }}" ng-attr-y="{{40+$index*60}}" width="40" height="40" style="fill:rgb(255,0,0);stroke-width:0;"/>
+                     <rect ng-repeat="node in simulatingArray.value" ng-if="(380+ (originalMachineViews[$index].getViewHeadPosition())*40 + (-node.movement)*40 ) >= 60 && (380 + (originalMachineViews[$index].getViewHeadPosition())*40 + (-node.movement)*40 )  <= 700" ng-attr-x="{{ 380+ (originalMachineViews[$index].getViewHeadPosition())*40 + (-node.movement)*40 }}" ng-attr-y="{{40+$index*60}}" width="40" height="40" style="fill:#d9534f;stroke-width:0;"/>
                   </g>
 
 
                <!-- green squares - tie budu oznacovat aktualne zmeny  krokov simulacie na sim. stroji-->
-                  <rect ng-repeat="square in greenStoragePrintingArray" ng-if="(380 + 40*(reducedMachineStorageTapeViews.getViewHeadPosition() + square.getIndex())) >= 60 && (380 + 40*(reducedMachineStorageTapeViews.getViewHeadPosition() + square.getIndex()) ) <= 700" ng-attr-x="{{380 + 40*(reducedMachineStorageTapeViews.getViewHeadPosition()+square.getIndex()) }}" ng-attr-y="{{storageTapeOffset.value + 80*square.getSimulatedTrack() + 40*square.getRow()}}" width="40" height="40" style="fill:rgb(0,255,0);stroke-width:0;"/>
+                  <rect ng-repeat="square in greenStoragePrintingArray" ng-if="(380 + 40*(reducedMachineStorageTapeViews.getViewHeadPosition() + square.getIndex())) >= 60 && (380 + 40*(reducedMachineStorageTapeViews.getViewHeadPosition() + square.getIndex()) ) <= 700" ng-attr-x="{{380 + 40*(reducedMachineStorageTapeViews.getViewHeadPosition()+square.getIndex()) }}" ng-attr-y="{{storageTapeOffset.value + 80*square.getSimulatedTrack() + 40*square.getRow()}}" width="40" height="40" style="fill:#5cb85c;stroke-width:0;"/>
 
 
                <!-- green copy squares - oznacuju zmeny na copy paske-->
-                  <rect ng-repeat="square in greenCopyPrintingArray track by $index" ng-if="60 + $index*40 >= 60 && 60 + $index*40 <= 700" ng-attr-x="{{60+40*$index}}" ng-attr-y="{{ reducedMachineCopyTapeOffset.value }}" width="40" height="40" style="fill:rgb(0,255,0);stroke-width:0;"/>
+                  <rect ng-repeat="square in greenCopyPrintingArray track by $index" ng-if="60 + $index*40 >= 60 && 60 + $index*40 <= 700" ng-attr-x="{{60+40*$index}}" ng-attr-y="{{ reducedMachineCopyTapeOffset.value }}" width="40" height="40" style="fill:#5cb85c;stroke-width:0;"/>
 
                <!-- original machine-->
                   <g ng-repeat="node in originalMachinePrintingArray">
@@ -69,14 +69,14 @@
                   <rect ng-repeat="xval in CONSTANT_X_VIEW_ARRAY" ng-attr-x="{{xval}}" ng-attr-y="{{reducedMachineCopyTapeOffset.value}}" width="40" height="40" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0);fill-opacity:0;"/>
 
                <!-- ciarny znazornujuce oddelene bloky.-->
-                  <line ng-repeat="Xsep in separatorArrayPositive" ng-if="400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition() >= 60 && 400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition() <= 700" ng-attr-x1="{{400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y1="{{storageTapeOffset.value}}" ng-attr-x2="{{400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y2="{{storageTapeOffset.value+kNumber.value*80}}" style="stroke:rgb(255,0,0);stroke-width:4" />
+                  <line ng-repeat="Xsep in separatorArrayPositive" ng-if="400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition() >= 60 && 400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition() <= 740" ng-attr-x1="{{400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y1="{{storageTapeOffset.value}}" ng-attr-x2="{{400+20+40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y2="{{storageTapeOffset.value+kNumber.value*80}}" style="stroke:rgb(0,0,0);stroke-width:4" />
 
-                  <line ng-repeat="Xsep in separatorArrayNegative" ng-if="400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()>=60 && 400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition() <= 700" ng-attr-x1="{{400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y1="{{storageTapeOffset.value}}" ng-attr-x2="{{400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y2="{{storageTapeOffset.value+kNumber.value*80}}" style="stroke:rgb(255,0,0);stroke-width:4" />
+                  <line ng-repeat="Xsep in separatorArrayNegative" ng-if="400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()>=60 && 400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition() <= 740" ng-attr-x1="{{400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y1="{{storageTapeOffset.value}}" ng-attr-x2="{{400-20-40*Xsep + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y2="{{storageTapeOffset.value+kNumber.value*80}}" style="stroke:rgb(0,0,0);stroke-width:4" />
 
                <!--oznacenie nepouzitych stvorcekov nad homecolumnom -->
-                  <line ng-repeat="val in originalMachinePrintingArray" x1="380" ng-attr-y1="{{storageTapeOffset.value+$index*80}}" x2="420" ng-attr-y2="{{storageTapeOffset.value+$index*80+40}}" style="stroke:rgb(0,0,0);stroke-width:2" />
+                  <line ng-if="(380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition()) >= 60 && (380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition()) <= 700" ng-repeat="val in originalMachinePrintingArray" ng-attr-x1="{{380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y1="{{storageTapeOffset.value+$index*80}}" ng-attr-x2="{{420 + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y2="{{storageTapeOffset.value+$index*80+40}}" style="stroke:rgb(0,0,0);stroke-width:2" />
 
-                  <line ng-repeat="val in originalMachinePrintingArray" x1="420" ng-attr-y1="{{storageTapeOffset.value+$index*80}}" x2="380" ng-attr-y2="{{storageTapeOffset.value+$index*80+40}}" style="stroke:rgb(0,0,0);stroke-width:2" />
+                  <line ng-if="(380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition()) >= 60 && (380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition()) <= 700" ng-repeat="val in originalMachinePrintingArray" ng-attr-x1="{{420 + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y1="{{storageTapeOffset.value+$index*80}}" ng-attr-x2="{{380 + 40* reducedMachineStorageTapeViews.getViewHeadPosition()}}" ng-attr-y2="{{storageTapeOffset.value+$index*80+40}}" style="stroke:rgb(0,0,0);stroke-width:2" />
 					<!-- texty na vykreslovanie -->
 
 					<!-- texty na orig. stroji TODO ten range spravit nejak normalnejsie mozno-->
