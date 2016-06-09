@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html lang="sk" >
-   <head>
-      <meta charset="utf-8" />
-      <title>Vizualizácia algoritmu na redukciu počtu pások z k na 2 pre čas</title>
-      <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
-      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-      <link href="styles.css" rel="stylesheet" />
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-      <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-      <script src="app.js"></script>
-      <script src="services/simulationService.js"></script>
-      <script src="controllers/mainController.js"></script>
-      <script src="controllers/simulationController.js"></script>
-   </head>
-   <body ng-app="App">
-      <div class="container">
-         <div ng-controller="mainController">
-            <div class="row">
-            	<div class="col-sm-12">
+    <head>
+        <meta charset="utf-8" />
+        <title>Vizualizácia algoritmu na redukciu počtu pások z k na 2 pre čas</title>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link href="styles.css" rel="stylesheet" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="app.js"></script>
+        <script src="services/simulationService.js"></script>
+        <script src="controllers/mainController.js"></script>
+        <script src="controllers/simulationController.js"></script>
+    </head>
+    <body ng-app="App">
+        <div class="container">
+            <div ng-controller="mainController">
+                <div class="row">
+                	<div class="col-sm-12">
             		<h1>Vizualizácia algoritmu na redukciu počtu pások z k na 2 pre čas</h1>
             	</div>
             	<!-- intro -->
-					<div class="col-sm-12">
-            		<p>Interaktívny simulátor práce 2 páskového Turingovho stroja simulujúceho k páskový Turingov stroj podľa algoritmu na redukciu počtu pások na 2 pre čas, vhodný pre študentov predmetu FOJA1. </p>
+					<div ng-if="currentState == stateEnum.BEGINNING" class="col-sm-12">
+            		  <p> Interaktívny simulátor práce 2 páskového Turingovho stroja simulujúceho k páskový Turingov stroj podľa algoritmu na redukciu počtu pások na 2 pre čas, vhodný pre študentov predmetu FOJA1. </p>
 					</div>
 				</div>
             <!-- content -->

@@ -1,14 +1,16 @@
 <div class="col-sm-12">
-	<form name="sourceTapesForm1" novalidate>
-   	<div>
-      	<p>Zadajte obsah vstupnej pásky simulovaného stroja.</p>
-	      <label>Vstupná páska(1 až 100 znakov, čiarka, medzera ani krížik sa nesmú používať ako symboly) :</label>
-      	<input type="text" class="form-control" name="sourceTrack" ng-pattern="/^[^,×\s]*$/" value="" ng-model="kSourceTapes[0]" required minlength="0" maxlength="100" >
-   	</div>
-	</form>
+    <h3>Vstupná páska</h3>
 </div>
 <div class="col-sm-12">
-	<div class="btn-group">
-   	<button class="btn btn-default" ng-disabled="sourceTapesForm1.$invalid" ng-click="startSimulation(1)">Začať simuláciu</button>
-	</div>
+    <form name="sourceTapesForm1" novalidate>
+        <div>
+            <label>Zadajte obsah vstupnej pásky simulovaného stroja(1 až 100 znakov, čiarka, medzera ani krížik sa nesmú používať ako symboly) :</label>
+            <input type="text" class="form-control" name="sourceTrack" ng-pattern="/^[^,×\s]*$/" value="" ng-model="kSourceTapes[0]" required minlength="0" maxlength="100" >
+        </div>
+    </form>
+</div>
+<div class="col-sm-12">
+    <div class="btn-group">
+        <button class="btn btn-default" ng-disabled="sourceTapesForm1.$invalid" ng-click="startSimulation(1)">Začať simuláciu</button>
+    </div>
 </div>

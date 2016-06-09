@@ -74,19 +74,6 @@ function NegativeArray() {
 		}
 	};
 
-	/*tieto funkcie predpokladaju, ze pole obsahuje 0. Ak nie, budu sa robit diery. Ale pasky su konstruovbane tak, ze home row je na nule, teda situacia, ked by sa to pokazilo nevznikne*/
-	/*this.ePush = function(val) {
-		this.__positive.push(val);
-	};
-	this.ePop = function() {
-		return this.__positive.pop();
-	};
-	this.bPush = function(val) {
-		this.__negative.push(val);
-	};
-	this.bPop = function(val) {
-		return this.__negative.pop();
-	};*/
 	this.positiveLength = function() {
 		return this.__positive.length;
 	};
@@ -191,7 +178,7 @@ function PrintingSquare(index,row, simulatedTrack) {
 	}
 };
 
-
+/*kruhovity zasobnik s obmedzenou kapacitou*/
 function CircularStack(){
 	var stack  = [];
 	var beginning = 0;
@@ -206,7 +193,7 @@ function CircularStack(){
 	}
 
 	this.isFull = function(){
-		return (stack.length == LENGTH)
+		return (stack.length == LENGTH);
 	}
 	this.push = function(item){
  		stack[end] = item;

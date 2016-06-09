@@ -40,6 +40,7 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 	$scope.deltaTemp = {
 		value: ""
 	};
+
 	$scope.resetDelta = function() {
 		$scope.deltaTemp.value = angular.copy($scope.masterFormCommas);
 	};
@@ -92,7 +93,7 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 		if($scope.kSourceTapes[0].length < 9){
 			var tempString = "";
 			for(var temp = 9 - $scope.kSourceTapes[0].length;temp > 0; temp--){
-				tempString += "×"
+				tempString += "×";
 			}
 			$scope.kSourceTapes[0] = $scope.kSourceTapes[0] + tempString;
 		}
@@ -208,13 +209,11 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 			errLog += "Zlá dĺžka vstupu. ";
 		}
 
-		/*toto mozno netreba - mozno povolime viacznakove stavy TODO*/
 		if (arr[0].length > 15) {
 			deltaInvalid.value = true;
 			errLog += "Stav musí mať najviac 15 znakov. ";
 		}
 
-		/*tieto _state premenne su iba tempy, preto nepouzivaju camelcase*/
 		var orig_state = arr[0];
 		var reading = [];
 		for (var i = 1; i < 1 + $scope.kNumber.value; i++) {
@@ -226,7 +225,6 @@ app.controller('mainController', ['$scope', 'simulationService', '$window', '$lo
 			}
 		}
 
-		/*toto sa mozno tiez vyhodi - mozno povolime viacznakove stavy TODO*/
 		if (arr[1 + $scope.kNumber.value].length != 1) {
 			deltaInvalid.value = true;
 			errLog += "Nový stav môže mať najviac 15 znakov. ";

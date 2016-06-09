@@ -1,7 +1,4 @@
 app.controller('simulationController', ['$scope', '$window', '$log', 'simulationService', function($scope, $window, $log, simulationService) {
-	/*UPRAVIT SWITCH BLOCK TAK ABY SA ZBYTOCNE NEOPAKOVAL KOD 0- VYROBIT FALL THROUGH BLOCK. ZAROVEN TO TREBA ZJEDNOTIT - MIESTO IF ELSE BLOKOV POUZIT JEDNU DEDIKOVANU FUNKCIU - ULAHCI TO FAKT< ZE TIE VECI SU REALNE SYMETRICKE, CI SU POZITIVNE CI NEGATIVNE - OTAZKA JE,CI TO POJDE LEBO UPPPER A LOWER LEVELS. CO TREBA - V SWITCHI PORIEDNE ZJEDNOTIT INTERVALY A CACHOVAT VSETKY CYKLOVEW BOUNDY*/
-	/*Co sa tyka stavov, z storage pasky sa maze hned pri presune na copy - bude to indikovane zelenym stvorcekom. Pri presune z copy sa bude hned mazat z copy
-	*/
 	/*hlavne stavy. Maju dopad na to, co sa objavuje na obrazovke*/
 	$scope.stateEnum = {
 		IDLE: 1,
@@ -32,6 +29,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		VISUALIZE_HALF_FULL_BLOCK_FROM_COPY_TAPE: 19,
 	};
 
+	/*pomocne mody pre vizualizaciu niektorych medzikrookov*/
 	$scope.visualizationStateEnum = {
 		NO_VISUALIZATION:0,
 		MODE_1_VISUALIZE:1,
@@ -40,10 +38,12 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 
 
 	/*Pomocne polia na spravne vykreslenie*/
+
 	/*pole, ktore sa nebude menit a bude sluzit len na iterovanie cez view na paskach. Je na vykreslenie celeho riadku / tj textu*/
 	$scope.CONSTANT_VIEW_ARRAY = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-	/*je na vykreslovanie stvorcekov ako riadku, ma spravne suradnice okrem prostredneho stvorceka, ten chyba*/
-	$scope.CONSTANT_X_VIEW_ARRAY = [60, 100, 140, 180, 220, 260, 300, 340,/**/380,/**/ 420, 460, 500, 540, 580, 620, 660, 700];
+
+	/*pole na vykreslovanie stvorcekov ako riadku*/
+	$scope.CONSTANT_X_VIEW_ARRAY = [60, 100, 140, 180, 220, 260, 300, 340,380, 420, 460, 500, 540, 580, 620, 660, 700];
 
 	/*Offsety sluziace na orientaciu na ploche svg. Na zaklade nich vieme urcit, kde sa zacinaju jednotlive pasky strojov, hoci je ich poloha dynamicka*/
 	$scope.reducedMachineCopyTapeOffset = {
@@ -58,9 +58,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 
 	/*pole obsahujuci pre kazdu pasku orig. stroja interval <) ktory bude vykreslovany */
 	$scope.originalMachineViews = [];
-	/*pole obsahujuci pre storage pasku simulacneho stroja interval <) ktory bude vykreslovany. On sa asi bude posuvat len pre stav, ze sa cosi bude diat as na moc vzdialenom konci, tak aby to uzivatel videl. Ma mat beginning nastavey na -8 */
+	/*pole obsahujuci pre storage pasku simulacneho stroja interval <) ktory bude vykreslovany. */
 	$scope.reducedMachineStorageTapeViews = new MachineView();
-	/*pole obsahujuci pre copy pasku simulacneho stroja interval <) ktory bude vykreslovany. On sa asi bude posuvat len pre stav, ze sa cosi bude diat as na moc vzdialenom konci, tak aby to uzivatel videl. Ma mat beginning nastavey na -8 */
+	/*pole obsahujuci pre copy pasku simulacneho stroja interval <) ktory bude vykreslovany. */
 	$scope.reducedMachineCopyTapeViews = new MachineView();
 
 
@@ -76,17 +76,15 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 	/*pole obsahujuce pre kazdu pasku orig stroja jedno negativearray reprezentujuce dvojstopu na storage paske*/
 	$scope.simulationStorageTapeArray = simulationService.simulationStorageTapeArray;
 
-	/*TODO ZMENIT NA POLE MEDZERNIKOV< BUDE SA POUZIVAT MISTO STRINGU*/
 	/*String copy zatial obsahuje iba medzerniky*/
 	$scope.reducedMachineCopyTape = "                 ";
-		/*ZATIAL TEMPOVE POLE NA POUZIVANIE< NIE NA VYKRESLOVANIE*/
 	$scope.reducedMachineCopyTapeArray = [];
 
-	/*Sucasny stav originalneho TS. Defaultne to bude stav 0 nula*/
+	/*Sucasny stav originalneho TS. Defaultne to bude stav 0*/
 	$scope.originalMachineState = "0";
 
 	/*Dolezite objekty urcujuce stav simulacie*/
-	/*IDLE alebo in progress - ci prave simulujeme, alebo len nahadzujeme vstup*/
+	/*IDLE alebo IN_PROGRESS - ci prave simulujeme, alebo len nahadzujeme vstup*/
 	$scope.simulationMode = $scope.stateEnum.IDLE;
 	/*premenna ktoru naplni mainSimulationFunkcia objektami, ktore budu obsahovat riadiace prikazy pre simulaciu a pointer do tohoto pola. Nextstep ho bude inkrementovat*/
 	$scope.currentSimulationStateArray = [];
@@ -159,10 +157,10 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		var moving = [];
 		for (var i = 0; i < $scope.kNumber.value; i++) {
 			writing.push($scope.simulatingArray.value[i].overwriteValue);
-			//chyba s znamienkami v pohybe. Musim ich otocit. robim to v dvoch funkciach redraw a main
 			moving.push($scope.simulatingArray.value[i].movement);
 		}
 
+		$scope.reducedMachineStorageTapeViews.reInitialise(-8, 9, 0);
 		$scope.backupTapes();
 		$scope.redrawOriginalMachine(writing, moving);
 		$scope.mainSimulatingFunction(writing, moving);
@@ -193,7 +191,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				}
 			}
 		}
-		/*Ak sa nenasla zhoda v deltavunkcii, stroj sa zasekne - zatial temporary*/
+		/*Ak sa nenasla zhoda v deltavunkcii, stroj sa zasekne*/
 		if (!wasSet) {
 			$window.alert("Žiadna zhoda s deltafunkciou, stroj sa zasekol");
 			$scope.simulationMode = $scope.stateEnum.IDLE;
@@ -202,15 +200,14 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		for (var i = 0; i < $scope.kNumber.value; i++) {
 			$scope.simulatingArray.value[i].movement = moving[i];
 		}
+
+		$scope.reducedMachineStorageTapeViews.reInitialise(-8, 9, 0);
 		$scope.backupTapes();
 		$scope.redrawOriginalMachine(writing, moving);
 		$scope.mainSimulatingFunction(writing, moving);
 	};
 
 	/*Funkcia upravuje výstup simulačnej funkcie tak, aby bol vykresliteľný*/
-	/*TODO _ ZELENE STVORCEKY SA ESTE NEDEJU< TAKZE TO TREBA ESTE PODOPLNAT*/
-	/*TODO OSETRIT DIVNE VSTUPY - I = 0*/
-	/*Kazdy krok zrestuje view storagetape.*/
 	$scope.nextStep = function() {
 		/*ak sme vsetko posimulovali, upraceme a vypneme simulaciu*/
 		if ($scope.pointerToCurrentSimulationState === $scope.currentSimulationStateArray.length) {
@@ -222,12 +219,10 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 			return;
 		}
 		var placeholder = 1;
-		/*vratime pohlad na stred*/
-		$scope.reducedMachineStorageTapeViews.reInitialise(-8, 9, 0);
 		var tempContainer = $scope.currentSimulationStateArray[$scope.pointerToCurrentSimulationState];
 
 		/*pridanie novej ciary bloku ak je to potrebne (stroj cita blok, na ktorom este nebol)*/
-		if(tempContainer.getStepState() == $scope.simulationStateEnum.EMPTY_BLOCK_REARRANGE_SYMBOLS || tempContainer.getStepState() == $scope.simulationStateEnum.HALF_EMPTY_BLOCK_REARRANGE_SYMBOLS){
+		if(tempContainer.getStepState() == $scope.simulationStateEnum.EMPTY_BLOCK_FROM_COPY_TAPE || tempContainer.getStepState() == $scope.simulationStateEnum.HALF_EMPTY_BLOCK_FROM_COPY_TAPE){
 			if(tempContainer.getIBlockNumber() > 0){
 				if(Math.pow(2,tempContainer.getIBlockNumber())-1 > $scope.separatorArrayPositive[$scope.separatorArrayPositive.length-1]){
 					$scope.separatorArrayPositive.push(Math.pow(2,tempContainer.getIBlockNumber())-1);
@@ -276,10 +271,9 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					}
 				} else {
 					/*to iste len pre negativne. Robim to vsetko len zmenami znamienok, tie cykly by boli skarede, ak by boli negativne*/
-					/*var lastIndexOfUsedBlock = Math.pow(2, -(iBlockIndex+1)) - 1;*/
 					/*najdeme vsetky konce blokov az po blok ktory aktualne spracuvame*/
 					var tempEnd = -Math.pow(2, -iBlockIndex-1);
-					/*zelene stvorceky oznacujuce policka, s ktorymi sa hybe TODO doplnit na copy pasku*/
+					/*zelene stvorceky oznacujuce policka, s ktorymi sa hybe*/
 					for (var i = -1; i > tempEnd; i--) {
 						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,0,tempContainer.getIndexOfOriginalTrack()));
 						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
@@ -293,14 +287,12 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				var iBlockIndex = tempContainer.getIBlockNumber();
 				/*prava strana - ten priklad co je v skriptach*/
 				if (iBlockIndex > 0) {
-					/*var lastIndexOfUsedBlock = Math.pow(2, iBlockIndex-1) - 1; CO JE UCEL TEJTO PREMENNEJ - ONO TO JE LEN PRE UCEL TOHO NASLEDNEHO VRACANIA NA TIE BLOKY*/
 					/*najdeme vsetky konce blokov az po blok ktory aktualne spracuvame (nevratane - chceme na copytape davat len veci az po blok Bi-1)*/
 					var endBlocksArray = [0];
 					for (var i = 0; i < iBlockIndex; i++) {
 						/*polootvorene intervaly*/
 						endBlocksArray.push(Math.pow(2, i));
 					}
-					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
 					for (var j = 1; j < endBlocksArray.length; j++) {
 						for (var k = endBlocksArray[j - 1]; k < endBlocksArray[j]; k++) {
 							if (k === 0) {
@@ -330,21 +322,15 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						}
 					}
 				} else {
-					/*to iste len pre negativne. Robim to vsetko len zmenami znamienok, tie cykly by boli skarede, ak by boli negativne*/
-					/*var lastIndexOfUsedBlock = Math.pow(2, -(iBlockIndex+1)) - 1;*/
+					/*to iste len pre negativne. Robim to vsetko len zmenami znamienok*/
 					/*najdeme vsetky konce blokov az po blok ktory aktualne spracuvame*/
 					var endBlocksArray = [0];
 					for (var i = 0; i < -iBlockIndex; i++) {
 						/*polootvorene intervaly*/
 						endBlocksArray.push(-Math.pow(2, i) /*-1*/ );
 					}
-					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
 					for (var j = endBlocksArray.length -1; j > 0 ; j--) {
 						for (var k = endBlocksArray[j]+1; k <= endBlocksArray[j-1]; k++) {
-							/*if(k===0){
-							 	  	   	  $scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(-k).lowerLevel);
-											  continue;
-							 	  	   }*/
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
 							$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel = " ";
 							if($scope.greenCopyPrintingArray.length < 17){
@@ -383,7 +369,6 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
 					}
 				}
-				/*mozeme vymazat pole copy POZOR-SKUTOCNE SA CELE ODALOKUJE A PRESTANE SA VYPISOVAT??*/
 				break;
 
 
@@ -405,7 +390,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i-lastIndexOfIBlock -1];
 					}
 				}
-				/*mozeme vymazat pole copy POZOR-SKUTOCNE SA CELE ODALOKUJE A PRESTANE SA VYPISOVAT??*/
+				/*mozeme vymazat pole copy*/
 				$scope.reducedMachineCopyTapeArray.length = 0;
 				break;
 
@@ -423,7 +408,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				} else {
 					/*najdeme vsetky konce blokov az po blok ktory aktualne spracuvame*/
 					var tempEnd = -Math.pow(2, -iBlockIndex-1);
-					/*zelene stvorceky oznacujuce policka, s ktorymi sa hybe TODO doplnit na copy pasku*/
+					/*zelene stvorceky oznacujuce policka, s ktorymi sa hybe*/
 					for (var i = -1; i > tempEnd; i--) {
 						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,0,tempContainer.getIndexOfOriginalTrack()));
 						$scope.greenStoragePrintingArray.push(new PrintingSquare(i,1,tempContainer.getIndexOfOriginalTrack()));
@@ -442,9 +427,8 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					var endBlocksArray = [0];
 					for (var i = 0; i < iBlockIndex; i++) {
 						/*polootvorene intervaly*/
-						endBlocksArray.push(Math.pow(2, i) /*-1*/ );
+						endBlocksArray.push(Math.pow(2, i) );
 					}
-					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE - toto je totiz rovnake pre half empty aj empty*/
 					for (var j = 1; j < endBlocksArray.length; j++) {
 						for (var k = endBlocksArray[j - 1]; k < endBlocksArray[j]; k++) {
 							if (k === 0) {
@@ -478,9 +462,8 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					var endBlocksArray = [0];
 					for (var i = 0; i < -iBlockIndex; i++) {
 						/*polootvorene intervaly*/
-						endBlocksArray.push(-Math.pow(2, i) /*-1*/ );
+						endBlocksArray.push(-Math.pow(2, i) );
 					}
-					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE- toto je rovnake v empty aj v halfempty*/
 					for (var j = endBlocksArray.length - 1; j > 0; j--) {
 						for (var k = endBlocksArray[j]+1; k <= endBlocksArray[j-1]; k++) {
 							$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(k).lowerLevel);
@@ -560,7 +543,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						counter++;
 					}
 				}
-				/*mozeme vymazat pole copy POZOR-SKUTOCNE SA CELE ODALOKUJE A PRESTANE SA VYPISOVAT??*/
+				/*mozeme vymazat pole copy*/
 				$scope.reducedMachineCopyTapeArray.length = 0;
 				break;
 
@@ -572,17 +555,15 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					var lastIndexOfMinusIFullBlock = -Math.pow(2, -iBlockIndex);
 					/*najdeme zaciatok minus iteho */
 					var firstIndexOfMinusIFullBlock = -Math.pow(2, -iBlockIndex - 1);
-					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
 					for (var j = lastIndexOfMinusIFullBlock + 1; j <= firstIndexOfMinusIFullBlock; j++) {
 						$scope.greenStoragePrintingArray.push(new PrintingSquare(j,0,tempContainer.getIndexOfOriginalTrack()));
 					}
 				} else {
-					/*to iste len pre negativne I, cize teraz pozitivne -I. Robim to vsetko len zmenami znamienok, tie cykly by boli skarede, ak by boli negativne*/
+					/*to iste len pre negativne I, cize teraz pozitivne -I. Robim to vsetko len zmenami znamienok*/
 					/*tento interval je uzavrety*/
 					var lastIndexOfMinusIFullBlock = Math.pow(2, iBlockIndex);
 					/*najdeme zaciatok minus iteho */
 					var firstIndexOfMinusIFullBlock = Math.pow(2, iBlockIndex-1);
-					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
 					for (var j = firstIndexOfMinusIFullBlock; j < lastIndexOfMinusIFullBlock; j++) {
 						$scope.greenStoragePrintingArray.push(new PrintingSquare(j,0,tempContainer.getIndexOfOriginalTrack()));
 					}
@@ -598,7 +579,6 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 					var lastIndexOfMinusIFullBlock = -Math.pow(2, -iBlockIndex);
 					/*najdeme zaciatok minus iteho */
 					var firstIndexOfMinusIFullBlock = -Math.pow(2, -iBlockIndex - 1);
-					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
 					for (var j = lastIndexOfMinusIFullBlock + 1; j <= firstIndexOfMinusIFullBlock; j++) {
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel);
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel = " ";
@@ -607,12 +587,11 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						}
 					}
 				} else {
-					/*to iste len pre negativne I, cize teraz pozitivne -I. Robim to vsetko len zmenami znamienok, tie cykly by boli skarede, ak by boli negativne*/
+					/*to iste len pre negativne I, cize teraz pozitivne -I. Robim to vsetko len zmenami znamienok*/
 					/*tento interval je uzavrety*/
 					var lastIndexOfMinusIFullBlock = Math.pow(2, iBlockIndex);
 					/*najdeme zaciatok minus iteho */
 					var firstIndexOfMinusIFullBlock = Math.pow(2, iBlockIndex-1);
-					/*TOTO BUDE LEPSIE ROBIT CEZ NEJAKE FUNKCIE KONKRETNE NA TO URCENE*/
 					for (var j = firstIndexOfMinusIFullBlock; j < lastIndexOfMinusIFullBlock; j++) {
 						$scope.reducedMachineCopyTapeArray.push($scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel);
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(j).upperLevel = " ";
@@ -653,7 +632,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i];
 					}
 				}
-				/*mozeme vymazat pole copy POZOR-SKUTOCNE SA CELE ODALOKUJE A PRESTANE SA VYPISOVAT??*/
+				/*mozeme vymazat pole copy*/
 				$scope.reducedMachineCopyTapeArray.length = 0;
 				break;
 
@@ -743,7 +722,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 						$scope.simulationStorageTapeArray.value[tempContainer.getIndexOfOriginalTrack()].get(i).lowerLevel = $scope.reducedMachineCopyTapeArray[i];
 					}
 				}
-				/*mozeme vymazat pole copy POZOR-SKUTOCNE SA CELE ODALOKUJE A PRESTANE SA VYPISOVAT??*/
+				/*mozeme vymazat pole copy*/
 				$scope.reducedMachineCopyTapeArray.length = 0;
 				break;
 			default:
@@ -752,9 +731,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		$scope.pointerToCurrentSimulationState++;
 	};
 
-	/*tato funkcia bude vsetko pocitat*/
-	/*TODO dat tam nejake medzi stavy tak, aby sa tie veci dali pekne obrazkovo ukazovat*/
-	/*opravit to treba aby to bolo krajsie*/
+	/*tato funkcia bude vsetko potrebne pre simulaciu pocitat vopred*/
 	$scope.mainSimulatingFunction = function(writingArr, movementArr) {
 		/*najskor vyprazdnime pole, v ktrom zostali veci z prerdch. simulacie*/
 		$scope.currentSimulationStateArray.length = 0;
@@ -770,7 +747,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 			var blockNumber;
 			/*osetrenie pohybu hlavy dolava*/
 			/*najdeme prvy neplny stlpec v danom smere. Na zaklade neho vyratame blok*/
-			if (movementArr[j] == -1) { /*mozno je dobre cachovat tu dlzku*/
+			if (movementArr[j] == -1) {
 				for (var k = 1; k < $scope.simulationStorageTapeArray.value[j].positiveLength(); k++) {
 					if ($scope.simulationStorageTapeArray.value[j].get(k).isEmpty() === 1) {
 						blockNumber = Math.floor(Math.log(k) / Math.LN2) + 1;
@@ -820,7 +797,7 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 				}
 			}
 			/*osetrenie pohybu hlavy doprava*/
-			if (movementArr[j] == 1) { /*mozno je dobre cachovat tu dlzku*/
+			if (movementArr[j] == 1) {
 				for (var k = 1; k < $scope.simulationStorageTapeArray.value[j].negativeLength(); k++) {
 					if ($scope.simulationStorageTapeArray.value[j].get(-k).isEmpty() === 1) {
 						blockNumber = -(Math.floor(Math.log(k) / Math.LN2)+1);
@@ -905,12 +882,12 @@ app.controller('simulationController', ['$scope', '$window', '$log', 'simulation
 		}
 	};
 
-	/*funkcia posuvajuca nas view na storage paske.*/
+	/*funkcia posuvajuca nas pohlad na storage pasku.*/
 	$scope.moveStorageTape = function(direction){
 		$scope.reducedMachineStorageTapeViews.moveView(-direction);
 	};
 
-	/*funkcia posuvajuca view na paskach origo stroja*/
+	/*funkcia posuvajuca pohlad na pasky origo stroja*/
 	$scope.moveOriginalTapes = function(index,direction){
 		/*$scope.originalMachineViews[index].moveOriginalView(-direction);*/
 		$scope.originalMachineViews[index].moveView(-direction);
