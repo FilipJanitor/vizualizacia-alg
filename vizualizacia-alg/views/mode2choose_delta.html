@@ -1,0 +1,35 @@
+<div class="col-sm-12">
+	<h2>Prechodová funkcia</h2>
+</div>
+<div class="col-sm-12">
+	<p>Formát zadávania prechodovej funkcie je nasledovný:
+		<ol>
+			<li> Súčasný stav (Pomenovanie stavu môže mať najviac 15 znakov)
+			<li> Čítané znaky na páskach (na poradí záleží - symbol najviac vľavo vo vstupe je čítaný symbol na prvej páske zhora)
+			<li> Nový stav
+			<li> Nové znaky na zapísanie (na poradí záleží - symbol najviac vľavo na vstupe je symbol zapísaný na prvej páske zhora)
+			<li> Posun všetkých čítacích hláv(-1 = doľava, 0 = stáť, 1 = doprava. Poradie je rovnaké ako pri symboloch).
+		</ol>
+		Všetky tieto atribúty musia byť na vstupe oddelené čiarkami. <br>
+		<big> <strong> Počiatočný stav je "0" a blank je značený znakom "×"</strong> </big> <br>
+		Príklady:
+		<ul>
+			<li>&#948(q0,A) = (p,B,1) zapíšeme ako "q0,A,p,B,1" <br>
+			<li>&#948(q0,A,X) = (p,B,Y,1,-1) zapíšeme ako "q0,A,X,p,B,Y,1,-1" <br>
+		</ul>
+
+	</p>
+	<form name="delta" novalidate>
+		<fieldset  data-ng-repeat="choice in deltaArrayTemp">
+			<input type="text" ng-model="choice.value" name="" >
+			<button type="button" class="btn btn-danger btn-xs" ng-click="removeDeltaTemp($index)" required ng-minlength="myMinLength">-</button>
+			<span class="help-block" ng-show="choice.invalid">{{ choice.err }}</span>
+		</fieldset>
+		<div class="btn-group">
+			<button type="button" class="btn btn-success" ng-click="addNewDeltaTemp()">pridať riadok</button>
+			<button type="button" class="btn btn-primary" ng-disabled="delta.$pristine||(delta.$dirty && delta.$invalid)" ng-click="validateDeltaStartSimulation()">Zvalidovať a spustiť simuláciu</button>
+   			<button type="button" class="btn btn-danger btn-responsive" ng-click="restartSimulation()">Vrátiť sa na výber módov</button>
+   		</div>
+		<span class="help-block" ng-hide="isDeterministic.value">{{ isDeterministic.errLog }}</span>
+	</form>
+</div>
